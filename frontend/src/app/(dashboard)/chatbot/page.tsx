@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Chatbot() {
   return (
-    <main className="flex-1 flex flex-col h-full relative w-full">
+    <main className="flex flex-col relative w-full overflow-hidden" style={{ height: 'calc(100vh / 0.9)' }}>
 
 {/* TopAppBar */}
 <header className="bg-surface dark:bg-surface text-primary dark:text-primary font-headline-md text-headline-md docked full-width top-0 sticky z-40 border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex justify-between items-center h-16 px-margin-desktop">
