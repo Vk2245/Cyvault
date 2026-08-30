@@ -1,4 +1,5 @@
 import React from 'react';
+import { Menu, Search, Bell, ScrollText, TrendingDown, TrendingUp, Shield } from 'lucide-react';
 
 export default function Recovery() {
   return (
@@ -12,7 +13,7 @@ export default function Recovery() {
 <div className="flex items-center gap-4">
 {/* Mobile Menu Trigger (Visible only on mobile) */}
 <button className="md:hidden text-on-surface-variant hover:text-primary">
-<span className="material-symbols-outlined text-2xl">menu</span>
+<Menu size={24} />
 </button>
 {/* Applying style_brand_logo/typography */}
 <h2 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary">Recovery Command</h2>
@@ -20,20 +21,20 @@ export default function Recovery() {
 <div className="flex items-center gap-6">
 {/* Search Icon (Search Bar on left representation) */}
 <button className="text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity">
-<span className="material-symbols-outlined text-xl">search</span>
+<Search size={20} />
 </button>
 {/* Trailing Icons */}
 <div className="flex items-center gap-4 border-l border-[#ffffff1a] pl-6">
 <button className="text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity relative">
-<span className="material-symbols-outlined text-xl">notifications</span>
+<Bell size={20} />
 <span className="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
 </button>
 <button className="text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity">
-<span className="material-symbols-outlined text-xl">history_edu</span>
+<ScrollText size={20} />
 </button>
 {/* Avatar */}
 <button className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-[#ffffff1a] hover:opacity-80 transition-opacity ml-2">
-<img alt="Chief Security Officer" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASfMdQQ9KaMlyLWJtOxd6Oir2Q4qKPtgCiR_RaunZZGnm2U3X7jZbPgPJAC3wcgIl35W315dnRI1dwujC_PP5Chfyr4unEPuNHtK29R4R0hLM_phxjYqsUT91O26FKLMMsxTq7qTOegZh6kogykgKlfziO_RjXOc7v6jEzsSB-chxtBf5Dlx9VAY8b4e7LW43b5FmNPlBCEjm-nn7fHG4F5niwmzG08AOvFyfcaFWz-zqUK8rggGvh"/>
+<img alt="Chief Security Officer" className="w-8 h-8 object-contain" src="/cyvault-logo-no-caption.png"/>
 </button>
 </div>
 </div>
@@ -47,23 +48,23 @@ export default function Recovery() {
 <div className="glass-panel glass-panel-hover rounded-xl p-6 glow-amber relative overflow-hidden group">
 <div className="flex justify-between items-start mb-4">
 <h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">₹ At Risk</h3>
-<div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
-<span className="material-symbols-outlined text-amber-500 text-sm">trending_down</span>
+<div className="w-8 h-8 rounded-full bg-cyan-400/10 flex items-center justify-center border border-cyan-400/20">
+<TrendingDown size={16} />
 </div>
 </div>
 <div className="font-stat-lg text-stat-lg text-on-surface">₹1,47,500</div>
 <div className="mt-4 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
-<div className="h-full bg-amber-500/50 w-3/4"></div>
+<div className="h-full bg-cyan-400/50 w-3/4"></div>
 </div>
 {/* Decorative subtle glow */}
-<div className="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
+<div className="absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-400/10 rounded-full blur-2xl group-hover:bg-cyan-400/20 transition-all"></div>
 </div>
 {/* KPI 2: ₹ Recovered */}
 <div className="glass-panel glass-panel-hover rounded-xl p-6 glow-green relative overflow-hidden group">
 <div className="flex justify-between items-start mb-4">
 <h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">₹ Recovered</h3>
 <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-<span className="material-symbols-outlined text-emerald-400 text-sm">trending_up</span>
+<TrendingUp size={16} />
 </div>
 </div>
 <div className="flex items-end gap-3">
@@ -97,7 +98,7 @@ export default function Recovery() {
 <div className="flex justify-between items-start mb-4">
 <h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Correctly Blocked</h3>
 <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
-<span className="material-symbols-outlined text-red-500 text-sm">shield</span>
+<Shield size={16} />
 </div>
 </div>
 <div className="font-stat-lg text-stat-lg text-on-surface">7</div>
@@ -166,8 +167,8 @@ export default function Recovery() {
 <td className="py-4 px-6 text-on-surface-variant">Cart Abandon</td>
 <td className="py-4 px-6">Email</td>
 <td className="py-4 px-6">
-<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 font-label-mono text-[10px] uppercase">
-<span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyan-400/10 text-cyan-400 border border-cyan-400/20 font-label-mono text-[10px] uppercase">
+<span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                                             Warning (Pending)
                                         </span>
 </td>

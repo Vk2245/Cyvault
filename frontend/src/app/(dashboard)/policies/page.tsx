@@ -1,4 +1,5 @@
 import React from 'react';
+import { Shield, Edit2, Trash2, AlertTriangle, Plus, Sparkles, Terminal, CheckCircle2 } from 'lucide-react';
 
 export default function Policies() {
   return (
@@ -17,7 +18,7 @@ export default function Policies() {
 <div className="flex items-center justify-between mb-2">
 <div className="flex items-center gap-3">
 <div className="p-2 bg-primary/10 rounded-lg border border-primary/20">
-<span className="material-symbols-outlined text-primary text-xl" data-icon="shield">shield</span>
+<Shield size={20} className="text-primary" />
 </div>
 <h3 className="font-headline-md text-headline-md text-on-surface">Active Policies</h3>
 </div>
@@ -33,8 +34,8 @@ export default function Policies() {
 <span className="font-label-mono text-primary text-sm font-bold tracking-wide">retry_under_5k</span>
 </div>
 <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><span className="material-symbols-outlined text-[18px]" data-icon="edit">edit</span></button>
-<button className="hover:text-error"><span className="material-symbols-outlined text-[18px]" data-icon="delete">delete</span></button>
+<button className="hover:text-primary"><Edit2 size={18} /></button>
+<button className="hover:text-error"><Trash2 size={18} /></button>
 </div>
 </div>
 <p className="text-on-surface-variant text-sm mb-4">Auto-retry payments under ₹5,000.</p>
@@ -55,8 +56,8 @@ export default function Policies() {
 <span className="font-label-mono text-primary text-sm font-bold tracking-wide">max_2_recovery</span>
 </div>
 <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><span className="material-symbols-outlined text-[18px]" data-icon="edit">edit</span></button>
-<button className="hover:text-error"><span className="material-symbols-outlined text-[18px]" data-icon="delete">delete</span></button>
+<button className="hover:text-primary"><Edit2 size={18} /></button>
+<button className="hover:text-error"><Trash2 size={18} /></button>
 </div>
 </div>
 <p className="text-on-surface-variant text-sm mb-4">Max 2 recovery messages per customer per day.</p>
@@ -77,8 +78,8 @@ export default function Policies() {
 <span className="font-label-mono text-primary text-sm font-bold tracking-wide">block_high_risk</span>
 </div>
 <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><span className="material-symbols-outlined text-[18px]" data-icon="edit">edit</span></button>
-<button className="hover:text-error"><span className="material-symbols-outlined text-[18px]" data-icon="delete">delete</span></button>
+<button className="hover:text-primary"><Edit2 size={18} /></button>
+<button className="hover:text-error"><Trash2 size={18} /></button>
 </div>
 </div>
 <p className="text-on-surface-variant text-sm mb-4">Block customers with risk score above 0.7.</p>
@@ -98,12 +99,12 @@ export default function Policies() {
 <span className="status-active status-dot"></span>
 <span className="font-label-mono text-secondary text-sm font-bold tracking-wide flex items-center gap-1">
                                         approval_above_10k
-                                        <span className="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+                                        <AlertTriangle size={14} />
 </span>
 </div>
 <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><span className="material-symbols-outlined text-[18px]" data-icon="edit">edit</span></button>
-<button className="hover:text-error"><span className="material-symbols-outlined text-[18px]" data-icon="delete">delete</span></button>
+<button className="hover:text-primary"><Edit2 size={18} /></button>
+<button className="hover:text-error"><Trash2 size={18} /></button>
 </div>
 </div>
 <p className="text-on-surface-variant text-sm mb-4">Need approval for retry above ₹10,000.</p>
@@ -124,8 +125,8 @@ export default function Policies() {
 <span className="font-label-mono text-on-surface text-sm font-bold tracking-wide">discount_cap_5pct</span>
 </div>
 <div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><span className="material-symbols-outlined text-[18px]" data-icon="edit">edit</span></button>
-<button className="hover:text-error"><span className="material-symbols-outlined text-[18px]" data-icon="delete">delete</span></button>
+<button className="hover:text-primary"><Edit2 size={18} /></button>
+<button className="hover:text-error"><Trash2 size={18} /></button>
 </div>
 </div>
 <p className="text-on-surface-variant text-sm mb-4">Maximum 5% discount for recovery.</p>
@@ -140,8 +141,8 @@ export default function Policies() {
 </div>
 </div>
 {/* Add New Button */}
-<button className="mt-4 w-full py-4 border border-secondary/50 rounded-xl text-secondary font-bold hover:bg-secondary/10 transition-colors flex items-center justify-center gap-2">
-<span className="material-symbols-outlined" data-icon="add">add</span>
+<button className="mt-4 w-full py-4 bg-white text-black rounded-full font-bold hover:bg-white/90 transition-colors flex items-center justify-center gap-2 shadow-sm">
+<Plus size={24} />
                         Add New Policy
                     </button>
 </section>
@@ -155,7 +156,7 @@ export default function Policies() {
 <div className="relative z-10 p-6 md:p-8 flex flex-col h-full bg-background/95 rounded-[15px]">
 <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
 <div className="p-2 bg-secondary/10 rounded-lg border border-secondary/20">
-<span className="material-symbols-outlined text-secondary text-xl" data-icon="auto_awesome">auto_awesome</span>
+<Sparkles size={20} className="text-secondary" />
 </div>
 <div>
 <h3 className="font-headline-md text-headline-md text-on-surface">Create / Edit Policy</h3>
@@ -169,8 +170,8 @@ export default function Policies() {
                                 </label>
 <textarea className="w-full h-32 md:h-40 bg-[#0A0A0A] border border-primary/40 rounded-xl p-4 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all resize-none shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]" placeholder="e.g., Block transactions over $10k from new IPs..." defaultValue="If a customer has more than 2 chargebacks in the last 30 days, block all auto-retry attempts and flag for manual review."></textarea>
 <div className="flex justify-end mt-2">
-<button className="bg-secondary text-[#030303] px-6 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-secondary-fixed transition-colors shadow-[0_0_15px_rgba(255,185,95,0.3)] hover:shadow-[0_0_25px_rgba(255,185,95,0.5)]">
-<span className="material-symbols-outlined text-[20px]" data-icon="auto_awesome">auto_awesome</span>
+<button className="bg-white text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-white/90 transition-colors shadow-sm">
+<Sparkles size={20} />
                                         Compile Rule
                                     </button>
 </div>
@@ -178,7 +179,7 @@ export default function Policies() {
 {/* Compiled Preview (Glassmorphism Card) */}
 <div className="mt-8">
 <div className="flex items-center gap-2 mb-3">
-<span className="material-symbols-outlined text-sm text-on-surface-variant" data-icon="terminal">terminal</span>
+<Terminal size={16} className="text-on-surface-variant" />
 <span className="text-sm font-medium text-on-surface-variant">Compiled Rule Preview</span>
 </div>
 <div className="glass-card rounded-xl p-5 border-l-4 border-l-primary relative overflow-hidden">
@@ -186,7 +187,7 @@ export default function Policies() {
 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
 <div className="flex justify-between items-center mb-4 relative z-10">
 <span className="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-full text-xs font-label-mono flex items-center gap-1">
-<span className="material-symbols-outlined text-[14px]" data-icon="check_circle">check_circle</span>
+<CheckCircle2 size={14} />
                                             Compiled Successfully
                                         </span>
 <span className="text-xs font-label-mono text-on-surface-variant opacity-50">v1.0.4 • 12ms processing</span>
@@ -198,10 +199,10 @@ export default function Policies() {
 <div className="flex"><span className="text-primary w-28 shrink-0">Escalation:</span> <span className="text-secondary">FLAG</span> <span className="ml-2 text-on-surface">for manual review</span></div>
 </div>
 <div className="flex flex-col sm:flex-row gap-3 mt-6 relative z-10">
-<button className="flex-1 bg-secondary text-[#030303] py-2.5 rounded-lg font-bold hover:bg-secondary-fixed transition-colors">
+<button className="flex-1 bg-white text-black py-2.5 rounded-full font-bold hover:bg-white/90 transition-colors">
                                             Confirm &amp; Activate
                                         </button>
-<button className="flex-1 border border-white/20 bg-transparent text-on-surface py-2.5 rounded-lg font-medium hover:bg-white/5 transition-colors">
+<button className="flex-1 border border-white/20 bg-transparent text-white py-2.5 rounded-full font-medium hover:bg-white/10 transition-colors">
                                             Edit Structure
                                         </button>
 </div>

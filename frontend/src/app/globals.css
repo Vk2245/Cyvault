@@ -1,33 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
+  /* Colors - Apple UI Premium Dark Mode */
   --color-primary: #8b5cf6;
-  --color-secondary: #f59e0b;
-  --color-background: #030303;
-  --color-surface-variant: #353434;
-  --color-on-surface-variant: #cbc3d7;
-  --color-on-primary: #030303;
-  --color-primary-fixed-dim: #d0bcff;
-  --color-surface-container-high: #2a2a2a;
-  --color-surface-container-low: #1c1b1b;
-  --color-surface: #141313;
+  --color-secondary: #3b82f6;
+  --color-background: #000000;
+  --color-surface: #121212;
+  --color-surface-variant: #1c1c1e;
+  --color-surface-container-low: #0a0a0a;
+  --color-surface-container-high: #2c2c2e;
   --color-on-surface: #ffffff;
-  --color-inverse-primary: #6d3bd7;
-  --color-inverse-surface: #e5e2e1;
-  --color-outline: #958ea0;
-  --color-on-background: #e5e2e1;
+  --color-on-surface-variant: #98989d;
+  --color-on-primary: #000000;
+  --color-on-background: #ffffff;
+  --color-outline: #38383a;
+  --color-inverse-primary: #007aff;
+  --color-inverse-surface: #ffffff;
 
   /* Fonts */
-  --font-hanken: "Hanken Grotesk", sans-serif;
-  --font-jetbrains: "JetBrains Mono", monospace;
+  /* Fonts are injected via CSS variables from layout.tsx: --font-inter and --font-jetbrains */
   
-  --font-body-md: var(--font-hanken);
-  --font-body-lg: var(--font-hanken);
-  --font-headline-md: var(--font-hanken);
-  --font-headline-lg: var(--font-hanken);
-  --font-headline-xl: var(--font-hanken);
-  --font-headline-xl-mobile: var(--font-hanken);
+  --font-body-md: var(--font-inter);
+  --font-body-lg: var(--font-inter);
+  --font-headline-md: var(--font-inter);
+  --font-headline-lg: var(--font-inter);
+  --font-headline-xl: var(--font-inter);
+  --font-headline-xl-mobile: var(--font-inter);
   --font-label-mono: var(--font-jetbrains);
   --font-stat-lg: var(--font-jetbrains);
   
@@ -81,49 +79,32 @@ body {
 }
 
 .glass-panel {
-  background-color: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(14, 14, 16, 0.6);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .glass-card {
-  background-color: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(14, 14, 16, 0.6);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  border-radius: 24px;
 }
 
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 150%;
-  height: 150%;
-  background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.5s ease-out;
-  z-index: 0;
-  pointer-events: none;
-}
 
-.glass-card:hover::before {
-  transform: translate(-50%, -50%) scale(1);
-}
 
-.animated-line {
-  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
-  background-size: 200% 100%;
-  animation: moveGradient 2s linear infinite;
-}
 
-@keyframes moveGradient {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Material Symbols fix */
@@ -142,8 +123,3 @@ body {
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
-
-.pulse-red { animation: pulse-red 2s infinite; }
-@keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 180, 171, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0); } }
-.animated-line { stroke-dasharray: 100; stroke-dashoffset: 100; animation: dash 3s linear infinite; }
-@keyframes dash { to { stroke-dashoffset: 0; } }

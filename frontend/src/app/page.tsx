@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Menu, Link as LinkIcon, PlayCircle } from 'lucide-react';
 
 export default function LandingPage() {
   return (
@@ -7,63 +7,64 @@ export default function LandingPage() {
       
 {/* TopNavBar */}
 <nav className="fixed top-0 w-full z-50 bg-[#ffffff08] backdrop-blur-xl border-b border-[#ffffff1a] transition-all duration-300">
-<div className="flex justify-between items-center px-gutter py-4 max-w-container-max mx-auto">
-<div className="flex items-center gap-4 group">
-<img alt="Cyvault Logo" className="w-8 h-8 rounded-md group-hover:scale-105 transition-transform duration-300 shadow-[0_0_15px_rgba(139,92,246,0.5)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSfYHMRYx_L_7A4iXS7T-x_B7n5O_Xu65sSioXJniUz9EfBEAKNcNKWkS-mItATrZOAGz2UmAG-6Cc9c-dSWXZYPQU34uDLlSmFWzS0qjH3oPXWVRmbViM0IZu8wY9W2VJmTuWiNYoLE8fpyZTQgtBwSpuiSzRWuC79xvc2r0MTc_SmTqgm3Iu7sgN9s-ef8q-VHdoz4cwDsf0jsApR81YmL9bRQm5hekL0RiVu_aDc-z1KqCUILpY"/>
-<span className="font-headline-md text-headline-md font-bold text-primary drop-shadow-[0_0_8px_rgba(208,188,255,0.8)] tracking-tight">CYVAULT</span>
+<div className="flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto">
+<div className="flex items-center gap-3 group">
+<img alt="Cyvault Logo" className="w-8 h-8 group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] object-contain" src="/cyvault-logo-no-caption.png"/>
+<span className="font-[family-name:var(--font-orbitron)] text-[18px] font-bold text-primary drop-shadow-[0_0_8px_rgba(208,188,255,0.8)] tracking-wide">CYVAULT</span>
 </div>
-<div className="hidden md:flex items-center gap-8">
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/recovery">Dashboard</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/radar">Leakage Radar</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/graph">Entity Graph</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/chatbot">Insights Bot</a>
+<div className="hidden md:flex items-center gap-6">
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-[14px] font-body-md" href="/recovery">Dashboard</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-[14px] font-body-md" href="/radar">Leakage Radar</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-[14px] font-body-md" href="/graph">Entity Graph</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-[14px] font-body-md" href="/chatbot">Insights Bot</a>
 </div>
+<div className="hidden md:flex items-center gap-4">
+<a href="/login">
+  <button className="bg-white text-black px-4 py-1.5 rounded-full text-[14px] font-body-md font-medium hover:bg-white/90 transition-all duration-300 active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+                  Log In
+  </button>
+</a>
 <a href="/connect">
-  <button className="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-DEFAULT font-label-mono text-label-mono hover:bg-primary-fixed-dim transition-colors duration-300 active:scale-95 shadow-[0_0_10px_rgba(139,92,246,0.3)]">
+  <button className="bg-white text-black px-4 py-1.5 rounded-full text-[14px] font-body-md font-medium hover:bg-white/90 transition-all duration-300 active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)]">
                   Get Started
   </button>
 </a>
+</div>
 {/* Mobile Menu Toggle */}
 <button className="md:hidden text-on-surface p-2">
-<span className="material-symbols-outlined">menu</span>
+<Menu size={24} />
 </button>
 </div>
 </nav>
-<main className="flex-grow pt-24">
+<main className="flex-grow pt-16 flex flex-col">
 {/* Hero Section */}
-<section className="relative min-h-[90vh] flex items-center justify-center pt-16 pb-32 px-margin-mobile md:px-margin-desktop overflow-hidden border-b border-[#ffffff1a]">
-{/* WebGL Background */}
-<div className="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
-{/* STITCH_SHADER_START:ANIMATION_2 className="absolute inset-0 w-full h-full" */}
-<div className="absolute inset-0 w-full h-full" style={{display: 'block'}}>
-<canvas id="shader-canvas-ANIMATION_2" style={{display: 'block', width: '100%', height: '100%'}}></canvas>
-
+<section className="relative flex-grow flex items-center justify-center py-8 px-margin-mobile md:px-margin-desktop overflow-hidden border-b border-[#ffffff1a]">
+<div className="relative z-10 max-w-4xl mx-auto text-center space-y-4">
+<div className="flex justify-center mb-2">
+<img alt="Cyvault Logo" className="w-32 md:w-48 h-auto object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.3)] animate-fade-in-up" src="/cyvault-logo-with-name.png"/>
 </div>
-{/* STITCH_SHADER_END:ANIMATION_2 */}
+<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4 animate-fade-in-up">
+<span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span className="font-medium text-primary tracking-wider text-xs uppercase">Cyvault Security Intelligence</span>
 </div>
-<div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
-<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border-primary/30 mb-4 animate-fade-in-up">
-<span className="w-2 h-2 rounded-full bg-secondary animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
-<span className="font-label-mono text-label-mono text-secondary tracking-wider text-xs">SYSTEM ONLINE</span>
-</div>
-<h1 className="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-on-surface max-w-3xl mx-auto leading-tight drop-shadow-2xl">
-                    Your Agents Already Work.<br className="hidden md:block"/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-container to-secondary">Now Make Them Work Together.</span>
+<h1 className="font-headline-lg text-[40px] md:text-[56px] text-on-surface max-w-4xl mx-auto leading-tight tracking-tight">
+                    Secure Every Transaction.<br className="hidden md:block"/> <span className="bg-gradient-to-r from-primary via-[#a78bfa] to-secondary bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(139,92,246,0.3)]">With Zero Blind Spots.</span>
 </h1>
-<p className="font-body-lg text-body-lg text-on-surface/60 max-w-2xl mx-auto">
-                    The missing vault that connects Razorpay's payment agents — shared memory, governed actions, zero blind spots.
+<p className="font-body-lg text-[16px] md:text-[18px] text-on-surface-variant max-w-2xl mx-auto">
+                    The missing vault that connects all your payment gateways — real-time anomaly detection, ledger reconciliation, and automated fraud prevention.
                 </p>
 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-<button className="w-full sm:w-auto bg-secondary text-on-secondary px-8 py-3 rounded-DEFAULT font-label-mono text-label-mono hover:bg-secondary-fixed-dim transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-95 flex items-center justify-center gap-2">
-<span className="material-symbols-outlined text-sm">link</span>
+<button className="w-full sm:w-auto bg-white text-black px-8 py-3 rounded-full font-body-md font-medium hover:bg-white/90 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 shadow-sm">
+<LinkIcon size={16} />
                         Connect Razorpay
                     </button>
-<button className="w-full sm:w-auto px-8 py-3 rounded-DEFAULT font-label-mono text-label-mono text-on-surface border border-[#ffffff33] hover:bg-[#ffffff1a] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 group">
-<span className="material-symbols-outlined text-sm group-hover:text-primary transition-colors">play_circle</span>
+<button className="w-full sm:w-auto px-8 py-3 rounded-full font-body-md font-medium text-white bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 group">
+<PlayCircle size={16} className="group-hover:text-white transition-colors" />
                         Watch Demo
                     </button>
 </div>
 {/* Stats Row */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16 mt-8 border-t border-[#ffffff1a]/50">
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 mt-4 border-t border-[#ffffff1a]/50">
 <div className="flex flex-col items-center gap-2">
 <span className="font-stat-lg text-stat-lg text-secondary">₹1.2Cr+</span>
 <span className="font-label-mono text-label-mono text-on-surface/50 uppercase tracking-widest text-xs">Recovered</span>
@@ -81,22 +82,13 @@ export default function LandingPage() {
 </section>
 </main>
 {/* Footer */}
-<footer className="w-full py-12 bg-background border-t border-[#ffffff1a]">
-<div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-gutter max-w-container-max mx-auto">
-<div className="flex flex-col gap-4">
-<div className="flex items-center gap-3">
-<span className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">CYVAULT</span>
-</div>
-<p className="font-body-md text-body-md text-on-surface-variant max-w-sm">
-                    © 2024 CYVAULT. Built for Razorpay Buildathon 2026.
-                </p>
-</div>
-<div className="flex flex-wrap gap-x-8 gap-y-4 md:justify-end">
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Privacy Policy</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Terms of Service</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Security Audit</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Contact</a>
-</div>
+<footer className="w-full py-4 bg-background border-t border-[#ffffff1a]">
+<div className="flex items-center justify-center gap-2 px-gutter max-w-container-max mx-auto opacity-80">
+<img alt="Cyvault Logo" className="w-5 h-5 object-contain" src="/cyvault-logo-no-caption.png"/>
+<span className="font-[family-name:var(--font-orbitron)] text-[14px] font-bold text-on-surface tracking-widest">CYVAULT</span>
+<span className="font-body-md text-[12px] text-on-surface-variant ml-2">
+                    © 2026. All rights reserved.
+                </span>
 </div>
 </footer>
 

@@ -36,9 +36,9 @@ class Settings(BaseSettings):
     supabase_url: str = ""
     supabase_key: str = ""
     
-    # Tell Pydantic to read from the .env file in the root folder
+    # Tell Pydantic to read from the .env file in the root folder (../.env)
     # extra="ignore" means it will ignore extra variables in .env that are not listed here
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file="../.env", env_file_encoding="utf-8", extra="ignore")
 
 @lru_cache()
 def get_settings() -> Settings:

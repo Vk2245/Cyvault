@@ -22,7 +22,7 @@ from app.core.config import get_settings
 # ──────────────────────────────────────────────
 # CONSTANTS
 # ──────────────────────────────────────────────
-LLM_MODEL_NAME = "llama3-8b-8192"  # Fast and reliable model
+LLM_MODEL_NAME = "openai/gpt-oss-20b"  # Updated active model
 
 # Create the router to group our chat endpoints
 router = APIRouter()

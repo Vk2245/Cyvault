@@ -1,4 +1,5 @@
 import React from 'react';
+import { Shield, Key, Lock, TriangleAlert, Eye, RefreshCw, Webhook, Copy, Bot } from 'lucide-react';
 
 export default function Settings() {
   return (
@@ -44,7 +45,7 @@ export default function Settings() {
 {/* Header */}
 <div className="flex items-center gap-4 mb-2">
 <div className="w-12 h-12 rounded-xl bg-surface-container border border-outline-variant flex items-center justify-center">
-<span className="material-symbols-outlined text-primary-container text-2xl" data-icon="security">security</span>
+<Shield size={24} className="text-primary-container" />
 </div>
 <div>
 <h2 className="font-headline-md text-headline-md font-bold text-on-surface tracking-tight text-glow">API &amp; Security Configuration</h2>
@@ -55,17 +56,17 @@ export default function Settings() {
 <section className="glass-panel rounded-xl p-8 neon-glow-primary">
 <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
 <h3 className="font-body-lg text-body-lg font-semibold text-on-surface flex items-center gap-2">
-<span className="material-symbols-outlined text-primary text-xl" data-icon="key">key</span>
+<Key size={20} className="text-primary" />
                             Razorpay Connection
                         </h3>
 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant font-label-mono text-label-mono text-on-surface-variant text-xs">
-<span className="material-symbols-outlined text-[14px]" data-icon="lock">lock</span>
+<Lock size={14} />
                             Keys Encrypted at Rest (AES-256-GCM)
                         </span>
 </div>
 {/* Warning Banner */}
 <div className="bg-secondary-container/10 border border-secondary-container/30 rounded-lg p-4 mb-6 flex items-start gap-3">
-<span className="material-symbols-outlined text-secondary-container mt-0.5" data-icon="warning">warning</span>
+<TriangleAlert size={20} className="text-secondary-container mt-0.5" />
 <div className="font-body-md text-body-md text-secondary-fixed-dim">
 <strong className="font-semibold block mb-1">Security Notice</strong>
                             Always use Restricted API Keys with minimum necessary privileges. Never share your secret keys.
@@ -81,14 +82,14 @@ export default function Settings() {
 <div className="relative">
 <input className="input-glass pr-12 cursor-default bg-surface-container-highest/50" readOnly type="password" defaultValue="secret_key_1234567890"/>
 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface">
-<span className="material-symbols-outlined" data-icon="visibility">visibility</span>
+<Eye size={20} />
 </button>
 </div>
 </div>
 </div>
 <div className="flex justify-end">
 <button className="px-6 py-2.5 rounded-lg border border-white/20 hover:bg-white/10 transition-colors font-body-md text-body-md font-medium flex items-center gap-2">
-<span className="material-symbols-outlined text-[18px]" data-icon="sync">sync</span>
+<RefreshCw size={18} />
                             Rotate Keys
                         </button>
 </div>
@@ -97,7 +98,7 @@ export default function Settings() {
 <section className="glass-panel rounded-xl p-8 neon-glow-primary">
 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-4 mb-6 gap-4">
 <h3 className="font-body-lg text-body-lg font-semibold text-on-surface flex items-center gap-2">
-<span className="material-symbols-outlined text-primary text-xl" data-icon="webhook">webhook</span>
+<Webhook size={20} className="text-primary" />
                             Event Listeners
                         </h3>
 <div className="font-label-mono text-label-mono text-on-surface-variant text-sm flex items-center gap-2 bg-surface-container py-1.5 px-3 rounded-lg border border-outline-variant">
@@ -113,7 +114,7 @@ export default function Settings() {
 <div className="flex gap-2">
 <input className="input-glass flex-1 bg-surface-container-highest/50 text-tertiary-fixed-dim" readOnly type="text" defaultValue="https://api.cyvault.io/v1/webhooks/incoming/rZP_992x"/>
 <button className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-center" title="Copy to clipboard">
-<span className="material-symbols-outlined text-on-surface-variant" data-icon="content_copy">content_copy</span>
+<Copy size={20} className="text-on-surface-variant" />
 </button>
 </div>
 </div>
@@ -122,7 +123,7 @@ export default function Settings() {
 <div className="relative max-w-md">
 <input className="input-glass pr-12 bg-surface-container-highest/50" readOnly type="password" defaultValue="whsec_dummysecretkeyhere"/>
 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface">
-<span className="material-symbols-outlined" data-icon="visibility">visibility</span>
+<Eye size={20} />
 </button>
 </div>
 </div>
@@ -158,7 +159,7 @@ export default function Settings() {
 <section className="glass-panel rounded-xl p-8 neon-glow-primary">
 <div className="flex items-center border-b border-white/10 pb-4 mb-6">
 <h3 className="font-body-lg text-body-lg font-semibold text-on-surface flex items-center gap-2">
-<span className="material-symbols-outlined text-primary text-xl" data-icon="smart_toy">smart_toy</span>
+<Bot size={20} className="text-primary" />
                             Insights Agent Permissions
                         </h3>
 </div>
@@ -188,7 +189,7 @@ export default function Settings() {
 <div>
 <div className="font-body-md text-body-md font-medium text-on-surface mb-1">Allow triggering manual recovery via chat</div>
 <div className="font-label-mono text-label-mono text-on-surface-variant text-sm flex items-center gap-2">
-<span className="material-symbols-outlined text-secondary text-[14px]" data-icon="warning">warning</span>
+<TriangleAlert size={14} className="text-secondary" />
                                     Requires Elevated Permissions
                                 </div>
 </div>
@@ -199,9 +200,9 @@ export default function Settings() {
 </div>
 </div>
 <div className="flex justify-end pt-4 border-t border-white/5">
-<button className="px-8 py-3 rounded-lg bg-primary text-on-primary font-body-md text-body-md font-bold hover:bg-primary-fixed transition-colors shadow-[0_0_15px_rgba(208,188,255,0.3)]">
-                            Save Preferences
-                        </button>
+<button className="px-8 py-3 rounded-full bg-white text-black font-body-md text-body-md font-bold hover:bg-white/90 transition-colors shadow-sm">
+                        Save Changes
+                    </button>
 </div>
 </section>
 </div>
