@@ -13,14 +13,16 @@ export default function LandingPage() {
 <span className="font-headline-md text-headline-md font-bold text-primary drop-shadow-[0_0_8px_rgba(208,188,255,0.8)] tracking-tight">CYVAULT</span>
 </div>
 <div className="hidden md:flex items-center gap-8">
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="#">Features</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="#">How It Works</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="#">Pricing</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="#">Docs</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/recovery">Dashboard</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/radar">Leakage Radar</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/graph">Entity Graph</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-300 text-body-md font-body-md" href="/chatbot">Insights Bot</a>
 </div>
-<button className="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-DEFAULT font-label-mono text-label-mono hover:bg-primary-fixed-dim transition-colors duration-300 active:scale-95 shadow-[0_0_10px_rgba(139,92,246,0.3)]">
-                Get Started
-            </button>
+<a href="/connect">
+  <button className="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-DEFAULT font-label-mono text-label-mono hover:bg-primary-fixed-dim transition-colors duration-300 active:scale-95 shadow-[0_0_10px_rgba(139,92,246,0.3)]">
+                  Get Started
+  </button>
+</a>
 {/* Mobile Menu Toggle */}
 <button className="md:hidden text-on-surface p-2">
 <span className="material-symbols-outlined">menu</span>
@@ -90,10 +92,10 @@ export default function LandingPage() {
                 </p>
 </div>
 <div className="flex flex-wrap gap-x-8 gap-y-4 md:justify-end">
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Privacy Policy</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Terms of Service</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Security Audit</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Contact</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Privacy Policy</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Terms of Service</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Security Audit</a>
+<a className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="/feed">Contact</a>
 </div>
 </div>
 </footer>

@@ -1,0 +1,285 @@
+
+import React from 'react';
+
+export default function Recovery() {
+  return (
+    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
+      
+{/* SideNavBar (Shared Component) */}
+{/* Applying style_component_shape: h-screen w-64 fixed left-0 top-0 */}
+{/* Applying style_separation_logic: border-r border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] */}
+{/* Applying style_shell_layout: flex flex-col h-full py-8 */}
+<nav className="hidden md:flex h-screen w-64 fixed left-0 top-0 border-r border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex-col h-full py-8 z-50">
+{/* Brand Header */}
+<div className="px-8 mb-12 flex items-center gap-3">
+<div className="w-10 h-10 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0">
+<span className="material-symbols-outlined text-primary text-2xl">shield</span>
+</div>
+<div>
+{/* Applying style_brand_logo: text-headline-md font-headline-md font-bold text-primary dark:text-primary */}
+<h1 className="text-headline-md font-headline-md font-bold text-primary dark:text-primary tracking-tight">Cyvault</h1>
+<p className="font-label-mono text-label-mono text-on-surface-variant text-[10px] uppercase">AI Governance</p>
+</div>
+</div>
+{/* Navigation Links */}
+{/* Active Tab Logic: User is on Recovery Dashboard -> "Recovery" is active */}
+<ul className="flex-1 flex flex-col gap-2 px-4">
+{/* Dashboard (Inactive) */}
+<li>
+<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
+<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">dashboard</span>
+<span className="font-body-md">Dashboard</span>
+</a>
+</li>
+{/* Analytics (Inactive) */}
+<li>
+<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
+<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">bar_chart</span>
+<span className="font-body-md">Analytics</span>
+</a>
+</li>
+{/* Recovery (Active) */}
+{/* Applying style_active_navigation: text-primary dark:text-primary font-bold border-r-2 border-primary */}
+<li>
+<a className="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary/10 text-primary dark:text-primary font-bold border-r-2 border-primary active:scale-95 transition-transform" href="/settings">
+<span className="material-symbols-outlined text-xl" style={{fontVariationSettings: "'FILL' 1"}}>restore_page</span>
+<span className="font-body-md">Recovery</span>
+</a>
+</li>
+{/* Compliance (Inactive) */}
+<li>
+<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
+<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">gavel</span>
+<span className="font-body-md">Compliance</span>
+</a>
+</li>
+{/* Settings (Inactive) */}
+<li>
+<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/settings">
+<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">settings</span>
+<span className="font-body-md">Settings</span>
+</a>
+</li>
+</ul>
+{/* CTA / Status */}
+<div className="px-8 mt-auto">
+<div className="glass-panel p-4 rounded-xl flex items-center gap-3">
+<div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+<span className="font-label-mono text-label-mono text-xs uppercase tracking-wider text-on-surface-variant">System Secure</span>
+</div>
+</div>
+</nav>
+{/* Main Content Area */}
+<main className="flex-1 md:ml-64 flex flex-col min-h-screen relative">
+{/* TopAppBar (Shared Component) */}
+{/* Applying style_component_shape: docked full-width top-0 sticky z-40 */}
+{/* Applying style_separation_logic: border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] */}
+{/* Applying style_shell_layout: flex justify-between items-center h-16 px-margin-desktop */}
+<header className="docked full-width top-0 sticky z-40 border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex justify-between items-center h-16 px-4 md:px-margin-desktop">
+<div className="flex items-center gap-4">
+{/* Mobile Menu Trigger (Visible only on mobile) */}
+<button className="md:hidden text-on-surface-variant hover:text-primary">
+<span className="material-symbols-outlined text-2xl">menu</span>
+</button>
+{/* Applying style_brand_logo/typography */}
+<h2 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary">Recovery Command</h2>
+</div>
+<div className="flex items-center gap-6">
+{/* Search Icon (Search Bar on left representation) */}
+<button className="text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity">
+<span className="material-symbols-outlined text-xl">search</span>
+</button>
+{/* Trailing Icons */}
+<div className="flex items-center gap-4 border-l border-[#ffffff1a] pl-6">
+<button className="text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity relative">
+<span className="material-symbols-outlined text-xl">notifications</span>
+<span className="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button className="text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity">
+<span className="material-symbols-outlined text-xl">history_edu</span>
+</button>
+{/* Avatar */}
+<button className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-[#ffffff1a] hover:opacity-80 transition-opacity ml-2">
+<img alt="Chief Security Officer" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASfMdQQ9KaMlyLWJtOxd6Oir2Q4qKPtgCiR_RaunZZGnm2U3X7jZbPgPJAC3wcgIl35W315dnRI1dwujC_PP5Chfyr4unEPuNHtK29R4R0hLM_phxjYqsUT91O26FKLMMsxTq7qTOegZh6kogykgKlfziO_RjXOc7v6jEzsSB-chxtBf5Dlx9VAY8b4e7LW43b5FmNPlBCEjm-nn7fHG4F5niwmzG08AOvFyfcaFWz-zqUK8rggGvh"/>
+</button>
+</div>
+</div>
+</header>
+{/* Canvas / Dashboard Content */}
+{/* Using container-max and fluid padding */}
+<div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-margin-desktop flex flex-col gap-8 md:gap-16">
+{/* Top Row: 4 KPI Cards */}
+<section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+{/* KPI 1: ₹ At Risk */}
+<div className="glass-panel glass-panel-hover rounded-xl p-6 glow-amber relative overflow-hidden group">
+<div className="flex justify-between items-start mb-4">
+<h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">₹ At Risk</h3>
+<div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+<span className="material-symbols-outlined text-amber-500 text-sm">trending_down</span>
+</div>
+</div>
+<div className="font-stat-lg text-stat-lg text-on-surface">₹1,47,500</div>
+<div className="mt-4 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div className="h-full bg-amber-500/50 w-3/4"></div>
+</div>
+{/* Decorative subtle glow */}
+<div className="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
+</div>
+{/* KPI 2: ₹ Recovered */}
+<div className="glass-panel glass-panel-hover rounded-xl p-6 glow-green relative overflow-hidden group">
+<div className="flex justify-between items-start mb-4">
+<h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">₹ Recovered</h3>
+<div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+<span className="material-symbols-outlined text-emerald-400 text-sm">trending_up</span>
+</div>
+</div>
+<div className="flex items-end gap-3">
+<div className="font-stat-lg text-stat-lg text-on-surface">₹1,02,300</div>
+</div>
+<div className="mt-4 flex items-center gap-2">
+<span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-label-mono text-[10px] border border-emerald-500/30">+₹12,400 today</span>
+</div>
+{/* Decorative subtle glow */}
+<div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+</div>
+{/* KPI 3: Recovery Rate */}
+<div className="glass-panel glass-panel-hover rounded-xl p-6 glow-violet relative overflow-hidden flex items-center justify-between group">
+<div>
+<h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider mb-4">Recovery Rate</h3>
+<div className="font-stat-lg text-stat-lg text-primary">68.4%</div>
+</div>
+{/* Circular Progress */}
+<div className="relative w-16 h-16 shrink-0">
+<svg className="w-full h-full -rotate-90" viewbox="0 0 36 36">
+{/* Background Circle */}
+<path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3"></path>
+{/* Progress Circle */}
+<path className="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="68.4, 100" strokeWidth="3"></path>
+</svg>
+</div>
+<div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all"></div>
+</div>
+{/* KPI 4: Correctly Blocked */}
+<div className="glass-panel glass-panel-hover rounded-xl p-6 glow-red relative overflow-hidden group">
+<div className="flex justify-between items-start mb-4">
+<h3 className="font-label-mono text-label-mono text-on-surface-variant uppercase tracking-wider">Correctly Blocked</h3>
+<div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+<span className="material-symbols-outlined text-red-500 text-sm">shield</span>
+</div>
+</div>
+<div className="font-stat-lg text-stat-lg text-on-surface">7</div>
+<div className="mt-4 font-label-mono text-xs text-red-400">
+                        ₹45K saved from fraud
+                    </div>
+<div className="absolute -bottom-10 -right-10 w-32 h-32 bg-red-500/10 rounded-full blur-2xl group-hover:bg-red-500/20 transition-all"></div>
+</div>
+</section>
+{/* Middle Section: 2 Columns */}
+<section className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
+{/* Left Column: Active Recovery Cases (Spans 2 columns on XL) */}
+<div className="xl:col-span-2 glass-panel rounded-2xl flex flex-col overflow-hidden">
+<div className="p-6 border-b border-[#ffffff1a] flex justify-between items-center bg-[#ffffff05]">
+<h3 className="font-headline-md text-headline-md font-semibold text-on-surface">Active Recovery Cases</h3>
+<button className="px-4 py-2 border border-[#ffffff33] rounded-lg text-white font-label-mono text-xs hover:bg-[#ffffff1a] transition-colors">
+                            View All
+                        </button>
+</div>
+<div className="overflow-x-auto">
+<table className="w-full text-left border-collapse">
+<thead>
+<tr className="border-b border-[#ffffff1a] bg-[#ffffff02]">
+<th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Order</th>
+<th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Customer</th>
+<th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider text-right">Amount</th>
+<th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Type</th>
+<th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Intervention</th>
+<th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody className="font-body-md text-sm divide-y divide-[#ffffff0a]">
+{/* Row 1 */}
+<tr className="hover:bg-[#ffffff08] transition-colors">
+<td className="py-4 px-6 font-label-mono text-on-surface-variant">#4521</td>
+<td className="py-4 px-6">Ravi S.</td>
+<td className="py-4 px-6 text-right font-label-mono">₹2,499</td>
+<td className="py-4 px-6 text-on-surface-variant">Payment Fail</td>
+<td className="py-4 px-6">Payment Link</td>
+<td className="py-4 px-6">
+<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-label-mono text-[10px] uppercase">
+<span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                            Success (Recovered)
+                                        </span>
+</td>
+</tr>
+{/* Row 2 */}
+<tr className="hover:bg-[#ffffff08] transition-colors">
+<td className="py-4 px-6 font-label-mono text-on-surface-variant">#4590</td>
+<td className="py-4 px-6">Amit K.</td>
+<td className="py-4 px-6 text-right font-label-mono">₹12,000</td>
+<td className="py-4 px-6 text-on-surface-variant">Payment Fail</td>
+<td className="py-4 px-6 text-on-surface-variant">—</td>
+<td className="py-4 px-6">
+<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 font-label-mono text-[10px] uppercase">
+<span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                            Error (Blocked - Fraud)
+                                        </span>
+</td>
+</tr>
+{/* Row 3 */}
+<tr className="hover:bg-[#ffffff08] transition-colors">
+<td className="py-4 px-6 font-label-mono text-on-surface-variant">#4601</td>
+<td className="py-4 px-6">Neha R.</td>
+<td className="py-4 px-6 text-right font-label-mono">₹3,200</td>
+<td className="py-4 px-6 text-on-surface-variant">Cart Abandon</td>
+<td className="py-4 px-6">Email</td>
+<td className="py-4 px-6">
+<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 font-label-mono text-[10px] uppercase">
+<span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            Warning (Pending)
+                                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+{/* Right Column: Intervention Effectiveness */}
+<div className="xl:col-span-1 glass-panel rounded-2xl flex flex-col overflow-hidden">
+<div className="p-6 border-b border-[#ffffff1a] bg-[#ffffff05]">
+<h3 className="font-headline-md text-headline-md font-semibold text-on-surface">Intervention Effectiveness</h3>
+</div>
+<div className="p-6 flex-1 flex flex-col justify-center gap-6">
+{/* Bar 1 */}
+<div>
+<div className="flex justify-between font-label-mono text-xs mb-2">
+<span className="text-on-surface">Payment Link</span>
+<span className="text-primary">72%</span>
+</div>
+<div className="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div className="h-full bg-primary w-[72%]"></div>
+</div>
+</div>
+{/* Bar 2 */}
+<div>
+<div className="flex justify-between font-label-mono text-xs mb-2">
+<span className="text-on-surface">SMS + Discount</span>
+<span className="text-secondary">58%</span>
+</div>
+<div className="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div className="h-full bg-secondary w-[58%]"></div>
+</div>
+</div>
+</div>
+<div className="p-4 border-t border-[#ffffff1a] bg-[#ffffff02]">
+<p className="font-label-mono text-[10px] text-on-surface-variant text-center uppercase tracking-wider">
+                            Bandit learning from 234 cases
+                        </p>
+</div>
+</div>
+</section>
+</div>
+</main>
+
+    </div>
+  );
+}

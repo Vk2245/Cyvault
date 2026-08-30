@@ -11,3 +11,13 @@ issues.txt
 convert.py
 
 stitch_screens/
+bulk_convert.py
+
+stitch_cyvault_revenue_leak_decoder/
+
+fix_checked.py
+fix_links.py
+fix_icons.py
+fix_react_syntax.py
+fix_value_prop.py
+fix_checked_str.py
