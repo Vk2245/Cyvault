@@ -142,3 +142,8 @@ body {
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
+
+.pulse-red { animation: pulse-red 2s infinite; }
+@keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 180, 171, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0); } }
+.animated-line { stroke-dasharray: 100; stroke-dashoffset: 100; animation: dash 3s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: 0; } }

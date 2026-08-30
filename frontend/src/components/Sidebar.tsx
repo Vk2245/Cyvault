@@ -45,7 +45,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col space-y-2 overflow-y-auto pb-4">
+      <nav className="flex-1 flex flex-col space-y-2 overflow-y-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {links.map((link) => {
           const isActive = pathname === link.path;
           return (
