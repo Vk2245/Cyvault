@@ -23,3 +23,7 @@ fix_value_prop.py
 fix_checked_str.py
 
 bug_fixes/
+
+.env
+
+

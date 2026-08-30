@@ -167,7 +167,7 @@ export default function Policies() {
 <label className="text-sm font-medium text-on-surface-variant flex items-center gap-2">
                                     Describe your policy rule
                                 </label>
-<textarea className="w-full h-32 md:h-40 bg-[#0A0A0A] border border-primary/40 rounded-xl p-4 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all resize-none shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]" placeholder="e.g., Block transactions over $10k from new IPs...">If a customer has more than 2 chargebacks in the last 30 days, block all auto-retry attempts and flag for manual review.</textarea>
+<textarea className="w-full h-32 md:h-40 bg-[#0A0A0A] border border-primary/40 rounded-xl p-4 text-on-surface font-body-md focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all resize-none shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]" placeholder="e.g., Block transactions over $10k from new IPs..." defaultValue="If a customer has more than 2 chargebacks in the last 30 days, block all auto-retry attempts and flag for manual review."></textarea>
 <div className="flex justify-end mt-2">
 <button className="bg-secondary text-[#030303] px-6 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-secondary-fixed transition-colors shadow-[0_0_15px_rgba(255,185,95,0.3)] hover:shadow-[0_0_25px_rgba(255,185,95,0.5)]">
 <span className="material-symbols-outlined text-[20px]" data-icon="auto_awesome">auto_awesome</span>

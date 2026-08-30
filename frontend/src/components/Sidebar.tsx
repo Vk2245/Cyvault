@@ -28,7 +28,7 @@ export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-64 border-r border-white/10 bg-background/80 dark:bg-background/80 backdrop-blur-xl flex flex-col z-40 hidden md:flex">
       {/* Header */}
-      <div className="px-6 py-8 border-b border-white/10 mb-6 flex items-center gap-4">
+      <Link href="/" className="px-6 py-8 border-b border-white/10 mb-6 flex items-center gap-4 hover:opacity-80 transition-opacity">
         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(139,92,246,0.4)]">
           <span className="material-symbols-outlined text-background" style={{ fontVariationSettings: "'FILL' 1" }}>
             security
@@ -42,7 +42,7 @@ export default function Sidebar() {
             {activeLink.name}
           </p>
         </div>
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 flex flex-col space-y-2 overflow-y-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
