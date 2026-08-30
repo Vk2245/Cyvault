@@ -39,8 +39,8 @@ export default function Graph() {
 <path className="animated-line opacity-50" d="M128,128 L128,224" fill="none" stroke="url(#blue-grad)" strokeWidth="1.5"></path>
 <defs>
 <linearGradient id="blue-grad" x1="0%" x2="100%" y1="0%" y2="0%">
-<stop offset="0%" stop-color="#3B82F6"></stop>
-<stop offset="100%" stop-color="#8B5CF6"></stop>
+<stop offset="0%" stopColor="#3B82F6"></stop>
+<stop offset="100%" stopColor="#8B5CF6"></stop>
 </linearGradient>
 </defs>
 </svg>
@@ -69,9 +69,9 @@ export default function Graph() {
 <div className="relative w-72 h-72">
 <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" style={{zIndex: '0'}}>
 {/* Connections to shared device */}
-<path className="opacity-80" d="M144,144 L48,48" fill="none" stroke="#ffb4ab" stroke-dasharray="4,4" strokeWidth="1.5"></path>
-<path className="opacity-80" d="M144,144 L240,48" fill="none" stroke="#ffb4ab" stroke-dasharray="4,4" strokeWidth="1.5"></path>
-<path className="opacity-80" d="M144,144 L144,240" fill="none" stroke="#ffb4ab" stroke-dasharray="4,4" strokeWidth="1.5"></path>
+<path className="opacity-80" d="M144,144 L48,48" fill="none" stroke="#ffb4ab" strokeDasharray="4,4" strokeWidth="1.5"></path>
+<path className="opacity-80" d="M144,144 L240,48" fill="none" stroke="#ffb4ab" strokeDasharray="4,4" strokeWidth="1.5"></path>
+<path className="opacity-80" d="M144,144 L144,240" fill="none" stroke="#ffb4ab" strokeDasharray="4,4" strokeWidth="1.5"></path>
 </svg>
 {/* Shared Device Node (Center of ring) */}
 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-error-container rounded border-2 border-error flex items-center justify-center pulse-red pointer-events-auto cursor-pointer">
