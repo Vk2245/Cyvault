@@ -1,76 +1,9 @@
-
 import React from 'react';
 
 export default function Recovery() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* SideNavBar (Shared Component) */}
-{/* Applying style_component_shape: h-screen w-64 fixed left-0 top-0 */}
-{/* Applying style_separation_logic: border-r border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] */}
-{/* Applying style_shell_layout: flex flex-col h-full py-8 */}
-<nav className="hidden md:flex h-screen w-64 fixed left-0 top-0 border-r border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex-col h-full py-8 z-50">
-{/* Brand Header */}
-<div className="px-8 mb-12 flex items-center gap-3">
-<div className="w-10 h-10 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0">
-<span className="material-symbols-outlined text-primary text-2xl">shield</span>
-</div>
-<div>
-{/* Applying style_brand_logo: text-headline-md font-headline-md font-bold text-primary dark:text-primary */}
-<h1 className="text-headline-md font-headline-md font-bold text-primary dark:text-primary tracking-tight">Cyvault</h1>
-<p className="font-label-mono text-label-mono text-on-surface-variant text-[10px] uppercase">AI Governance</p>
-</div>
-</div>
-{/* Navigation Links */}
-{/* Active Tab Logic: User is on Recovery Dashboard -> "Recovery" is active */}
-<ul className="flex-1 flex flex-col gap-2 px-4">
-{/* Dashboard (Inactive) */}
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">dashboard</span>
-<span className="font-body-md">Dashboard</span>
-</a>
-</li>
-{/* Analytics (Inactive) */}
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">bar_chart</span>
-<span className="font-body-md">Analytics</span>
-</a>
-</li>
-{/* Recovery (Active) */}
-{/* Applying style_active_navigation: text-primary dark:text-primary font-bold border-r-2 border-primary */}
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary/10 text-primary dark:text-primary font-bold border-r-2 border-primary active:scale-95 transition-transform" href="/settings">
-<span className="material-symbols-outlined text-xl" style={{fontVariationSettings: "'FILL' 1"}}>restore_page</span>
-<span className="font-body-md">Recovery</span>
-</a>
-</li>
-{/* Compliance (Inactive) */}
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">gavel</span>
-<span className="font-body-md">Compliance</span>
-</a>
-</li>
-{/* Settings (Inactive) */}
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/settings">
-<span className="material-symbols-outlined text-xl group-hover:text-primary transition-colors">settings</span>
-<span className="font-body-md">Settings</span>
-</a>
-</li>
-</ul>
-{/* CTA / Status */}
-<div className="px-8 mt-auto">
-<div className="glass-panel p-4 rounded-xl flex items-center gap-3">
-<div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
-<span className="font-label-mono text-label-mono text-xs uppercase tracking-wider text-on-surface-variant">System Secure</span>
-</div>
-</div>
-</nav>
-{/* Main Content Area */}
-<main className="flex-1 md:ml-64 flex flex-col min-h-screen relative">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 {/* TopAppBar (Shared Component) */}
 {/* Applying style_component_shape: docked full-width top-0 sticky z-40 */}
 {/* Applying style_separation_logic: border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] */}
@@ -150,7 +83,7 @@ export default function Recovery() {
 </div>
 {/* Circular Progress */}
 <div className="relative w-16 h-16 shrink-0">
-<svg className="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
 {/* Background Circle */}
 <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3"></path>
 {/* Progress Circle */}
@@ -278,8 +211,7 @@ export default function Recovery() {
 </div>
 </section>
 </div>
-</main>
 
-    </div>
+    </main>
   );
 }

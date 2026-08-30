@@ -1,51 +1,9 @@
-
 import React from 'react';
 
 export default function Chatbot() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* SideNavBar */}
-<nav className="hidden md:flex bg-surface dark:bg-surface h-screen w-64 fixed left-0 top-0 border-r border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex-col h-full py-8 z-50">
-<div className="px-8 mb-12">
-<h1 className="text-headline-md font-headline-md font-bold text-primary dark:text-primary">Cyvault</h1>
-<p className="font-label-mono text-label-mono text-on-surface-variant dark:text-on-surface-variant mt-1">AI Governance</p>
-</div>
-<div className="flex-1 px-4 space-y-2">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
-<span className="font-label-mono text-label-mono">Dashboard</span>
-</a>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">bar_chart</span>
-<span className="font-label-mono text-label-mono">Analytics</span>
-</a>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">restore_page</span>
-<span className="font-label-mono text-label-mono">Recovery</span>
-</a>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/feed">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">gavel</span>
-<span className="font-label-mono text-label-mono">Compliance</span>
-</a>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-primary dark:text-primary font-bold border-r-2 border-primary hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform bg-[#ffffff0a]" href="/settings">
-<span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>smart_toy</span>
-<span className="font-label-mono text-label-mono">Chatbot</span>
-</a>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform group" href="/settings">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
-<span className="font-label-mono text-label-mono">Settings</span>
-</a>
-</div>
-<div className="px-8 mt-auto">
-<button className="w-full py-3 px-4 bg-neon-primary rounded-lg font-label-mono text-label-mono font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-<span className="material-symbols-outlined text-[18px]">security</span>
-                System Secure
-            </button>
-</div>
-</nav>
-{/* Main Content Area */}
-<main className="flex-1 md:ml-64 flex flex-col h-screen overflow-hidden">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 {/* TopAppBar */}
 <header className="bg-surface dark:bg-surface text-primary dark:text-primary font-headline-md text-headline-md docked full-width top-0 sticky z-40 border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex justify-between items-center h-16 px-margin-desktop">
 <div className="flex items-center gap-4">
@@ -167,7 +125,7 @@ export default function Chatbot() {
 <span className="material-symbols-outlined">attach_file</span>
 </button>
 <div className="flex-1 relative">
-<textarea className="w-full glass-input rounded-xl py-4 pl-4 pr-12 text-on-surface font-body-md resize-none placeholder:text-on-surface-variant/50 focus:ring-0 overflow-hidden" placeholder="Ask about any customer, order, or metric..." rows="1" style={{minHeight: '56px', maxHeight: '120px'}}></textarea>
+<textarea className="w-full glass-input rounded-xl py-4 pl-4 pr-12 text-on-surface font-body-md resize-none placeholder:text-on-surface-variant/50 focus:ring-0 overflow-hidden" placeholder="Ask about any customer, order, or metric..." rows={1} style={{minHeight: '56px', maxHeight: '120px'}}></textarea>
 <button className="absolute right-3 bottom-3 p-1 text-on-surface-variant hover:text-primary transition-colors">
 <span className="material-symbols-outlined">mic</span>
 </button>
@@ -247,9 +205,7 @@ export default function Chatbot() {
 </div>
 </div>
 </div>
-</main>
 
-
-    </div>
+    </main>
   );
 }

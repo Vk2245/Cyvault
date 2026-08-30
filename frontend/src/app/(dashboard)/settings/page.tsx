@@ -1,94 +1,9 @@
-
 import React from 'react';
 
 export default function Settings() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* Ambient Background Light Effect */}
-<div className="fixed top-0 right-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
-<div className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] bg-primary-container/5 rounded-full blur-[120px] opacity-50 mix-blend-screen"></div>
-<div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-secondary-container/5 rounded-full blur-[100px] opacity-30 mix-blend-screen"></div>
-</div>
-{/* SideNavBar */}
-<nav className="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-background dark:bg-background border-r border-outline-variant flex-col py-8 px-4 z-40">
-<div className="mb-12 px-4">
-<h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary tracking-tight">Cyvault</h1>
-<p className="font-label-mono text-label-mono text-on-surface-variant mt-1">Secure AI Operations</p>
-</div>
-<ul className="flex flex-col gap-2 flex-grow">
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high hover:text-on-surface transition-all duration-300 ease-in-out font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                    Dashboard
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high hover:text-on-surface transition-all duration-300 ease-in-out font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined" data-icon="monitoring">monitoring</span>
-                    Analytics
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high hover:text-on-surface transition-all duration-300 ease-in-out font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined" data-icon="restart_alt">restart_alt</span>
-                    Recovery
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high hover:text-on-surface transition-all duration-300 ease-in-out font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined" data-icon="verified_user">verified_user</span>
-                    Compliance
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high hover:text-on-surface transition-all duration-300 ease-in-out font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
-                    Chatbot
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10 transition-all duration-300 ease-in-out font-body-md text-body-md" href="/settings">
-<span className="material-symbols-outlined" data-icon="settings">settings</span>
-                    Settings
-                </a>
-</li>
-</ul>
-<div className="mt-auto px-4">
-<div className="flex items-center gap-3">
-<img alt="Merchant Profile Avatar" className="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A futuristic minimalist abstract avatar image featuring glowing geometric nodes connected by fine lines in a deep dark void with purple accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcH0UiPnB5I_ED1zJGrE6td1LRTeqGzx-9WqLF0PG-oTJmdIZRFihw26whuVzOrVKtP7hy5JyMl1AIhn-sl42D2TC9JiUXBJMvl7GYWseN3z4CZwAw_YpfQrgC-ck20xiPte0aO47mo49r8Co1p8oKXSfg7ns1xuC4zysd0e654bgZe0qROl9ErxOngHhzFmQgxY4itFMMNEXh191OR4kGpqYKSzfEeIvBUTAD60wSkaGekzTx52Ky"/>
-<div className="font-body-md text-body-md text-on-surface-variant">Merchant</div>
-</div>
-</div>
-</nav>
-{/* TopAppBar */}
-<header className="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-opacity duration-200">
-{/* Search (Left) */}
-<div className="flex-1 max-w-md hidden md:flex items-center relative">
-<span className="material-symbols-outlined absolute left-3 text-on-surface-variant text-xl">search</span>
-<input className="w-full bg-surface-container/50 border border-outline-variant rounded-lg py-1.5 pl-10 pr-4 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Search operations, alerts..." type="text"/>
-</div>
-{/* Mobile Menu & Title */}
-<div className="md:hidden flex items-center gap-4">
-<span className="material-symbols-outlined text-primary cursor-pointer">menu</span>
-<span className="font-headline-md text-headline-md font-bold text-primary">Cyvault</span>
-</div>
-{/* Trailing Actions */}
-<div className="flex items-center gap-6 text-on-surface-variant font-body-md text-body-md">
-<button className="hover:text-primary transition-colors relative">
-<span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
-</button>
-<button className="hover:text-primary transition-colors">
-<span className="material-symbols-outlined" data-icon="security">security</span>
-</button>
-<button className="hover:text-primary transition-colors">
-<span className="material-symbols-outlined" data-icon="account_circle">account_circle</span>
-</button>
-</div>
-</header>
-{/* Main Content Canvas */}
-<main className="md:ml-64 pt-24 px-margin-mobile md:px-margin-desktop pb-24 max-w-container-max mx-auto">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 <div className="flex flex-col md:flex-row gap-gutter">
 {/* Settings Navigation (Left Column 25%) */}
 <div className="w-full md:w-1/4 shrink-0">
@@ -159,12 +74,12 @@ export default function Settings() {
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 <div>
 <label className="block font-label-mono text-label-mono text-on-surface-variant mb-2">Key ID</label>
-<input className="input-glass border-primary-container/50 bg-primary-container/5 cursor-default select-all" readonly="" type="text" defaultValue="rzp_test_XyZ12389abcDEF"/>
+<input className="input-glass border-primary-container/50 bg-primary-container/5 cursor-default select-all" readOnly type="text" defaultValue="rzp_test_XyZ12389abcDEF"/>
 </div>
 <div>
 <label className="block font-label-mono text-label-mono text-on-surface-variant mb-2">Key Secret</label>
 <div className="relative">
-<input className="input-glass pr-12 cursor-default bg-surface-container-highest/50" readonly="" type="password" defaultValue="secret_key_1234567890"/>
+<input className="input-glass pr-12 cursor-default bg-surface-container-highest/50" readOnly type="password" defaultValue="secret_key_1234567890"/>
 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface">
 <span className="material-symbols-outlined" data-icon="visibility">visibility</span>
 </button>
@@ -196,7 +111,7 @@ export default function Settings() {
                                 Cyvault Webhook URL
                             </label>
 <div className="flex gap-2">
-<input className="input-glass flex-1 bg-surface-container-highest/50 text-tertiary-fixed-dim" readonly="" type="text" defaultValue="https://api.cyvault.io/v1/webhooks/incoming/rZP_992x"/>
+<input className="input-glass flex-1 bg-surface-container-highest/50 text-tertiary-fixed-dim" readOnly type="text" defaultValue="https://api.cyvault.io/v1/webhooks/incoming/rZP_992x"/>
 <button className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-center" title="Copy to clipboard">
 <span className="material-symbols-outlined text-on-surface-variant" data-icon="content_copy">content_copy</span>
 </button>
@@ -205,7 +120,7 @@ export default function Settings() {
 <div>
 <label className="block font-label-mono text-label-mono text-on-surface-variant mb-2">Webhook Secret</label>
 <div className="relative max-w-md">
-<input className="input-glass pr-12 bg-surface-container-highest/50" readonly="" type="password" defaultValue="whsec_dummysecretkeyhere"/>
+<input className="input-glass pr-12 bg-surface-container-highest/50" readOnly type="password" defaultValue="whsec_dummysecretkeyhere"/>
 <button className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface">
 <span className="material-symbols-outlined" data-icon="visibility">visibility</span>
 </button>
@@ -291,8 +206,7 @@ export default function Settings() {
 </section>
 </div>
 </div>
-</main>
 
-    </div>
+    </main>
   );
 }

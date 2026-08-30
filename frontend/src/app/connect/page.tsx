@@ -40,18 +40,18 @@ export default function Connect() {
 </div>
 <p className="text-on-surface-variant font-body-md mb-8">We only need test-mode keys. No real money will be involved.</p>
 {/* Form Area */}
-<form className="flex flex-col gap-6" onSubmit="event.preventDefault(); document.getElementById('status-indicator').classList.remove('hidden');">
+<form className="flex flex-col gap-6">
 {/* Field 1 */}
 <div className="flex flex-col gap-2">
 <label className="font-label-mono text-label-mono text-on-surface-variant" htmlFor="apiKey">Razorpay API Key</label>
-<input className="glass-input w-full rounded-md px-4 py-3 font-label-mono text-label-mono text-on-surface placeholder:text-outline focus:ring-0" id="apiKey" placeholder="rzp_test_XXXXXXXXX" required="" type="text"/>
+<input className="glass-input w-full rounded-md px-4 py-3 font-label-mono text-label-mono text-on-surface placeholder:text-outline focus:ring-0" id="apiKey" placeholder="rzp_test_XXXXXXXXX" required type="text"/>
 </div>
 {/* Field 2 */}
 <div className="flex flex-col gap-2 relative">
 <label className="font-label-mono text-label-mono text-on-surface-variant" htmlFor="apiSecret">Razorpay API Secret</label>
 <div className="relative">
-<input className="glass-input w-full rounded-md px-4 py-3 font-label-mono text-label-mono text-on-surface placeholder:text-outline focus:ring-0 pr-10" id="apiSecret" placeholder="XXXXXXXX" required="" type="password"/>
-<button className="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-primary transition-colors" onClick="const input = document.getElementById('apiSecret'); input.type = input.type === 'password' ? 'text' : 'password';" type="button">
+<input className="glass-input w-full rounded-md px-4 py-3 font-label-mono text-label-mono text-on-surface placeholder:text-outline focus:ring-0 pr-10" id="apiSecret" placeholder="XXXXXXXX" required type="password"/>
+<button className="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-primary transition-colors" type="button">
 <span className="material-symbols-outlined text-[20px]">visibility</span>
 </button>
 </div>
@@ -59,7 +59,7 @@ export default function Connect() {
 {/* Field 3 */}
 <div className="flex flex-col gap-2">
 <label className="font-label-mono text-label-mono text-on-surface-variant" htmlFor="webhookSecret">Webhook Secret</label>
-<input className="glass-input w-full rounded-md px-4 py-3 font-label-mono text-label-mono text-on-surface placeholder:text-outline focus:ring-0" id="webhookSecret" placeholder="whsec_XXXXXXXX" required="" type="text"/>
+<input className="glass-input w-full rounded-md px-4 py-3 font-label-mono text-label-mono text-on-surface placeholder:text-outline focus:ring-0" id="webhookSecret" placeholder="whsec_XXXXXXXX" required type="text"/>
 </div>
 {/* Webhook Info Box */}
 <div className="glass-info rounded-lg p-5 mt-2 flex flex-col gap-4">

@@ -1,89 +1,9 @@
-
 import React from 'react';
 
 export default function Policies() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* SideNavBar (Predicted & Rendered from JSON Style Logic) */}
-<nav className="hidden md:flex flex-col h-screen p-unit*4 bg-background/80 dark:bg-background/80 backdrop-blur-xl border-r border-white/10 fixed left-0 top-0 w-64 z-50">
-<div className="px-6 py-8">
-<h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary mb-1">Cyvault</h1>
-<p className="font-label-mono text-label-mono text-on-surface-variant text-xs opacity-70">Policy Management</p>
-</div>
-<ul className="flex flex-col gap-2 mt-8 px-4 flex-grow">
-{/* Inactive */}
-<li>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors" href="/feed">
-<span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                    Dashboard
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors" href="/feed">
-<span className="material-symbols-outlined" data-icon="warning">warning</span>
-                    Alerts
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors" href="/graph">
-<span className="material-symbols-outlined" data-icon="account_tree">account_tree</span>
-                    Entity Graph
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors" href="/feed">
-<span className="material-symbols-outlined" data-icon="storefront">storefront</span>
-                    Merchants
-                </a>
-</li>
-{/* Active State */}
-<li>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 text-primary font-bold border-r-2 border-primary transition-transform duration-150 transform hover:scale-95" href="/policies">
-<span className="material-symbols-outlined" data-icon="gavel" style={{fontVariationSettings: "'FILL' 1"}}>gavel</span>
-                    Policies
-                </a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors mt-auto" href="/settings">
-<span className="material-symbols-outlined" data-icon="settings">settings</span>
-                    Settings
-                </a>
-</li>
-</ul>
-<div className="p-4 mt-auto">
-<div className="px-4 py-3 rounded-lg bg-surface-container-low border border-white/5 flex items-center justify-between">
-<span className="font-label-mono text-[10px] text-on-surface-variant">System Status</span>
-<span className="flex items-center gap-2 font-label-mono text-[10px] text-primary"><span className="status-active status-dot w-1.5 h-1.5"></span> Active</span>
-</div>
-</div>
-</nav>
-{/* TopNavBar (Predicted & Rendered) */}
-<header className="fixed top-0 right-0 left-0 md:left-64 h-16 bg-background/60 dark:bg-background/60 backdrop-blur-xl border-b border-white/10 z-40 flex items-center justify-between px-margin-mobile md:px-margin-desktop w-full transition-all">
-<div className="md:hidden flex items-center gap-4">
-<span className="material-symbols-outlined text-primary text-2xl" data-icon="menu">menu</span>
-<span className="font-headline-md text-headline-md font-extrabold text-on-surface dark:text-on-surface">Cyvault</span>
-</div>
-<div className="hidden md:block">
-{/* Empty space to balance flex on desktop if needed, or breadcrumbs could go here */}
-<span className="font-label-mono text-label-mono text-on-surface-variant opacity-70">Policies / Manager</span>
-</div>
-<div className="flex items-center gap-6">
-<div className="relative group hidden sm:block">
-<span className="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-sm" data-icon="search">search</span>
-<input className="input-glass pl-9 pr-4 py-1.5 rounded-full text-sm w-48 focus:w-64 transition-all duration-300 font-label-mono" placeholder="Search rules..." type="text"/>
-</div>
-<button className="text-on-surface-variant hover:text-primary transition-all relative">
-<span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span className="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
-</button>
-<button className="text-on-surface-variant hover:text-primary transition-all">
-<span className="material-symbols-outlined" data-icon="account_circle">account_circle</span>
-</button>
-</div>
-</header>
-{/* Main Content Area */}
-<main className="flex-1 ml-0 md:ml-64 pt-24 pb-32 px-margin-mobile md:px-margin-desktop min-h-screen">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 <div className="max-w-container-max mx-auto h-full flex flex-col">
 {/* Page Header */}
 <div className="mb-8 md:mb-12">
@@ -292,17 +212,7 @@ export default function Policies() {
 </section>
 </div>
 </div>
-</main>
-{/* Footer (Predicted & Rendered) */}
-<footer className="fixed bottom-0 right-0 left-0 md:left-64 py-4 bg-background/40 dark:bg-background/40 backdrop-blur-md border-t border-white/10 z-30 flex justify-between items-center px-margin-mobile md:px-margin-desktop w-full text-sm">
-<span className="font-label-mono text-label-mono text-secondary-fixed-dim">© 2024 SecureGuard AI Compliance Engine</span>
-<div className="hidden sm:flex gap-6">
-<a className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary-fixed transition-colors cursor-pointer" href="/feed">GDPR Policy</a>
-<a className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary-fixed transition-colors cursor-pointer" href="/feed">System Audit</a>
-<a className="font-label-mono text-label-mono text-on-surface-variant hover:text-secondary-fixed transition-colors cursor-pointer" href="/feed">Support</a>
-</div>
-</footer>
 
-    </div>
+    </main>
   );
 }

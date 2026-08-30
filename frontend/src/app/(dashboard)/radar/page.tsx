@@ -1,63 +1,9 @@
-
 import React from 'react';
 
 export default function Radar() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* SideNavBar (Desktop) */}
-<nav className="hidden md:flex h-screen w-64 fixed left-0 top-0 border-r border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex-col py-8 z-50">
-<div className="px-6 mb-12">
-<h1 className="text-headline-md font-headline-md font-bold text-primary dark:text-primary">Cyvault</h1>
-<p className="text-on-surface-variant text-label-mono font-label-mono mt-1 uppercase tracking-wider">AI Governance</p>
-</div>
-<div className="flex-1 px-4 space-y-2">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined">dashboard</span>
-                Dashboard
-            </a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-primary font-bold border-r-2 border-primary bg-[#ffffff08] shadow-[0_0_15px_rgba(139,92,246,0.15)] hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform font-body-md text-body-md" href="/settings">
-<span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>bar_chart</span>
-                Analytics
-            </a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined">restore_page</span>
-                Recovery
-            </a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform font-body-md text-body-md" href="/feed">
-<span className="material-symbols-outlined">gavel</span>
-                Compliance
-            </a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-[#ffffff1a] transition-colors duration-200 active:scale-95 transition-transform font-body-md text-body-md" href="/settings">
-<span className="material-symbols-outlined">settings</span>
-                Settings
-            </a>
-</div>
-<div className="px-6 mt-auto">
-<div className="flex items-center gap-3 p-4 glass-panel rounded-xl">
-<div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></div>
-<span className="font-label-mono text-label-mono text-on-surface">System Secure</span>
-</div>
-</div>
-</nav>
-{/* BottomNavBar (Mobile) */}
-<nav className="md:hidden fixed bottom-0 w-full glass-panel z-50 flex justify-around items-center h-16 pb-safe">
-<a className="flex flex-col items-center justify-center w-full h-full text-on-surface-variant" href="/feed">
-<span className="material-symbols-outlined text-[20px]">dashboard</span>
-</a>
-<a className="flex flex-col items-center justify-center w-full h-full text-primary relative" href="/settings">
-<div className="absolute inset-0 bg-primary/10 rounded-full blur-md scale-50"></div>
-<span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>bar_chart</span>
-</a>
-<a className="flex flex-col items-center justify-center w-full h-full text-on-surface-variant" href="/feed">
-<span className="material-symbols-outlined text-[20px]">restore_page</span>
-</a>
-<a className="flex flex-col items-center justify-center w-full h-full text-on-surface-variant" href="/feed">
-<span className="material-symbols-outlined text-[20px]">gavel</span>
-</a>
-</nav>
-{/* Main Content Wrapper */}
-<main className="flex-1 flex flex-col min-h-screen md:ml-64 w-full">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 {/* TopAppBar */}
 <header className="hidden md:flex justify-between items-center h-16 px-margin-desktop docked full-width top-0 sticky z-40 border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08]">
 <div className="flex items-center gap-4">
@@ -222,8 +168,7 @@ export default function Radar() {
 </div>
 </section>
 </div>
-</main>
 
-    </div>
+    </main>
   );
 }

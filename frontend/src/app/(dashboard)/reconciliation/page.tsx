@@ -1,120 +1,9 @@
-
 import React from 'react';
 
 export default function Reconciliation() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* SideNavBar Component */}
-<nav className="hidden md:flex fixed inset-y-0 left-0 flex-col gap-8 p-6 bg-surface/50 backdrop-blur-xl border-r border-outline-variant/10 docked left-0 h-screen w-64 z-50">
-<div>
-<div className="flex items-center gap-3 mb-8 px-2">
-<div className="w-10 h-10 rounded-lg bg-electric-violet flex items-center justify-center text-[#030303] font-bold text-xl shadow-[0_0_15px_rgba(139,92,246,0.5)]">
-                C
-            </div>
-<div>
-<h1 className="text-headline-md font-headline-md font-bold text-primary tracking-tight">Cyvault</h1>
-<p className="text-label-mono font-label-mono text-on-surface-variant text-[10px]">Secure AI Operations</p>
-</div>
-</div>
-<ul className="flex flex-col gap-2">
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/feed">
-<span className="material-symbols-outlined text-[20px]">dashboard</span>
-<span className="font-medium">Dashboard</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/feed">
-<span className="material-symbols-outlined text-[20px]">warning</span>
-<span className="font-medium">Alerts</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/graph">
-<span className="material-symbols-outlined text-[20px]">account_tree</span>
-<span className="font-medium">Entity Graph</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/feed">
-<span className="material-symbols-outlined text-[20px]">store</span>
-<span className="font-medium">Merchants</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/policies">
-<span className="material-symbols-outlined text-[20px]">policy</span>
-<span className="font-medium">Policies</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/feed">
-<span className="material-symbols-outlined text-[20px]">history</span>
-<span className="font-medium">Action Feed</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/feed">
-<span className="material-symbols-outlined text-[20px]">restore</span>
-<span className="font-medium">Recovery</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg border border-primary/20 shadow-[0_0_15px_rgba(208,188,255,0.2)] scale-95 transition-transform duration-150" href="/reconciliation">
-<span className="material-symbols-outlined text-[20px]">account_balance</span>
-<span className="font-medium">Reconciliation</span>
-</a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors duration-200 hover:bg-surface-variant/30 rounded-lg" href="/settings">
-<span className="material-symbols-outlined text-[20px]">settings</span>
-<span className="font-medium">Settings</span>
-</a>
-</li>
-</ul>
-</div>
-<div className="mt-auto">
-<button className="w-full bg-electric-violet text-[#030303] font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-opacity-90 transition-colors">
-<span className="material-symbols-outlined text-[20px]">radar</span>
-            Initialize Scan
-        </button>
-</div>
-</nav>
-{/* Main Content Wrapper */}
-<div className="md:ml-64 flex flex-col min-h-screen">
-{/* TopNavBar Component */}
-<header className="sticky top-0 z-40 bg-surface/30 backdrop-blur-2xl border-b border-outline-variant/10 px-margin-mobile md:px-margin-desktop py-4 flex items-center justify-between">
-<div className="flex items-center gap-8">
-<div className="md:hidden text-headline-md font-headline-md font-bold text-primary flex items-center gap-2">
-<div className="w-8 h-8 rounded-lg bg-electric-violet flex items-center justify-center text-[#030303] font-bold text-sm">C</div>
-</div>
-<nav className="hidden md:flex items-center gap-6">
-<a className="text-on-surface-variant hover:text-on-surface text-label-mono font-label-mono uppercase tracking-wider text-sm transition-all hover:text-primary" href="/feed">Global View</a>
-<a className="text-on-surface-variant hover:text-on-surface text-label-mono font-label-mono uppercase tracking-wider text-sm transition-all hover:text-primary" href="/feed">Treasury</a>
-<a className="text-on-surface-variant hover:text-on-surface text-label-mono font-label-mono uppercase tracking-wider text-sm transition-all hover:text-primary" href="/feed">Risk Map</a>
-</nav>
-</div>
-<div className="flex items-center gap-6">
-<div className="hidden lg:flex items-center gap-4">
-<button className="text-on-surface-variant hover:text-primary transition-colors focus:ring-2 ring-primary/50 rounded-full p-1">
-<span className="material-symbols-outlined">notifications</span>
-</button>
-<button className="text-on-surface-variant hover:text-primary transition-colors focus:ring-2 ring-primary/50 rounded-full p-1">
-<span className="material-symbols-outlined">security</span>
-</button>
-<button className="text-on-surface-variant hover:text-primary transition-colors focus:ring-2 ring-primary/50 rounded-full p-1">
-<span className="material-symbols-outlined">account_circle</span>
-</button>
-</div>
-<button className="glass-button px-4 py-2 text-sm font-medium rounded border border-outline-variant/50 hover:bg-surface-variant/30 transition-all flex items-center gap-2">
-<span className="material-symbols-outlined text-[18px]">terminal</span>
-<span className="hidden sm:inline">Execute Protocol</span>
-</button>
-</div>
-</header>
-{/* Page Canvas */}
-<main className="flex-1 p-margin-mobile md:p-margin-desktop space-y-12 pb-24">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 {/* Header Section */}
 <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
 <div>
@@ -344,9 +233,7 @@ export default function Reconciliation() {
 </div>
 </div>
 </div>
-</main>
-</div>
 
-    </div>
+    </main>
   );
 }

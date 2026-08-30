@@ -1,43 +1,9 @@
-
 import React from 'react';
 
 export default function Graph() {
   return (
-    <div className="antialiased min-h-screen flex flex-col font-body-md overflow-x-hidden bg-[#030303] text-white">
-      
-{/* Left Sidebar (Appears on Desktop, Hidden on Mobile for brevity in this specific task) */}
-<aside className="hidden md:flex flex-col w-64 glass-panel border-r border-t-0 border-b-0 border-l-0 h-screen shrink-0 relative z-20">
-<div className="p-gutter flex items-center gap-3 border-b border-[#ffffff1a]">
-<span className="material-symbols-outlined text-primary text-3xl font-bold drop-shadow-[0_0_8px_rgba(208,188,255,0.8)]" data-icon="shield">shield</span>
-<span className="font-headline-md text-headline-md font-bold text-primary tracking-tight">CYVAULT</span>
-</div>
-<nav className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-4">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors duration-300" href="/feed">
-<span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span>Dashboard</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors duration-300" href="/feed">
-<span className="material-symbols-outlined" data-icon="warning">warning</span>
-<span>Alerts</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container text-primary shadow-[0_0_15px_rgba(208,188,255,0.15)] border border-[#ffffff1a] transition-all duration-300 relative overflow-hidden group" href="/graph">
-<div className="absolute inset-0 bg-primary opacity-5 group-hover:opacity-10 transition-opacity"></div>
-<span className="material-symbols-outlined" data-icon="hub">hub</span>
-<span className="font-semibold relative z-10">Entity Graph</span>
-<div className="absolute right-0 top-0 bottom-0 w-1 bg-primary"></div>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors duration-300" href="/feed">
-<span className="material-symbols-outlined" data-icon="manage_accounts">manage_accounts</span>
-<span>Merchants</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors duration-300" href="/settings">
-<span className="material-symbols-outlined" data-icon="settings">settings</span>
-<span>Settings</span>
-</a>
-</nav>
-</aside>
-{/* Main Content Area */}
-<main className="flex-1 flex flex-col h-screen relative z-10 bg-background overflow-hidden">
+    <main className="flex-1 flex flex-col h-full relative w-full">
+
 {/* Top Bar */}
 <header className="glass-panel h-16 flex items-center justify-between px-gutter border-b border-t-0 border-l-0 border-r-0 shrink-0">
 <div className="flex items-center gap-4">
@@ -72,10 +38,10 @@ export default function Graph() {
 <path className="animated-line opacity-50" d="M128,128 L224,32" fill="none" stroke="url(#blue-grad)" strokeWidth="1.5"></path>
 <path className="animated-line opacity-50" d="M128,128 L128,224" fill="none" stroke="url(#blue-grad)" strokeWidth="1.5"></path>
 <defs>
-<lineargradient id="blue-grad" x1="0%" x2="100%" y1="0%" y2="0%">
+<linearGradient id="blue-grad" x1="0%" x2="100%" y1="0%" y2="0%">
 <stop offset="0%" stop-color="#3B82F6"></stop>
 <stop offset="100%" stop-color="#8B5CF6"></stop>
-</lineargradient>
+</linearGradient>
 </defs>
 </svg>
 {/* Central Node */}
@@ -218,8 +184,7 @@ export default function Graph() {
                 Live Analysis Active
             </div>
 </footer>
-</main>
 
-    </div>
+    </main>
   );
 }
