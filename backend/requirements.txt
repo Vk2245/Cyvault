@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pydantic-settings
+pydantic
+groq
+google-generativeai
+sqlalchemy
+psycopg2-binary
+networkx
+cryptography
+razorpay
+upstash-qstash

@@ -1,0 +1,15 @@
+fastapi==0.111.0
+uvicorn==0.30.1
+pydantic==2.7.4
+pydantic-settings==2.3.4
+SQLAlchemy==2.0.31
+alembic==1.13.1
+psycopg2-binary==2.9.9
+supabase==2.5.1
+google-generativeai==0.7.1
+groq==0.9.0
+networkx==3.3
+upstash-redis==1.2.0
+python-dotenv==1.0.1
+cryptography==42.0.8
+pytest==8.2.2

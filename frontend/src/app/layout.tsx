@@ -17,6 +17,9 @@ const orbitron = Orbitron({
   subsets: ["latin"],
 });
 
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/contexts/AuthContext";
+
 export const metadata: Metadata = {
   title: "Cyvault - Decode Your Revenue Leaks",
   description: "Agentic revenue recovery",
@@ -28,9 +31,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${jetbrains.variable} ${orbitron.variable}`}>
-      <body className={`min-h-full flex flex-col bg-[#000000] text-white ${inter.className}`}>
-        {children}
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} ${orbitron.variable}`}>
+      <body className={`min-h-full flex flex-col ${inter.className}`}>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

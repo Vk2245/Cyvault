@@ -1,20 +1,6 @@
-implementation_plan.md
-KeyPoints.txt
-Razorpay Hackathon Product Strategy.docx
-razorpay_buildathon_research.md
-Razorpay Hackathon Product Strategy.txt
-updates.txt
-product_overview.md 
 download_screens.py
-design.md
-issues.txt
 convert.py
-
-stitch_screens/
 bulk_convert.py
-
-stitch_cyvault_revenue_leak_decoder/
-
 fix_checked.py
 fix_links.py
 fix_icons.py
@@ -22,8 +8,15 @@ fix_react_syntax.py
 fix_value_prop.py
 fix_checked_str.py
 
+stitch_screens/
+stitch_cyvault_revenue_leak_decoder/
 bug_fixes/
-
 .env
 
-update.txt
+*.md
+*.txt
+!requirements.txt
+!README.md
+!backend/requirements.txt
+!frontend/README.md
+Razorpay Hackathon Product Strategy.docx
