@@ -236,7 +236,10 @@ export default function SimulatorPage() {
                 <div className={styles.aiBadge}>🤖 Cyvault Recovery AI</div>
                 <h4>Wait! Don't leave empty-handed.</h4>
                 <p>Complete your purchase now with a special <strong>{discount}% discount</strong>.</p>
-                <button className={styles.successBtn} onClick={() => setPaymentState('idle')}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
+                <div className="flex flex-col gap-2 mt-4">
+                  <button className={styles.successBtn} style={{ marginTop: 0 }} onClick={() => setPaymentState('idle')}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
+                  <button className={styles.outlineBtn} onClick={() => setPaymentState('idle')}>No thanks, cancel order</button>
+                </div>
               </div>
             )}
           </div>
