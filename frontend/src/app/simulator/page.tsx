@@ -33,7 +33,7 @@ export default function SimulatorPage() {
     try {
       setLoading(true);
       const merchant_id = user?.email || "demo_merchant_1"; // Tie action to logged-in merchant
-      const res = await fetch('http://localhost:8000/api/simulate', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scenario, merchant_id, customer_id: testId })

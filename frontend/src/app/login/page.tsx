@@ -18,7 +18,7 @@ export default function LoginPage() {
 
     if (email && password) {
       try {
-        const response = await fetch('http://localhost:8000/api/merchants/login', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

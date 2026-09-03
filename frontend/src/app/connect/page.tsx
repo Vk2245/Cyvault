@@ -35,7 +35,7 @@ export default function Connect() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/merchants/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
