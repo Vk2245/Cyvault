@@ -31,15 +31,18 @@ export default function Users() {
   }, [merchantId]);
 
   return (
-    <main className="flex-1 flex flex-col h-full relative w-full">
-      <header className="docked full-width top-0 sticky z-40 border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex justify-between items-center h-16 px-4 md:px-margin-desktop">
+    <main className="flex-1 flex flex-col h-full relative w-full text-white">
+      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop">
         <div className="flex items-center gap-4">
           <button className="md:hidden text-on-surface-variant hover:text-primary">
             <Menu size={24} />
           </button>
-          <h2 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary flex items-center gap-2">
-            <UsersIcon size={20} />
-            Users
+          <h2 
+            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
+            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+          >
+            <UsersIcon size={20} className="text-primary" />
+            Customer Profiles
           </h2>
         </div>
         <div className="flex-1 max-w-md mx-8 hidden md:block">

@@ -19,11 +19,11 @@ export default function DashboardLayout({
         {/* Background Ambient Glows */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           {/* Top Left Primary Glow */}
-          <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
+          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-primary/40 rounded-full blur-[120px] animate-pulse mix-blend-screen"></div>
           {/* Bottom Right Secondary Glow */}
-          <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-secondary/40 rounded-full blur-[120px] animate-pulse mix-blend-screen" style={{ animationDelay: '2s' }}></div>
           {/* Center Subtle Glow */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-96 bg-primary/10 rounded-full blur-[120px]"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen"></div>
         </div>
 
         <Sidebar />

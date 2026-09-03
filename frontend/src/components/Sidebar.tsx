@@ -44,12 +44,15 @@ export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-64 border-r border-white/10 bg-background/80 dark:bg-background/80 backdrop-blur-xl flex flex-col z-40 hidden md:flex">
       {/* Header */}
-      <Link href="/" className="px-6 py-8 border-b border-white/10 mb-6 flex items-center gap-4 hover:opacity-80 transition-opacity">
+      <Link href="/" className="px-6 h-16 border-b border-white/5 flex items-center gap-4 hover:opacity-80 transition-opacity">
         <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
           <img src="/cyvault_transparent.png" alt="Cyvault Logo" className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.3)]" />
         </div>
         <div>
-          <h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary tracking-tight leading-none">
+          <h1 
+            className="font-headline-md text-headline-md font-bold tracking-tight leading-none bg-clip-text text-transparent drop-shadow-md"
+            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+          >
             Cyvault
           </h1>
           <p className="text-[12px] font-label-mono text-on-surface-variant mt-1 uppercase tracking-wider">
@@ -59,7 +62,7 @@ export default function Sidebar() {
       </Link>
 
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col space-y-2 overflow-y-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <nav className="flex-1 flex flex-col space-y-2 overflow-y-auto pt-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {links.map((link) => {
           const isActive = pathname === link.path;
           const Icon = link.icon;

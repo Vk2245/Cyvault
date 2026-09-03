@@ -38,13 +38,16 @@ export default function Graph() {
   const customerNodes = data.nodes.filter((n: any) => n.type === 'customer');
 
   return (
-    <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden bg-[#030303]">
-      <header className="glass-panel h-16 flex items-center justify-between px-gutter border-b border-[#ffffff1a] shrink-0 z-10 bg-[#ffffff05] backdrop-blur-xl">
+    <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden text-white">
+      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop">
         <div className="flex items-center gap-4">
-          <span className="font-headline-md text-headline-md text-primary font-bold flex items-center gap-2">
-            <BrainCircuit size={24} />
+          <h2 
+            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
+            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+          >
+            <BrainCircuit size={24} className="text-primary" />
             Cyvault Entity Graph
-          </span>
+          </h2>
         </div>
         <div className="flex-1 max-w-md mx-8 hidden md:block">
           <div className="relative group">
@@ -62,7 +65,7 @@ export default function Graph() {
         </div>
       </header>
 
-      <div className="flex-1 relative overflow-hidden flex items-center justify-center">
+      <div className="flex-1 relative overflow-hidden flex items-center justify-center animate-fade-in-up">
         {loading ? (
           <div className="text-on-surface-variant animate-pulse">Initializing neural graph...</div>
         ) : !hasData ? (
