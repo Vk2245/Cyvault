@@ -49,7 +49,7 @@ export default function Connect() {
         // Save merchant_id to localStorage for future requests
         localStorage.setItem('merchant_id', data.merchant_id);
         // Redirect to dashboard
-        router.push('/');
+        router.push('/recovery');
       } else {
         setError(data.detail || 'Failed to register account');
       }
