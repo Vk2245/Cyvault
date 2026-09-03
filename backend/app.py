@@ -151,7 +151,7 @@ def ask_cyvault(query: dict, db: Session = Depends(get_db)):
 # SIMULATOR ENDPOINT (For Hackathon Demo)
 # ==========================================
 @app.post("/api/simulate")
-def simulate_webhook(payload: dict):
+def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
     """
     Directly triggers the AI pipelines without Razorpay Signature.
     Used exclusively for the split-screen Hackathon Demo.
@@ -163,6 +163,11 @@ def simulate_webhook(payload: dict):
     event_dict = {}
     
     if scenario == "recovery_fail":
+        # Create an action receipt to populate the merchant dashboard simulator feed
+        from backend.action_receipt_logger import log_action_receipt
+        narrative = f"🤖 Cyvault Recovery AI offered 5% discount to Customer {customer_id} | Policy: max_discount_5% | Status: Awaiting Response"
+        log_action_receipt(db, merchant_id, "offer_discount", f"order_{customer_id}", "ALLOWED", narrative)
+        
         event_dict = {
             "event": "payment.failed",
             "payload": {
