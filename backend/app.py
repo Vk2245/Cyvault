@@ -223,30 +223,33 @@ def simulate_webhook(payload: dict):
 # ==========================================
 @app.get("/api/merchants/{merchant_id}/dashboard")
 def get_dashboard_kpis(merchant_id: str, db: Session = Depends(get_db)):
-    # Calculate mock KPIs based on DB or return defaults
     orders = db.query(Order).filter(Order.merchant_id == merchant_id).all()
     transactions = db.query(Transaction).join(Order).filter(Order.merchant_id == merchant_id).all()
     
-    # Defaults
-    at_risk = 147500
-    recovered = 102300
-    blocked = 7
-    rate = 68.4
+    at_risk = 0
+    recovered = 0
+    blocked = 0
+    rate = 0.0
+    recent_cases = []
     
     if orders:
-        failed_orders = [o for o in orders if o.status == 'attempted'] # rough proxy
+        failed_orders = [o for o in orders if o.status == 'attempted'] 
+        recovered_orders = [o for o in orders if o.status == 'paid']
+        
         at_risk = sum(o.amount_paise for o in failed_orders) / 100
+        recovered = sum(o.amount_paise for o in recovered_orders) / 100
+        
+        if (at_risk + recovered) > 0:
+            rate = round((recovered / (at_risk + recovered)) * 100, 1)
+            
+        # Optional: Add actual cases from DB if needed
         
     return {
         "at_risk": at_risk,
         "recovered": recovered,
         "recovery_rate": rate,
         "blocked": blocked,
-        "recent_cases": [
-            {"order_id": "#4521", "customer": "Ravi S.", "amount": 2499, "type": "Payment Fail", "intervention": "Payment Link", "status": "Success (Recovered)", "color": "emerald"},
-            {"order_id": "#4590", "customer": "Amit K.", "amount": 12000, "type": "Payment Fail", "intervention": "—", "status": "Error (Blocked - Fraud)", "color": "red"},
-            {"order_id": "#4601", "customer": "Neha R.", "amount": 3200, "type": "Cart Abandon", "intervention": "Email", "status": "Warning (Pending)", "color": "cyan"}
-        ]
+        "recent_cases": recent_cases
     }
 
 @app.get("/api/merchants/{merchant_id}/customers")
