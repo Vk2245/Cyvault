@@ -3,9 +3,11 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +33,8 @@ export default function LoginPage() {
         if (response.ok) {
           // Save merchant_id to localStorage for future requests
           localStorage.setItem('merchant_id', data.merchant_id);
+          // Set auth state
+          login(email);
           // Redirect to dashboard
           router.push('/recovery');
         } else {

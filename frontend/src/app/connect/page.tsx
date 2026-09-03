@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import { Key, Eye, Copy, ArrowRight, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Connect() {
   const router = useRouter();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showApiSecret, setShowApiSecret] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,6 +50,8 @@ export default function Connect() {
       if (response.ok) {
         // Save merchant_id to localStorage for future requests
         localStorage.setItem('merchant_id', data.merchant_id);
+        // Set auth state
+        login(formData.businessEmail);
         // Redirect to dashboard
         router.push('/recovery');
       } else {
