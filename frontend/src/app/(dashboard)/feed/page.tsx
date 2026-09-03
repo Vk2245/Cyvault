@@ -12,19 +12,24 @@ export default function Feed() {
   }, []);
 
   return (
-    <main className="flex-1 flex flex-col h-full relative w-full bg-[#030303] text-white">
-      <header className="h-16 border-b border-white/10 bg-[#ffffff08] backdrop-blur-xl flex items-center justify-between px-margin-desktop w-full shrink-0 z-30 sticky top-0">
+    <main className="flex-1 flex flex-col h-full relative w-full text-white">
+      <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-2xl flex items-center justify-between px-margin-desktop w-full shrink-0 z-30 sticky top-0">
         <div className="flex items-center gap-4">
-          <h2 className="font-headline-md font-bold">Action Feed</h2>
+          <h2 
+            className="font-headline-md font-bold bg-clip-text text-transparent drop-shadow-md"
+            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+          >
+            Action Feed
+          </h2>
         </div>
         <div className="flex items-center gap-6">
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-high border border-[#ffffff1a] hover:opacity-80 transition-opacity ml-2">
+          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-high border border-white/10 hover:opacity-80 transition-opacity ml-2">
             <User size={16} className="text-on-surface-variant" />
           </button>
         </div>
       </header>
 
-      <div className="flex-1 p-6 md:p-8 flex flex-col items-center justify-center w-full">
+      <div className="flex-1 p-6 md:p-8 flex flex-col items-center justify-center w-full animate-fade-in-up">
         {loading ? (
           <div className="text-on-surface-variant">Loading action feed...</div>
         ) : (

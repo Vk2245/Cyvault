@@ -32,24 +32,27 @@ export default function Alerts() {
 
   return (
     <main className="flex-1 flex flex-col h-full relative w-full">
-      <header className="docked full-width top-0 sticky z-40 border-b border-[#ffffff1a] backdrop-blur-xl bg-[#ffffff08] flex justify-between items-center h-16 px-4 md:px-margin-desktop">
+      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop">
         <div className="flex items-center gap-4">
           <button className="md:hidden text-on-surface-variant hover:text-primary">
             <Menu size={24} />
           </button>
-          <h2 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary flex items-center gap-2">
-            <TriangleAlert size={20} />
+          <h2 
+            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
+            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+          >
+            <TriangleAlert size={20} className="text-primary" />
             Live AI Alerts
           </h2>
         </div>
         <div className="flex items-center gap-6">
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-high border border-[#ffffff1a] hover:opacity-80 transition-opacity ml-2">
+          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-high border border-white/10 hover:opacity-80 transition-opacity ml-2">
              <User size={16} className="text-on-surface-variant" />
           </button>
         </div>
       </header>
 
-      <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-margin-desktop flex flex-col gap-6">
+      <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-margin-desktop flex flex-col gap-6 animate-fade-in-up">
         {loading && alerts.length === 0 ? (
            <div className="flex justify-center items-center h-64 text-on-surface-variant">Loading alerts...</div>
         ) : alerts.length === 0 ? (

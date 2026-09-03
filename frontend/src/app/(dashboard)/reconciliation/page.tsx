@@ -33,12 +33,17 @@ export default function Reconciliation() {
   }, [merchantId]);
 
   return (
-    <main className="flex-1 flex flex-col h-full overflow-hidden w-full p-6 md:p-8 bg-[#030303]">
+    <main className="flex-1 flex flex-col h-full overflow-hidden w-full p-6 md:p-8 text-white animate-fade-in-up">
 
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 shrink-0">
         <div>
-          <h2 className="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-white mb-2">Reconciliation Dashboard</h2>
+          <h2 
+            className="text-headline-lg-mobile md:text-headline-lg font-headline-lg font-bold bg-clip-text text-transparent mb-2 drop-shadow-md"
+            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+          >
+            Reconciliation Dashboard
+          </h2>
           <p className="text-on-surface-variant max-w-2xl">Real-time ledger matching and anomaly detection across all payment gateways.</p>
         </div>
         <div className="flex items-center gap-4">

@@ -5,10 +5,15 @@ export default function Policies() {
   return (
     <main className="flex-1 flex flex-col h-full relative w-full">
 
-<div className="max-w-container-max mx-auto h-full flex flex-col">
+<div className="max-w-container-max mx-auto h-full flex flex-col p-4 md:p-margin-desktop animate-fade-in-up">
 {/* Page Header */}
 <div className="mb-8 md:mb-12">
-<h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2 glow-text">Policy Engine</h2>
+<h2 
+  className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold bg-clip-text text-transparent mb-2 drop-shadow-md"
+  style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
+>
+  Policy Engine
+</h2>
 <p className="text-on-surface-variant max-w-2xl">Define, test, and deploy automated logic rules to mitigate risk and optimize revenue recovery strategies.</p>
 </div>
 {/* 2-Column Grid */}

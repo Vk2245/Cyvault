@@ -15,7 +15,8 @@ import {
   ArrowLeftRight, 
   Bot, 
   Shield, 
-  Settings 
+  Settings,
+  PlayCircle
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -31,6 +32,7 @@ export default function Sidebar() {
     { name: 'Leakage Radar', path: '/radar', icon: Radar },
     { name: 'Reconciliation', path: '/reconciliation', icon: ArrowLeftRight },
     { name: 'Insights Bot', path: '/chatbot', icon: Bot },
+    { name: 'Test Demo Mode', path: '/simulator', icon: PlayCircle },
   ];
 
   // Get active page name for the logo subtitle
