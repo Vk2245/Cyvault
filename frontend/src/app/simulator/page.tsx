@@ -180,10 +180,14 @@ export default function SimulatorPage() {
 
       {/* Right Side: Customer Simulator */}
       <div className={styles.customerSide}>
-        <div className={styles.simulatorHeader}>
+        {/* Cyvault Branding Header */}
+        <div className={styles.simulatorBrandHeader}>
+          <img src="/cyvault_transparent.png" alt="Cyvault" className={styles.brandLogo} />
+          <div>
+            <h2 className={styles.brandTitle}>Storefront Simulator</h2>
+            <span className={styles.brandBadge}>Customer ID: {testId}</span>
+          </div>
           <div className={styles.pulseDot}></div>
-          Storefront Simulator 
-          <span className="ml-4 bg-primary/20 px-2 py-1 rounded text-white text-xs font-mono border border-primary/30">Customer ID: {testId}</span>
         </div>
 
         <div className={styles.demoControlsWrapper}>

@@ -1,3 +1,12 @@
+/**
+ * FILE: simulator.module.css
+ * PURPOSE: Styles for the split-screen simulator page (merchant feed + customer storefront).
+ * USED BY: simulator/page.tsx
+ */
+
+/* ──────────────────────────────────────────────
+   LAYOUT
+   ────────────────────────────────────────────── */
 .appContainer {
   display: flex;
   height: 100vh;
@@ -7,18 +16,12 @@
   color: #f8f9fa;
 }
 
-/* Left Side: Merchant Dashboard */
+/* Left Side: Merchant Dashboard Feed */
 .merchantSide {
   flex: 1.2;
   border-right: 1px solid rgba(157, 78, 221, 0.2);
   position: relative;
   background: #000;
-}
-
-.dashboardIframe {
-  width: 100%;
-  height: 100%;
-  border: none;
 }
 
 /* Right Side: Customer Simulator */
@@ -27,26 +30,60 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
+  padding: 0 24px 40px;
   position: relative;
   overflow-y: auto;
-  background-image: 
+  background-image:
     radial-gradient(circle at 15% 50%, rgba(157, 78, 221, 0.15), transparent 25%),
     radial-gradient(circle at 85% 30%, rgba(0, 245, 255, 0.1), transparent 25%);
 }
 
-.simulatorHeader {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 0.85rem;
-  color: #adb5bd;
+/* ──────────────────────────────────────────────
+   BRANDING HEADER
+   ────────────────────────────────────────────── */
+.simulatorBrandHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 16px 0;
+  margin-bottom: 8px;
+  width: 100%;
+  max-width: 450px;
+  border-bottom: 1px solid rgba(157, 78, 221, 0.15);
 }
 
+.brandLogo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
+}
+
+.brandTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #8b5cf6, #a78bfa, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.brandBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: #a78bfa;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+/* ──────────────────────────────────────────────
+   PULSE DOT
+   ────────────────────────────────────────────── */
 .pulseDot {
   width: 8px;
   height: 8px;
@@ -54,6 +91,7 @@
   border-radius: 50%;
   box-shadow: 0 0 10px #00e676;
   animation: pulse 2s infinite;
+  margin-left: auto;
 }
 
 @keyframes pulse {
@@ -62,6 +100,9 @@
   100% { transform: scale(0.95); opacity: 0.5; }
 }
 
+/* ──────────────────────────────────────────────
+   GLASS PANELS
+   ────────────────────────────────────────────── */
 .glassPanel {
   background: rgba(25, 15, 45, 0.4);
   backdrop-filter: blur(12px);
@@ -72,45 +113,45 @@
   padding: 24px;
 }
 
+.demoControlsWrapper {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
 .gridControls {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.demoControlsWrapper {
-  width: 100%;
-  max-width: 450px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin-top: 40px;
-  padding-bottom: 40px;
-}
-
+/* ──────────────────────────────────────────────
+   SECTION TITLES
+   ────────────────────────────────────────────── */
 .sectionTitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #00f5ff;
-  margin-bottom: 12px;
-  border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 245, 255, 0.15);
   padding-bottom: 10px;
+  font-weight: 600;
 }
 
 .desc {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #adb5bd;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   line-height: 1.5;
 }
 
-.btnGroup {
-  display: flex;
-  gap: 12px;
-}
-
-/* Store Checkout Card */
+/* ──────────────────────────────────────────────
+   STORE CHECKOUT CARD
+   ────────────────────────────────────────────── */
 .checkoutCard {
-  padding: 30px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
 }
@@ -121,23 +162,30 @@
 }
 
 .productImage {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   background: linear-gradient(45deg, #2a1b4d, #42207a);
   border-radius: 12px;
-  margin: 0 auto 15px;
+  margin: 0 auto 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  font-size: 2.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .price {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #00f5ff;
-  margin-top: 10px;
+  margin-top: 8px;
+}
+
+.originalPrice {
+  font-size: 0.9rem;
+  color: #adb5bd;
+  text-decoration: line-through;
+  margin-left: 8px;
 }
 
 .actions {
@@ -146,155 +194,216 @@
   gap: 12px;
 }
 
-/* Hackathon Features Card */
-.hackathonFeaturesCard {
-  padding: 30px;
-}
-
-.featureGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.featureItem {
-  background: rgba(0,0,0,0.2);
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-.featureItem h4 {
-  color: #f8f9fa;
-  margin-bottom: 5px;
-  font-size: 0.95rem;
-}
-
-.featureItem p {
-  color: #adb5bd;
-  font-size: 0.8rem;
-  margin-bottom: 15px;
-  line-height: 1.4;
-}
-
-.btnPrimary {
+/* ──────────────────────────────────────────────
+   BUTTONS
+   ────────────────────────────────────────────── */
+.primaryBtn {
   background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
   color: white;
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+  font-size: 0.95rem;
+  width: 100%;
 }
 
-.btnPrimary:hover {
+.primaryBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
 }
 
-.btnOutline {
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.outlineBtn {
   background: transparent;
   color: #f8f9fa;
-  border: 1px solid #9d4edd;
-  padding: 12px 24px;
-  border-radius: 8px;
+  border: 1px solid rgba(157, 78, 221, 0.4);
+  padding: 10px 20px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-.btnOutline:hover { background: rgba(157, 78, 221, 0.1); }
-
-.btnSm {
-  padding: 8px 16px;
   font-size: 0.85rem;
+}
+
+.outlineBtn:hover {
+  background: rgba(157, 78, 221, 0.1);
+  border-color: rgba(157, 78, 221, 0.6);
+}
+
+.outlineBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.successBtn {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
   width: 100%;
+  margin-top: 8px;
+}
+
+.successBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+}
+
+.btnGroup {
+  display: flex;
+  gap: 10px;
 }
 
 .btnFraud {
-  border-color: #ff3366;
+  border-color: rgba(255, 51, 102, 0.4);
   color: #ff3366;
 }
-.btnFraud:hover { background: rgba(255, 51, 102, 0.1); }
 
-.btnFinance {
-  border-color: #00e676;
-  color: #00e676;
+.btnFraud:hover {
+  background: rgba(255, 51, 102, 0.1);
+  border-color: rgba(255, 51, 102, 0.6);
 }
-.btnFinance:hover { background: rgba(0, 230, 118, 0.1); }
 
-.btnSupport {
-  border-color: #00f5ff;
-  color: #00f5ff;
-}
-.btnSupport:hover { background: rgba(0, 245, 255, 0.1); }
-
-/* AI Popup Modal */
-.aiModalOverlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.85);
+/* ──────────────────────────────────────────────
+   STATES
+   ────────────────────────────────────────────── */
+.loadingState {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+  gap: 12px;
+  padding: 20px;
+  color: #adb5bd;
 }
 
-.aiModalOverlay.active {
-  opacity: 1;
-  pointer-events: all;
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(157, 78, 221, 0.2);
+  border-top-color: #9d4edd;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-.aiModal {
-  width: 90%;
-  max-width: 380px;
-  padding: 30px;
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.failedState {
   text-align: center;
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-  border-top: 4px solid #9d4edd;
+  padding: 20px;
+  color: #ff3366;
 }
 
-.aiModalOverlay.active .aiModal {
-  transform: translateY(0);
+.errorIcon {
+  font-size: 2rem;
+  margin-bottom: 8px;
 }
 
-.aiAvatar {
-  width: 60px;
-  height: 60px;
-  background: #9d4edd;
-  border-radius: 50%;
-  margin: -50px auto 15px;
+.aiNegotiating {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  box-shadow: 0 0 20px #9d4edd;
+  gap: 10px;
+  padding: 16px;
+  color: #adb5bd;
+  background: rgba(157, 78, 221, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(157, 78, 221, 0.15);
 }
 
-.typingIndicator {
-  display: flex;
-  gap: 5px;
-  justify-content: center;
-  margin-top: 15px;
+.discountOffer {
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(157, 78, 221, 0.1));
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
 }
 
-.typingIndicator span {
-  width: 8px;
-  height: 8px;
-  background: #adb5bd;
-  border-radius: 50%;
-  animation: typing 1.4s infinite ease-in-out both;
+.discountOffer h4 {
+  font-size: 1.1rem;
+  color: #f8f9fa;
+  margin-bottom: 6px;
 }
 
-.typingIndicator span:nth-child(1) { animation-delay: -0.32s; }
-.typingIndicator span:nth-child(2) { animation-delay: -0.16s; }
+.discountOffer p {
+  color: #adb5bd;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
 
-@keyframes typing {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
+.aiBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #a78bfa;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.blockedState {
+  text-align: center;
+  padding: 20px;
+}
+
+.blockIcon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.blockedState p {
+  font-weight: 700;
+  color: #ff3366;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.blockedState span {
+  color: #adb5bd;
+  font-size: 0.8rem;
+}
+
+/* ──────────────────────────────────────────────
+   MOBILE RESPONSIVE
+   ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .appContainer {
+    flex-direction: column;
+  }
+
+  .merchantSide {
+    flex: none;
+    height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+  }
+
+  .customerSide {
+    flex: 1;
+    padding: 0 16px 24px;
+  }
+
+  .demoControlsWrapper {
+    max-width: 100%;
+  }
+
+  .simulatorBrandHeader {
+    max-width: 100%;
+  }
 }

@@ -4,22 +4,10 @@ import { Shield, Edit2, Trash2, AlertTriangle, Plus, Sparkles, Terminal, CheckCi
 export default function Policies() {
   return (
     <main className="flex-1 flex flex-col h-full relative w-full">
-      {/* Standard Docked Header */}
-      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop text-white shrink-0">
-        <div className="flex items-center gap-4">
-          <h2 
-            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
-            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
-          >
-            Policy Engine
-          </h2>
-        </div>
-      </header>
-
-      <div className="flex-1 w-full max-w-container-max mx-auto h-full flex flex-col p-4 md:p-margin-desktop animate-fade-in-up">
+      <div className="flex-1 w-full max-w-container-max mx-auto h-full flex flex-col p-4 md:p-6 animate-fade-in-up">
         {/* Page Context */}
-        <div className="mb-6 md:mb-8">
-          <p className="text-on-surface-variant max-w-2xl text-lg">Define, test, and deploy automated logic rules to mitigate risk and optimize revenue recovery strategies.</p>
+        <div className="mb-6">
+          <p className="text-on-surface-variant max-w-2xl">Define, test, and deploy automated logic rules to mitigate risk and optimize revenue recovery strategies.</p>
         </div>
 {/* 2-Column Grid */}
 <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start h-full pb-8">

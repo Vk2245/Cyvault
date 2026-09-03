@@ -57,30 +57,9 @@ export default function Chatbot() {
   };
 
   return (
-    <main className="flex flex-col relative w-full overflow-hidden" style={{ height: 'calc(100vh / 0.9)' }}>
-      {/* TopAppBar */}
-      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop text-white">
-        <div className="flex items-center gap-4">
-          <Search size={24} className="cursor-pointer hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity" />
-          <h2 
-            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
-            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
-          >
-            Insights Bot
-          </h2>
-        </div>
-        <div className="flex items-center gap-6">
-          <Bell size={24} className="cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity" />
-          <ScrollText size={24} className="cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity" />
-          <User size={24} className="cursor-pointer text-on-surface-variant dark:text-on-surface-variant hover:text-secondary dark:hover:text-secondary hover:opacity-80 transition-opacity" />
-          <div className="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-[#ffffff1a]">
-            <img alt="Chief Security Officer" className="w-8 h-8 object-contain" src="/cyvault-logo-no-caption.png"/>
-          </div>
-        </div>
-      </header>
-
+    <main className="flex flex-col relative w-full overflow-hidden h-full">
       {/* Content Layout */}
-      <div className="flex-1 p-margin-mobile md:p-margin-desktop flex gap-gutter overflow-hidden">
+      <div className="flex-1 p-3 md:p-4 flex gap-4 overflow-hidden animate-fade-in-up">
         {/* Left Column (Chat Interface) */}
         <div className="flex-1 md:w-[70%] flex flex-col h-full glass-panel rounded-xl overflow-hidden">
           {/* Chat Header */}

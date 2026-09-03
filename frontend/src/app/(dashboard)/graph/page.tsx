@@ -39,32 +39,6 @@ export default function Graph() {
 
   return (
     <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden text-white">
-      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop">
-        <div className="flex items-center gap-4">
-          <h2 
-            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
-            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
-          >
-            <BrainCircuit size={24} className="text-primary" />
-            Cyvault Entity Graph
-          </h2>
-        </div>
-        <div className="flex-1 max-w-md mx-8 hidden md:block">
-          <div className="relative group">
-            <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" />
-            <input className="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-[0_0_10px_rgba(139,92,246,0)] focus:shadow-[0_0_10px_rgba(139,92,246,0.2)]" placeholder="Search Node ID, IP, or Customer..." type="text"/>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="p-2 text-on-surface-variant hover:text-primary transition-colors">
-            <Filter size={24} />
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-high border border-[#ffffff1a] hover:opacity-80 transition-opacity ml-2">
-            <User size={16} className="text-on-surface-variant" />
-          </button>
-        </div>
-      </header>
-
       <div className="flex-1 relative overflow-hidden flex items-center justify-center animate-fade-in-up">
         {loading ? (
           <div className="text-on-surface-variant animate-pulse">Initializing neural graph...</div>

@@ -32,24 +32,13 @@ export default function Reconciliation() {
     fetchReconciliation();
   }, [merchantId]);
 
+  return (
     <main className="flex-1 flex flex-col h-full relative w-full text-white">
-      {/* Standard Docked Header */}
-      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop text-white shrink-0">
-        <div className="flex items-center gap-4">
-          <h2 
-            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
-            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
-          >
-            Reconciliation Dashboard
-          </h2>
-        </div>
-      </header>
-
-      <div className="flex-1 flex flex-col h-full overflow-hidden w-full p-6 md:p-8 animate-fade-in-up">
+      <div className="flex-1 flex flex-col h-full overflow-hidden w-full p-4 md:p-6 animate-fade-in-up">
 
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 shrink-0">
-          <p className="text-on-surface-variant max-w-2xl text-lg mb-2">Real-time ledger matching and anomaly detection across all payment gateways.</p>
+          <p className="text-on-surface-variant max-w-2xl mb-2">Real-time ledger matching and anomaly detection across all payment gateways.</p>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]"></span>
@@ -76,6 +65,7 @@ export default function Reconciliation() {
             <p className="text-on-surface-variant max-w-md">Data table loaded.</p>
          </div>
       )}
+      </div>
     </main>
   );
 }

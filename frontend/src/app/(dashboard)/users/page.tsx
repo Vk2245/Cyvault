@@ -32,36 +32,7 @@ export default function Users() {
 
   return (
     <main className="flex-1 flex flex-col h-full relative w-full text-white">
-      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop">
-        <div className="flex items-center gap-4">
-          <button className="md:hidden text-on-surface-variant hover:text-primary">
-            <Menu size={24} />
-          </button>
-          <h2 
-            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
-            style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
-          >
-            <UsersIcon size={20} className="text-primary" />
-            Customer Profiles
-          </h2>
-        </div>
-        <div className="flex-1 max-w-md mx-8 hidden md:block">
-          <div className="relative group">
-            <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" />
-            <input className="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-[0_0_10px_rgba(139,92,246,0)] focus:shadow-[0_0_10px_rgba(139,92,246,0.2)]" placeholder="Search Users by Email or ID..." type="text"/>
-          </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <button className="text-on-surface-variant hover:text-primary transition-colors">
-            <Filter size={20} />
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-high border border-[#ffffff1a] hover:opacity-80 transition-opacity ml-2">
-             <User size={16} className="text-on-surface-variant" />
-          </button>
-        </div>
-      </header>
-
-      <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-margin-desktop flex flex-col gap-6">
+      <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-6 flex flex-col gap-6 animate-fade-in-up">
         {loading && users.length === 0 ? (
            <div className="flex justify-center items-center h-64 text-on-surface-variant">Loading users...</div>
         ) : users.length === 0 ? (
