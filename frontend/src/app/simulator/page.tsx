@@ -1,11 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
+import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon } from 'lucide-react';
 import styles from './simulator.module.css';
 
 export default function SimulatorPage() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, merchantId } = useAuth();
   const router = useRouter();
 
   const [activeScenario, setActiveScenario] = useState('none'); 
@@ -14,251 +15,293 @@ export default function SimulatorPage() {
   const [fraudBlocked, setFraudBlocked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testId, setTestId] = useState('');
+  
+  // Chat state
+  const [chatMessages, setChatMessages] = useState<{role: string, content: string}[]>([
+    { role: 'agent', content: 'Hi! I am Cyvault Support. Your payment failed. How can I help you today?' }
+  ]);
+  const [chatInput, setChatInput] = useState('');
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  
+  // Action Feed state
+  const [actionFeed, setActionFeed] = useState<any[]>([]);
 
   useEffect(() => {
-    // Generate a unique test ID for this simulator session
     setTestId(`SIM_${Math.floor(Math.random() * 9000) + 1000}`);
   }, []);
 
-  // Route protection with hydration safety
   useEffect(() => {
     const authState = localStorage.getItem('cyvault_auth');
     if (!authState && !isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+  
+  // Fetch action feed periodically
+  useEffect(() => {
+    const fetchFeed = async () => {
+      if (!merchantId) return;
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/${merchantId}/alerts`);
+        if (res.ok) {
+          const data = await res.json();
+          setActionFeed(data);
+        }
+      } catch(e) {}
+    };
+    fetchFeed();
+    const interval = setInterval(fetchFeed, 2000);
+    return () => clearInterval(interval);
+  }, [merchantId]);
 
-  // Helper to call FastAPI
-  const triggerBackend = async (scenario) => {
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
+
+  const triggerBackend = async (scenario: string) => {
     try {
       setLoading(true);
-      const merchant_id = user?.email || "demo_merchant_1"; // Tie action to logged-in merchant
+      const m_id = merchantId || "demo";
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scenario, merchant_id, customer_id: testId })
+        body: JSON.stringify({ scenario, merchant_id: m_id, customer_id: testId })
       });
-      const data = await res.json();
-      console.log('Backend response:', data);
-      return data;
+      return await res.json();
     } catch (e) {
-      console.error("Backend error:", e);
+      console.error(e);
     } finally {
       setLoading(false);
     }
   };
 
-  // SCENARIO 1: Revenue Recovery
   const handleSimulateFailure = async () => {
     setActiveScenario('recovery');
     setPaymentState('processing');
-    
-    // 1. Simulate network delay
     await new Promise(r => setTimeout(r, 1000));
     setPaymentState('failed');
-    
-    // 2. Call backend
     await triggerBackend('recovery_fail');
-    
-    // 3. Backend processes and AI creates discount. Mocking the wait for response UI.
     setPaymentState('negotiating');
     setTimeout(() => {
-      setDiscount(5); // UI Mock: AI proposed 5%
+      setDiscount(5); 
     }, 1500);
   };
 
-  // SCENARIO 2: Fraud Ring Attack
   const handleFraudAttack = async () => {
     setActiveScenario('fraud');
     setFraudBlocked(false);
-    
-    // Call backend to simulate 3 fast failures
     await triggerBackend('fraud_attack');
-    
     setTimeout(() => {
-      setFraudBlocked(true); // AI detected same fingerprint
+      setFraudBlocked(true); 
     }, 1000);
   };
 
-  // SCENARIO 3: Settlement
   const handleSettlement = async () => {
     setActiveScenario('settlement');
     await triggerBackend('settlement');
-    setTimeout(() => {
-      setActiveScenario('none');
-      alert("Webhook 'settlement.processed' fired! Backend database updated. Refresh the dashboard iframe to see changes.");
-    }, 1000);
+    setTimeout(() => setActiveScenario('none'), 1000);
   };
 
-  // SCENARIO 4: Refund
   const handleRefund = async () => {
     setActiveScenario('refund');
     await triggerBackend('refund');
-    setTimeout(() => {
-      setActiveScenario('none');
-      alert("Support AI triggered in backend! Customer notified.");
-    }, 1000);
+    setTimeout(() => setActiveScenario('none'), 1000);
   };
-
-  const handleReset = () => {
-    setActiveScenario('none');
-    setPaymentState('idle');
-    setDiscount(0);
-    setFraudBlocked(false);
+  
+  const sendChatMessage = async () => {
+    if(!chatInput.trim()) return;
+    const msg = chatInput;
+    setChatInput('');
+    setChatMessages(prev => [...prev, {role: 'user', content: msg}]);
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/customer/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, merchant_id: merchantId || "demo", customer_id: testId })
+      });
+      const data = await res.json();
+      setChatMessages(prev => [...prev, {role: 'agent', content: data.reply}]);
+    } catch (e) {
+      setChatMessages(prev => [...prev, {role: 'agent', content: 'Connection error'}]);
+    }
   };
 
   return (
     <div className={styles.appContainer}>
-      {/* Left Side: Merchant Dashboard iframe */}
-      <div className={styles.merchantSide}>
-        <iframe 
-          src="http://localhost:3000" 
-          title="Cyvault Merchant Dashboard"
-          className={styles.dashboardIframe}
-        />
+      {/* Left Side: Merchant Live Action Feed (Replaces Dashboard Iframe) */}
+      <div className={`${styles.merchantSide} bg-[#0a0a0a]`}>
+        <div className="h-full flex flex-col text-white p-8 overflow-y-auto">
+          <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-6 shrink-0">
+            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/30">
+              <TriangleAlert size={24} className="text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">Merchant Live Feed</h1>
+              <p className="text-white/60 text-sm">Real-time Cyvault AI Actions</p>
+            </div>
+            <button onClick={() => router.push('/recovery')} className="ml-auto px-4 py-2 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition-colors font-medium border border-white/10">
+              Go to Dashboard
+            </button>
+          </div>
+          
+          <div className="flex-1 flex flex-col gap-4">
+            {actionFeed.length === 0 ? (
+              <div className="text-center text-white/40 mt-20 flex flex-col items-center gap-4">
+                <Bot size={48} className="opacity-20" />
+                <p>No actions yet.<br/>Interact with the store simulator on the right.</p>
+              </div>
+            ) : (
+              actionFeed.map((alert: any) => (
+                <div key={alert.id} className="bg-white/5 border border-white/10 rounded-xl p-5 shadow-lg relative overflow-hidden group hover:bg-white/10 transition-colors">
+                  {/* Status strip */}
+                  <div className={`absolute left-0 top-0 bottom-0 w-1 ${alert.decision === 'ALLOWED' ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                  
+                  <div className="flex justify-between items-start mb-2 pl-3">
+                    <h3 className="font-semibold text-white flex items-center gap-2">
+                      <Bot size={18} className={alert.decision === 'ALLOWED' ? 'text-emerald-400' : 'text-red-400'}/> 
+                      Cyvault AI Action
+                    </h3>
+                    <span className="text-xs text-white/50">{new Date(alert.created_at).toLocaleTimeString()}</span>
+                  </div>
+                  <p className="text-white/80 text-sm mb-4 pl-3 leading-relaxed">{alert.narrative}</p>
+                  <div className="flex gap-2 text-xs font-mono pl-3">
+                    <span className="px-2 py-1 bg-white/10 rounded-md uppercase tracking-wider text-white/70">Action: {alert.action_type.replace('_', ' ')}</span>
+                    <span className={`px-2 py-1 rounded-md uppercase tracking-wider border ${alert.decision === 'ALLOWED' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                      {alert.decision}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Right Side: Customer Simulator */}
       <div className={styles.customerSide}>
         <div className={styles.simulatorHeader}>
           <div className={styles.pulseDot}></div>
-          Hackathon Demo Control Panel (Connected to Backend)
-          <span style={{marginLeft: '15px', background: 'rgba(157, 78, 221, 0.2)', padding: '4px 8px', borderRadius: '4px', color: '#fff'}}>
-            Customer ID: <strong>{testId}</strong>
-          </span>
+          Storefront Simulator 
+          <span className="ml-4 bg-primary/20 px-2 py-1 rounded text-white text-xs font-mono border border-primary/30">Customer ID: {testId}</span>
         </div>
 
         <div className={styles.demoControlsWrapper}>
           
           {/* Main Checkout View (Recovery Scenario) */}
           <div className={`${styles.glassPanel} ${styles.checkoutCard}`}>
-            <h3 className={styles.sectionTitle}>1. Test Revenue Recovery (AI Negotiation)</h3>
+            <h3 className={styles.sectionTitle}>1. Revenue Recovery (Payment Failure)</h3>
             <div className={styles.productInfo}>
               <div className={styles.productImage}>🎧</div>
               <h2>Premium Wireless Headphones</h2>
               <div className={styles.price}>
                 ₹{discount > 0 ? (4999 * (1 - discount/100)).toFixed(0) : 4999}
-                {discount > 0 && <span style={{fontSize: '1rem', color: 'var(--text-muted)', textDecoration: 'line-through', marginLeft: '10px'}}>₹4999</span>}
+                {discount > 0 && <span className={styles.originalPrice}>₹4999</span>}
               </div>
             </div>
 
-            <div className={styles.actions}>
-              {paymentState === 'idle' && (
-                <button className={styles.btnPrimary} onClick={handleSimulateFailure}>
-                  Simulate Failed Payment
-                </button>
-              )}
-              {paymentState === 'processing' && (
-                <button className={styles.btnPrimary} disabled style={{opacity: 0.7}}>
-                  Processing Payment...
-                </button>
-              )}
-              {paymentState === 'failed' && (
-                <button className={styles.btnOutline} style={{borderColor: 'var(--error)', color: 'var(--error)'}}>
-                  Payment Failed
-                </button>
-              )}
-              {paymentState === 'success' && (
-                <button className={styles.btnPrimary} style={{background: 'var(--success)'}} onClick={handleReset}>
-                  Payment Successful! (Reset)
-                </button>
-              )}
-            </div>
+            {paymentState === 'idle' && (
+              <button className={styles.primaryBtn} onClick={handleSimulateFailure} disabled={loading}>
+                {loading ? 'Processing...' : 'Pay ₹4999'}
+              </button>
+            )}
+
+            {paymentState === 'processing' && (
+              <div className={styles.loadingState}>
+                <div className={styles.spinner}></div>
+                <p>Authenticating with Bank...</p>
+              </div>
+            )}
+
+            {paymentState === 'failed' && (
+              <div className={styles.failedState}>
+                <div className={styles.errorIcon}>❌</div>
+                <p>Payment Failed. Insufficient Funds.</p>
+              </div>
+            )}
+
+            {paymentState === 'negotiating' && discount === 0 && (
+              <div className={styles.aiNegotiating}>
+                <div className={styles.pulseDot}></div>
+                <p>Cyvault AI analyzing recovery options...</p>
+              </div>
+            )}
+
+            {paymentState === 'negotiating' && discount > 0 && (
+              <div className={styles.discountOffer}>
+                <div className={styles.aiBadge}>🤖 Cyvault Recovery AI</div>
+                <h4>Wait! Don't leave empty-handed.</h4>
+                <p>Complete your purchase now with a special <strong>{discount}% discount</strong>.</p>
+                <button className={styles.successBtn} onClick={() => setPaymentState('idle')}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
+              </div>
+            )}
           </div>
 
-          {/* Other Hackathon Features */}
-          <div className={`${styles.glassPanel} ${styles.hackathonFeaturesCard}`}>
-            <h3 className={styles.sectionTitle}>2. Test Advanced Cyvault Features</h3>
-            
-            <div className={styles.featureGrid}>
-              <div className={styles.featureItem}>
-                <h4>Risk AI (Fraud Ring)</h4>
-                <p>Simulate an attack from a single device fingerprint.</p>
-                <button className={`${styles.btnOutline} ${styles.btnSm} ${styles.btnFraud}`} onClick={handleFraudAttack}>
-                  Simulate Fraud Attack
+          <div className={styles.gridControls}>
+            {/* Fraud Scenario */}
+            <div className={styles.glassPanel}>
+              <h3 className={styles.sectionTitle}>2. Fraud Prevention</h3>
+              <p className={styles.desc}>Simulate 3 rapid payment failures from the same device fingerprint (Velocity attack).</p>
+              {!fraudBlocked ? (
+                <button className={`${styles.outlineBtn} ${styles.btnFraud}`} onClick={handleFraudAttack} disabled={loading}>
+                  Run Fraud Attack
                 </button>
-              </div>
+              ) : (
+                <div className={styles.blockedState}>
+                  <div className={styles.blockIcon}>🛡️</div>
+                  <p>BLOCKED BY CYVAULT</p>
+                  <span>Device {testId} flagged as part of a fraud ring.</span>
+                </div>
+              )}
+            </div>
 
-              <div className={styles.featureItem}>
-                <h4>Finance AI (Cashflow)</h4>
-                <p>Simulate a successful bank settlement to reconcile ledger.</p>
-                <button className={`${styles.btnOutline} ${styles.btnSm} ${styles.btnFinance}`} onClick={handleSettlement}>
+            {/* Other Webhooks */}
+            <div className={styles.glassPanel}>
+              <h3 className={styles.sectionTitle}>3. Background Events</h3>
+              <p className={styles.desc}>Fire standard webhook events to populate the dashboard data.</p>
+              <div className={styles.btnGroup}>
+                <button className={styles.outlineBtn} onClick={handleSettlement} disabled={loading}>
                   Trigger Settlement
                 </button>
-              </div>
-
-              <div className={styles.featureItem}>
-                <h4>Support AI (Refunds)</h4>
-                <p>Trigger a refund event to see AI customer communication.</p>
-                <button className={`${styles.btnOutline} ${styles.btnSm} ${styles.btnSupport}`} onClick={handleRefund}>
-                  Trigger Refund/Dispute
+                <button className={styles.outlineBtn} onClick={handleRefund} disabled={loading}>
+                  Trigger Refund
                 </button>
               </div>
             </div>
-          </div>
-
-        </div>
-
-        {/* ================= MODALS ================= */}
-        {/* 1. AI Negotiation Modal */}
-        <div className={`${styles.aiModalOverlay} ${paymentState === 'negotiating' ? styles.active : ''}`}>
-          <div className={`${styles.glassPanel} ${styles.aiModal}`}>
-            <div className={styles.aiAvatar}>🤖</div>
-            {discount === 0 ? (
-              <>
-                <h3 style={{marginBottom: '10px'}}>Cyvault AI Analyzing...</h3>
-                <p style={{color: 'var(--text-muted)'}}>Reviewing policy to recover payment...</p>
-                <div className={styles.typingIndicator}>
-                  <span></span><span></span><span></span>
+            
+            {/* NEW: Customer Support Chatbot */}
+            <div className={`${styles.glassPanel} col-span-full w-full`} style={{ gridColumn: '1 / -1' }}>
+              <h3 className={styles.sectionTitle}>4. Support Chatbot (Negotiation AI)</h3>
+              <p className={styles.desc}>Chat with the Cyvault Support AI. Try asking for a discount on your failed payment!</p>
+              <div className="flex flex-col h-64 bg-black/40 rounded-xl border border-white/10 overflow-hidden mt-4">
+                <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                  {chatMessages.map((msg, idx) => (
+                    <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[80%] rounded-xl px-4 py-2.5 text-sm ${msg.role === 'user' ? 'bg-primary/20 text-primary-100 border border-primary/30 rounded-br-none' : 'bg-white/10 text-white/90 border border-white/10 rounded-bl-none'}`}>
+                        {msg.content}
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={chatEndRef} />
                 </div>
-              </>
-            ) : (
-              <>
-                <h3 style={{marginBottom: '10px', color: 'var(--neon-purple)'}}>Wait! Don't leave.</h3>
-                <p style={{marginBottom: '20px'}}>
-                  We noticed your payment failed. As a special offer, we've applied an instant <strong>{discount}% discount</strong> to your cart!
-                </p>
-                <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
-                  <button className={styles.btnOutline} onClick={() => { setPaymentState('idle'); setDiscount(0); }}>Decline</button>
-                  <button className={styles.btnPrimary} onClick={() => setPaymentState('success')}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)}</button>
+                <div className="p-3 border-t border-white/10 bg-white/5 flex gap-2">
+                  <input 
+                    type="text" 
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && sendChatMessage()}
+                    className="flex-1 bg-black/50 border border-white/10 rounded-lg outline-none text-sm text-white px-3 py-2 placeholder-white/30 focus:border-primary/50 transition-colors"
+                    placeholder="Message Support..."
+                  />
+                  <button onClick={sendChatMessage} className="p-2 bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 rounded-lg transition-colors flex items-center justify-center w-10">
+                    <Send size={16} />
+                  </button>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
+
           </div>
         </div>
-
-        {/* 2. Fraud Block Modal */}
-        <div className={`${styles.aiModalOverlay} ${activeScenario === 'fraud' ? styles.active : ''}`}>
-          <div className={`${styles.glassPanel} ${styles.aiModal}`} style={{borderTopColor: 'var(--error)'}}>
-            <div className={styles.aiAvatar} style={{background: 'var(--error)', boxShadow: '0 0 20px var(--error)'}}>🛡️</div>
-            {!fraudBlocked ? (
-              <>
-                <h3 style={{marginBottom: '10px'}}>Cyvault Risk AI Scanning...</h3>
-                <p style={{color: 'var(--text-muted)'}}>Analyzing device fingerprint and velocity...</p>
-                <div className={styles.typingIndicator}>
-                  <span></span><span></span><span></span>
-                </div>
-              </>
-            ) : (
-              <>
-                <h3 style={{marginBottom: '10px', color: 'var(--error)'}}>Access Denied</h3>
-                <p style={{marginBottom: '20px'}}>
-                  Cyvault has blocked this request. High risk score (0.95) detected from this device fingerprint across multiple accounts.
-                </p>
-                <button className={styles.btnOutline} style={{borderColor: 'var(--error)', color: 'var(--error)'}} onClick={handleReset}>Acknowledge</button>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Loading Spinner Modal (For Settlement/Refund delays) */}
-        <div className={`${styles.aiModalOverlay} ${(activeScenario === 'settlement' || activeScenario === 'refund') ? styles.active : ''}`}>
-          <div className={`${styles.glassPanel} ${styles.aiModal}`} style={{background: 'transparent', border: 'none', boxShadow: 'none'}}>
-            <div className={styles.pulseDot} style={{width: '30px', height: '30px', margin: '0 auto'}}></div>
-            <h3 style={{marginTop: '20px'}}>Processing Webhook...</h3>
-          </div>
-        </div>
-
       </div>
     </div>
   );

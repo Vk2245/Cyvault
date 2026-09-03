@@ -17,6 +17,9 @@
   --color-inverse-primary: #3b82f6;
   --color-inverse-surface: #1e293b;
 
+  /* Global HTML Settings */
+  html { scroll-behavior: smooth; }
+
   /* Custom Cyvault Text Gradient */
   --cyvault-start: #030712;
   --cyvault-mid: var(--color-primary);

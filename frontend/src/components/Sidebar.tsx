@@ -7,7 +7,8 @@ import {
   LayoutDashboard, 
   TriangleAlert, 
   Network, 
-  Store, 
+  Store,
+  Users,
   Gavel, 
   Receipt, 
   Radar, 
@@ -22,9 +23,9 @@ export default function Sidebar() {
 
   const links = [
     { name: 'Dashboard', path: '/recovery', icon: LayoutDashboard },
-    { name: 'Alerts', path: '#', icon: TriangleAlert },
+    { name: 'Alerts', path: '/alerts', icon: TriangleAlert },
     { name: 'Entity Graph', path: '/graph', icon: Network },
-    { name: 'Merchants', path: '#', icon: Store },
+    { name: 'Users', path: '/users', icon: Users },
     { name: 'Policies', path: '/policies', icon: Gavel },
     { name: 'Action Feed', path: '/feed', icon: Receipt },
     { name: 'Leakage Radar', path: '/radar', icon: Radar },
@@ -42,8 +43,8 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 h-full w-64 border-r border-white/10 bg-background/80 dark:bg-background/80 backdrop-blur-xl flex flex-col z-40 hidden md:flex">
       {/* Header */}
       <Link href="/" className="px-6 py-8 border-b border-white/10 mb-6 flex items-center gap-4 hover:opacity-80 transition-opacity">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(139,92,246,0.4)] text-black">
-          <Shield size={24} />
+        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0">
+          <img src="/cyvault_transparent.png" alt="Cyvault Logo" className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.3)]" />
         </div>
         <div>
           <h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary tracking-tight leading-none">

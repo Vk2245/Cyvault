@@ -1,11 +1,13 @@
 from fastapi import FastAPI, Depends, Request, HTTPException
+from pydantic import BaseModel
+import uuid
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
 from backend.config import settings
-from backend.database_schema import get_db, init_db, Merchant, Order, Settlement
+from backend.database_schema import get_db, init_db, Merchant, Order, Settlement, Customer, Transaction, ActionReceipt, PolicyRule
 from backend.webhook_handler import verify_razorpay_signature, parse_webhook_event
 from backend.llm_provider_router import get_llm_response
 
@@ -215,6 +217,113 @@ def simulate_webhook(payload: dict):
         
     parse_webhook_event(event_dict)
     return {"status": "success", "simulated_event": event_dict["event"]}
+
+# ==========================================
+# DASHBOARD ENDPOINTS
+# ==========================================
+@app.get("/api/merchants/{merchant_id}/dashboard")
+def get_dashboard_kpis(merchant_id: str, db: Session = Depends(get_db)):
+    # Calculate mock KPIs based on DB or return defaults
+    orders = db.query(Order).filter(Order.merchant_id == merchant_id).all()
+    transactions = db.query(Transaction).join(Order).filter(Order.merchant_id == merchant_id).all()
+    
+    # Defaults
+    at_risk = 147500
+    recovered = 102300
+    blocked = 7
+    rate = 68.4
+    
+    if orders:
+        failed_orders = [o for o in orders if o.status == 'attempted'] # rough proxy
+        at_risk = sum(o.amount_paise for o in failed_orders) / 100
+        
+    return {
+        "at_risk": at_risk,
+        "recovered": recovered,
+        "recovery_rate": rate,
+        "blocked": blocked,
+        "recent_cases": [
+            {"order_id": "#4521", "customer": "Ravi S.", "amount": 2499, "type": "Payment Fail", "intervention": "Payment Link", "status": "Success (Recovered)", "color": "emerald"},
+            {"order_id": "#4590", "customer": "Amit K.", "amount": 12000, "type": "Payment Fail", "intervention": "—", "status": "Error (Blocked - Fraud)", "color": "red"},
+            {"order_id": "#4601", "customer": "Neha R.", "amount": 3200, "type": "Cart Abandon", "intervention": "Email", "status": "Warning (Pending)", "color": "cyan"}
+        ]
+    }
+
+@app.get("/api/merchants/{merchant_id}/customers")
+def get_customers(merchant_id: str, db: Session = Depends(get_db)):
+    customers = db.query(Customer).filter(Customer.merchant_id == merchant_id).all()
+    return [{"id": c.id, "email": c.email, "phone": c.phone, "device_fingerprint": c.device_fingerprint, "created_at": c.created_at.isoformat()} for c in customers]
+
+@app.get("/api/merchants/{merchant_id}/graph")
+def get_graph_data(merchant_id: str, db: Session = Depends(get_db)):
+    customers = db.query(Customer).filter(Customer.merchant_id == merchant_id).all()
+    
+    nodes = []
+    edges = []
+    
+    # Generate mock graph if no data
+    if not customers:
+        return {"nodes": [], "edges": []}
+        
+    # Simplified graph generation for demo
+    for c in customers:
+        nodes.append({"id": c.id, "label": c.email or c.id, "type": "customer", "group": 1})
+        if c.device_fingerprint:
+            nodes.append({"id": f"dev_{c.device_fingerprint}", "label": c.device_fingerprint, "type": "device", "group": 2})
+            edges.append({"source": c.id, "target": f"dev_{c.device_fingerprint}"})
+            
+    return {"nodes": nodes, "edges": edges}
+
+@app.get("/api/merchants/{merchant_id}/alerts")
+def get_alerts(merchant_id: str, db: Session = Depends(get_db)):
+    receipts = db.query(ActionReceipt).filter(ActionReceipt.merchant_id == merchant_id).order_by(ActionReceipt.created_at.desc()).limit(20).all()
+    
+    alerts = []
+    for r in receipts:
+        alerts.append({
+            "id": r.id,
+            "action_type": r.action_type,
+            "decision": r.decision,
+            "narrative": r.narrative,
+            "created_at": r.created_at.isoformat()
+        })
+    return alerts
+
+class CustomerChatRequest(BaseModel):
+    message: str
+    merchant_id: str
+    customer_id: str
+
+@app.post("/api/customer/chat")
+def customer_chat(req: CustomerChatRequest, db: Session = Depends(get_db)):
+    message = req.message.lower()
+    
+    reply = "I can help with your order. What do you need?"
+    action_taken = None
+    
+    if "discount" in message:
+        reply = "We noticed your payment failed. As a special offer, we've applied an instant 5% discount to your cart! Would you like to retry?"
+        action_taken = {
+            "type": "discount_offered",
+            "narrative": f"Cyvault Recovery AI offered 5% discount to Customer {req.customer_id} under Policy: max_discount_5% | Status: Awaiting Response"
+        }
+        
+        # Log action
+        receipt = ActionReceipt(
+            id=f"act_{uuid.uuid4().hex[:8]}",
+            merchant_id=req.merchant_id,
+            action_type="offer_discount",
+            entity_id=req.customer_id,
+            decision="ALLOWED",
+            narrative=action_taken["narrative"]
+        )
+        db.add(receipt)
+        db.commit()
+        
+    elif "refund" in message:
+        reply = "I can process a refund for your recent transaction. It usually takes 5-7 business days."
+        
+    return {"reply": reply, "action_taken": action_taken}
 
 if __name__ == "__main__":
     import uvicorn
