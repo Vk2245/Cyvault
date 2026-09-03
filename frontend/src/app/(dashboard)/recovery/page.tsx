@@ -37,7 +37,7 @@ export default function Recovery() {
             <Menu size={24} />
           </button>
           <h2 
-            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent uppercase tracking-wider drop-shadow-md"
+            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
             style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
           >
             Recovery Command

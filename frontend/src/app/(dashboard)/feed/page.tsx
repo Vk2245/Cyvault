@@ -13,10 +13,10 @@ export default function Feed() {
 
   return (
     <main className="flex-1 flex flex-col h-full relative w-full text-white">
-      <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-2xl flex items-center justify-between px-margin-desktop w-full shrink-0 z-30 sticky top-0">
+      <header className="docked full-width top-0 sticky z-40 border-b border-white/5 backdrop-blur-2xl bg-black/40 flex justify-between items-center h-16 px-4 md:px-margin-desktop shrink-0">
         <div className="flex items-center gap-4">
           <h2 
-            className="font-headline-md font-bold bg-clip-text text-transparent drop-shadow-md"
+            className="font-headline-md text-headline-md font-bold bg-clip-text text-transparent flex items-center gap-2 drop-shadow-md"
             style={{ backgroundImage: 'linear-gradient(to right, var(--color-primary), #a78bfa, var(--color-secondary))' }}
           >
             Action Feed
