@@ -18,8 +18,6 @@
   --color-inverse-surface: #1e293b;
 
   /* Global HTML Settings */
-  html { scroll-behavior: smooth; }
-
   /* Custom Cyvault Text Gradient */
   --cyvault-start: #030712;
   --cyvault-mid: var(--color-primary);
@@ -83,6 +81,9 @@
   /* Hero Video Mask */
   --hero-mask: radial-gradient(circle, black 60%, transparent 90%);
 }
+
+/* Global HTML Settings */
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--color-background);
