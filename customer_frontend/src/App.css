@@ -1,0 +1,239 @@
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Left Side: Merchant Dashboard */
+.merchant-side {
+  flex: 1.2;
+  border-right: 1px solid var(--panel-border);
+  position: relative;
+  background: #000;
+}
+
+.dashboard-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Right Side: Customer Simulator */
+.customer-side {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.simulator-header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--success);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+/* Demo Controls Wrapper */
+.demo-controls-wrapper {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  color: var(--neon-cyan);
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+  padding-bottom: 10px;
+}
+
+/* Store Checkout Card */
+.checkout-card {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.product-image {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(45deg, #2a1b4d, #42207a);
+  border-radius: 12px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  margin-top: 10px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Hackathon Features Card */
+.hackathon-features-card {
+  padding: 30px;
+}
+
+.feature-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feature-item {
+  background: rgba(0,0,0,0.2);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.feature-item h4 {
+  color: var(--text-main);
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+.feature-item p {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+.btn-fraud {
+  border-color: var(--error);
+  color: var(--error);
+}
+.btn-fraud:hover { background: rgba(255, 51, 102, 0.1); }
+
+.btn-finance {
+  border-color: var(--success);
+  color: var(--success);
+}
+.btn-finance:hover { background: rgba(0, 230, 118, 0.1); }
+
+.btn-support {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+.btn-support:hover { background: rgba(0, 245, 255, 0.1); }
+
+/* AI Popup Modal */
+.ai-modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.ai-modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.ai-modal {
+  width: 90%;
+  max-width: 380px;
+  padding: 30px;
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  border-top: 4px solid var(--neon-purple);
+}
+
+.ai-modal-overlay.active .ai-modal {
+  transform: translateY(0);
+}
+
+.ai-avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--neon-purple);
+  border-radius: 50%;
+  margin: -50px auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 0 20px var(--neon-purple);
+}
+
+.typing-indicator {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}

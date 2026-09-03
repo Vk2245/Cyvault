@@ -18,5 +18,10 @@ bug_fixes/
 !requirements.txt
 !README.md
 !backend/requirements.txt
-!frontend/README.md
 Razorpay Hackathon Product Strategy.docx
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+cyvault*.db

@@ -1,0 +1,281 @@
+.appContainer {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #090610;
+  color: #f8f9fa;
+}
+
+/* Left Side: Merchant Dashboard */
+.merchantSide {
+  flex: 1.2;
+  border-right: 1px solid rgba(157, 78, 221, 0.2);
+  position: relative;
+  background: #000;
+}
+
+.dashboardIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Right Side: Customer Simulator */
+.customerSide {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  overflow-y: auto;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(157, 78, 221, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(0, 245, 255, 0.1), transparent 25%);
+}
+
+.simulatorHeader {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 0.85rem;
+  color: #adb5bd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  background-color: #00e676;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00e676;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+.glassPanel {
+  background: rgba(25, 15, 45, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(157, 78, 221, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.demoControlsWrapper {
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  color: #00f5ff;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+  padding-bottom: 10px;
+}
+
+/* Store Checkout Card */
+.checkoutCard {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.productInfo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.productImage {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(45deg, #2a1b4d, #42207a);
+  border-radius: 12px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00f5ff;
+  margin-top: 10px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Hackathon Features Card */
+.hackathonFeaturesCard {
+  padding: 30px;
+}
+
+.featureGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.featureItem {
+  background: rgba(0,0,0,0.2);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.featureItem h4 {
+  color: #f8f9fa;
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+.featureItem p {
+  color: #adb5bd;
+  font-size: 0.8rem;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+}
+
+.btnOutline {
+  background: transparent;
+  color: #f8f9fa;
+  border: 1px solid #9d4edd;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btnOutline:hover { background: rgba(157, 78, 221, 0.1); }
+
+.btnSm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+.btnFraud {
+  border-color: #ff3366;
+  color: #ff3366;
+}
+.btnFraud:hover { background: rgba(255, 51, 102, 0.1); }
+
+.btnFinance {
+  border-color: #00e676;
+  color: #00e676;
+}
+.btnFinance:hover { background: rgba(0, 230, 118, 0.1); }
+
+.btnSupport {
+  border-color: #00f5ff;
+  color: #00f5ff;
+}
+.btnSupport:hover { background: rgba(0, 245, 255, 0.1); }
+
+/* AI Popup Modal */
+.aiModalOverlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.aiModalOverlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.aiModal {
+  width: 90%;
+  max-width: 380px;
+  padding: 30px;
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  border-top: 4px solid #9d4edd;
+}
+
+.aiModalOverlay.active .aiModal {
+  transform: translateY(0);
+}
+
+.aiAvatar {
+  width: 60px;
+  height: 60px;
+  background: #9d4edd;
+  border-radius: 50%;
+  margin: -50px auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 0 20px #9d4edd;
+}
+
+.typingIndicator {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.typingIndicator span {
+  width: 8px;
+  height: 8px;
+  background: #adb5bd;
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typingIndicator span:nth-child(1) { animation-delay: -0.32s; }
+.typingIndicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
