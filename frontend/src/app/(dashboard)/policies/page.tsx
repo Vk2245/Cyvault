@@ -22,129 +22,22 @@ export default function Policies() {
 </div>
 <h3 className="font-headline-md text-headline-md text-on-surface">Active Policies</h3>
 </div>
-<span className="bg-surface-container-high border border-white/10 text-on-surface font-label-mono text-xs px-3 py-1 rounded-full">5 Rules</span>
+<span className="bg-surface-container-high border border-white/10 text-on-surface font-label-mono text-xs px-3 py-1 rounded-full">0 Rules</span>
 </div>
 {/* Policy List Container */}
 <div className="flex flex-col gap-3 overflow-y-auto pr-2" style={{maxHeight: 'calc(100vh - 280px)'}}>
-{/* Policy Card 1 */}
-<div className="glass-card rounded-xl p-4 relative group">
-<div className="flex justify-between items-start mb-2">
-<div className="flex items-center gap-2">
-<span className="status-active status-dot"></span>
-<span className="font-label-mono text-primary text-sm font-bold tracking-wide">retry_under_5k</span>
+{/* Empty State */}
+<div className="flex flex-col items-center justify-center text-center p-8 border border-dashed border-white/20 rounded-xl bg-white/5">
+<AlertTriangle size={32} className="text-on-surface-variant mb-4 opacity-50" />
+<h4 className="text-on-surface font-semibold mb-2">No Active Policies</h4>
+<p className="text-sm text-on-surface-variant max-w-[200px] mb-4">Create your first automated recovery rule.</p>
 </div>
-<div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><Edit2 size={18} /></button>
-<button className="hover:text-error"><Trash2 size={18} /></button>
+{/* Add Button */}
+<button className="mt-4 w-full py-3 bg-white text-black font-semibold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+<Plus size={20} />
+                            Add New Policy
+                        </button>
 </div>
-</div>
-<p className="text-on-surface-variant text-sm mb-4">Auto-retry payments under ₹5,000.</p>
-<div className="flex justify-between items-center mt-auto border-t border-white/5 pt-3">
-<span className="text-xs font-label-mono text-on-surface-variant bg-white/5 px-2 py-1 rounded">0 violations</span>
-{/* Toggle */}
-<div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-<input defaultChecked className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out border-primary" id="toggle1" name="toggle1" style={{transform: 'translateX(100%)', right: 'auto', left: '0'}} type="checkbox"/>
-<label className="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer transition-colors duration-200 ease-in-out" htmlFor="toggle1"></label>
-</div>
-</div>
-</div>
-{/* Policy Card 2 */}
-<div className="glass-card rounded-xl p-4 relative group">
-<div className="flex justify-between items-start mb-2">
-<div className="flex items-center gap-2">
-<span className="status-active status-dot"></span>
-<span className="font-label-mono text-primary text-sm font-bold tracking-wide">max_2_recovery</span>
-</div>
-<div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><Edit2 size={18} /></button>
-<button className="hover:text-error"><Trash2 size={18} /></button>
-</div>
-</div>
-<p className="text-on-surface-variant text-sm mb-4">Max 2 recovery messages per customer per day.</p>
-<div className="flex justify-between items-center mt-auto border-t border-white/5 pt-3">
-<span className="text-xs font-label-mono text-on-surface-variant bg-white/5 px-2 py-1 rounded">0 violations</span>
-{/* Toggle */}
-<div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-<input defaultChecked className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out border-primary" id="toggle2" name="toggle2" style={{transform: 'translateX(100%)', right: 'auto', left: '0'}} type="checkbox"/>
-<label className="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer transition-colors duration-200 ease-in-out" htmlFor="toggle2"></label>
-</div>
-</div>
-</div>
-{/* Policy Card 3 */}
-<div className="glass-card rounded-xl p-4 relative group border-primary/30 bg-primary/5">
-<div className="flex justify-between items-start mb-2">
-<div className="flex items-center gap-2">
-<span className="status-active status-dot"></span>
-<span className="font-label-mono text-primary text-sm font-bold tracking-wide">block_high_risk</span>
-</div>
-<div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><Edit2 size={18} /></button>
-<button className="hover:text-error"><Trash2 size={18} /></button>
-</div>
-</div>
-<p className="text-on-surface-variant text-sm mb-4">Block customers with risk score above 0.7.</p>
-<div className="flex justify-between items-center mt-auto border-t border-white/5 pt-3">
-<span className="text-xs font-label-mono text-on-surface-variant bg-white/5 px-2 py-1 rounded">0 violations</span>
-{/* Toggle */}
-<div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-<input defaultChecked className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out border-primary" id="toggle3" name="toggle3" style={{transform: 'translateX(100%)', right: 'auto', left: '0'}} type="checkbox"/>
-<label className="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer transition-colors duration-200 ease-in-out" htmlFor="toggle3"></label>
-</div>
-</div>
-</div>
-{/* Policy Card 4 */}
-<div className="glass-card rounded-xl p-4 relative group">
-<div className="flex justify-between items-start mb-2">
-<div className="flex items-center gap-2">
-<span className="status-active status-dot"></span>
-<span className="font-label-mono text-secondary text-sm font-bold tracking-wide flex items-center gap-1">
-                                        approval_above_10k
-                                        <AlertTriangle size={14} />
-</span>
-</div>
-<div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><Edit2 size={18} /></button>
-<button className="hover:text-error"><Trash2 size={18} /></button>
-</div>
-</div>
-<p className="text-on-surface-variant text-sm mb-4">Need approval for retry above ₹10,000.</p>
-<div className="flex justify-between items-center mt-auto border-t border-white/5 pt-3">
-<span className="text-xs font-label-mono text-on-surface-variant bg-white/5 px-2 py-1 rounded">0 violations</span>
-{/* Toggle */}
-<div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-<input defaultChecked className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out border-primary" id="toggle4" name="toggle4" style={{transform: 'translateX(100%)', right: 'auto', left: '0'}} type="checkbox"/>
-<label className="toggle-label block overflow-hidden h-5 rounded-full bg-primary cursor-pointer transition-colors duration-200 ease-in-out" htmlFor="toggle4"></label>
-</div>
-</div>
-</div>
-{/* Policy Card 5 (Paused) */}
-<div className="glass-card rounded-xl p-4 relative group opacity-60 hover:opacity-100">
-<div className="flex justify-between items-start mb-2">
-<div className="flex items-center gap-2">
-<span className="status-paused status-dot"></span>
-<span className="font-label-mono text-on-surface text-sm font-bold tracking-wide">discount_cap_5pct</span>
-</div>
-<div className="flex gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-<button className="hover:text-primary"><Edit2 size={18} /></button>
-<button className="hover:text-error"><Trash2 size={18} /></button>
-</div>
-</div>
-<p className="text-on-surface-variant text-sm mb-4">Maximum 5% discount for recovery.</p>
-<div className="flex justify-between items-center mt-auto border-t border-white/5 pt-3">
-<span className="text-xs font-label-mono text-on-surface-variant bg-white/5 px-2 py-1 rounded">0 violations</span>
-{/* Toggle (Off) */}
-<div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-<input className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 transition-transform duration-200 ease-in-out border-surface-container-highest" id="toggle5" name="toggle5" style={{transform: 'translateX(0)', left: '0', right: 'auto'}} type="checkbox"/>
-<label className="toggle-label block overflow-hidden h-5 rounded-full bg-surface-container-highest cursor-pointer transition-colors duration-200 ease-in-out" htmlFor="toggle5"></label>
-</div>
-</div>
-</div>
-</div>
-{/* Add New Button */}
-<button className="mt-4 w-full py-4 bg-white text-black rounded-full font-bold hover:bg-white/90 transition-colors flex items-center justify-center gap-2 shadow-sm">
-<Plus size={24} />
-                        Add New Policy
-                    </button>
 </section>
 {/* RIGHT COLUMN: Create / Edit Policy (AI Workspace) */}
 <section className="lg:col-span-7 xl:col-span-8 flex flex-col h-full mt-8 lg:mt-0">
