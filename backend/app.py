@@ -161,6 +161,17 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
     merchant_id = payload.get("merchant_id", "demo_merchant_1")
     customer_id = payload.get("customer_id", "sim_demo_999")
     
+    # Ensure merchant exists before doing anything (crucial for fresh DBs)
+    existing_merchant = db.query(Merchant).filter(Merchant.id == merchant_id).first()
+    if not existing_merchant:
+        new_merchant = Merchant(
+            id=merchant_id,
+            name=f"Merchant {merchant_id[-4:]}",
+            api_key_hash="demo_hash"
+        )
+        db.add(new_merchant)
+        db.commit()
+    
     from backend.action_receipt_logger import log_action_receipt
     import random
     
