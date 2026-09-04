@@ -16,6 +16,23 @@ export default function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Load chat history from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(`cyvault_chat_${merchantId}`);
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch (e) {}
+    }
+  }, [merchantId]);
+
+  // Save chat history to localStorage whenever it changes
+  useEffect(() => {
+    if (messages.length > 1) { // Don't save if it's just the default initial message
+      localStorage.setItem(`cyvault_chat_${merchantId}`, JSON.stringify(messages));
+    }
+  }, [messages, merchantId]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -89,7 +106,7 @@ export default function Chatbot() {
                 <div className={`w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center mt-1 border overflow-hidden ${msg.role === 'user' ? 'bg-surface-variant border-[#ffffff1a]' : 'bg-[rgba(59,130,246,0.1)] border-[#3B82F6]'}`}>
                   {msg.role === 'user' ? <User size={18} className="text-on-surface-variant" /> : <Bot size={18} className="text-[#3B82F6]" />}
                 </div>
-                <div className={`p-4 text-on-surface font-body-md text-body-md leading-relaxed ${msg.role === 'user' ? 'chat-bubble-user text-right' : 'chat-bubble-agent'}`}>
+                <div className={`p-4 text-on-surface font-body-md text-body-md leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'chat-bubble-user text-right' : 'chat-bubble-agent'}`}>
                   {msg.content}
                 </div>
               </div>
