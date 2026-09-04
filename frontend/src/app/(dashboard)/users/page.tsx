@@ -65,7 +65,12 @@ export default function Users() {
                  <tbody className="font-body-md text-sm divide-y divide-[#ffffff0a]">
                    {users.map((user, index) => (
                      <tr key={user.id} className="hover:bg-[#ffffff08] transition-colors">
-                       <td className="py-4 px-6 font-label-mono text-primary font-medium">{user.id}</td>
+                       <td className="py-4 px-6 font-label-mono text-primary font-medium flex items-center gap-2">
+                         {user.id}
+                         {user.is_blocked && (
+                           <span className="px-2 py-0.5 rounded bg-red-500/20 border border-red-500/40 text-[9px] text-red-400">BLOCKED</span>
+                         )}
+                       </td>
                        <td className="py-4 px-6">{user.email || '—'}</td>
                        <td className="py-4 px-6 font-label-mono text-on-surface-variant">{user.phone ? user.phone.replace(/(\+91-\d{2})\d{6}(\d{2})/, "$1XXXXXX$2") : '—'}</td>
                        <td className="py-4 px-6">

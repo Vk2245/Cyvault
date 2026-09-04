@@ -42,6 +42,7 @@ class Customer(Base):
     phone = Column(String, nullable=True)
     email = Column(String, nullable=True)
     device_fingerprint = Column(String, nullable=True) # Critical for Entity Graph (Fraud Rings)
+    is_blocked = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class Order(Base):
@@ -122,5 +123,13 @@ def get_db():
     finally:
         db.close()
 
+from sqlalchemy.sql import text
+
 def init_db():
     Base.metadata.create_all(bind=engine)
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE customers ADD COLUMN is_blocked BOOLEAN DEFAULT FALSE;"))
+    except Exception as e:
+        # Column likely already exists
+        pass

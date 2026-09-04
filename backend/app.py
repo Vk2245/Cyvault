@@ -203,12 +203,26 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         )
         db.add(new_tx)
         
+        # Check active policies to dynamically set discount
+        active_policies = db.query(PolicyRule).filter(PolicyRule.merchant_id == merchant_id, PolicyRule.is_active == True).all()
+        discount_offered = 5 # default
+        policy_name = "default_5%"
+        
+        if active_policies:
+            import re
+            combined_text = " ".join([p.description + " " + str(p.parameters) for p in active_policies])
+            matches = re.findall(r'(\d+(?:\.\d+)?)%', combined_text)
+            if matches:
+                percentages = [float(m) for m in matches]
+                discount_offered = min(percentages) # Use the lowest initial discount specified
+                policy_name = active_policies[0].name
+
         # 4. Log Action Receipt (so Alerts tab and Simulator Feed populate)
-        narrative = f"🤖 Cyvault Recovery AI offered 5% discount to Customer {customer_id} | Policy: max_discount_5% | Status: Awaiting Response"
+        narrative = f"🤖 Cyvault Recovery AI offered {discount_offered}% discount to Customer {customer_id} | Policy: {policy_name} | Status: Awaiting Response"
         log_action_receipt(db, merchant_id, "offer_discount", order_id, "ALLOWED", narrative)
         
         db.commit()
-        return {"status": "success", "simulated_event": "payment.failed", "customer_id": customer_id, "order_id": order_id}
+        return {"status": "success", "simulated_event": "payment.failed", "customer_id": customer_id, "order_id": order_id, "discount_offered": discount_offered}
         
     elif scenario == "fraud_attack":
         # Create 3 customers with SAME device fingerprint to trigger fraud ring detection
@@ -380,7 +394,25 @@ def get_dashboard_kpis(merchant_id: str, db: Session = Depends(get_db)):
 @app.get("/api/merchants/{merchant_id}/customers")
 def get_customers(merchant_id: str, db: Session = Depends(get_db)):
     customers = db.query(Customer).filter(Customer.merchant_id == merchant_id).all()
-    return [{"id": c.id, "email": c.email, "phone": c.phone, "device_fingerprint": c.device_fingerprint, "created_at": c.created_at.isoformat()} for c in customers]
+    return [{"id": c.id, "email": c.email, "phone": c.phone, "device_fingerprint": c.device_fingerprint, "is_blocked": getattr(c, 'is_blocked', False), "created_at": c.created_at.isoformat()} for c in customers]
+
+class BlockCustomerRequest(BaseModel):
+    device_fingerprint: str = None
+    customer_id: str = None
+
+@app.post("/api/merchants/{merchant_id}/customers/block")
+def block_customer_cluster(merchant_id: str, req: BlockCustomerRequest, db: Session = Depends(get_db)):
+    if req.device_fingerprint:
+        fp = req.device_fingerprint.replace("dev_", "")
+        customers = db.query(Customer).filter(Customer.merchant_id == merchant_id, Customer.device_fingerprint == fp).all()
+        for c in customers:
+            c.is_blocked = True
+    elif req.customer_id:
+        c = db.query(Customer).filter(Customer.merchant_id == merchant_id, Customer.id == req.customer_id).first()
+        if c:
+            c.is_blocked = True
+    db.commit()
+    return {"status": "success"}
 
 @app.get("/api/merchants/{merchant_id}/graph")
 def get_graph_data(merchant_id: str, db: Session = Depends(get_db)):
@@ -455,19 +487,38 @@ class CustomerChatRequest(BaseModel):
 
 @app.post("/api/customer/chat")
 def customer_chat(req: CustomerChatRequest, db: Session = Depends(get_db)):
-    message = req.message.lower()
+    # Get active policies to inform the AI
+    active_policies = db.query(PolicyRule).filter(PolicyRule.merchant_id == req.merchant_id, PolicyRule.is_active == True).all()
+    policy_context = ""
+    if active_policies:
+        policy_context = "Active Merchant Policies (You MUST obey these rules):\n" + "\n".join([f"- {p.name}: {p.description}" for p in active_policies])
     
-    reply = "I can help with your order. What do you need?"
+    prompt = f"""You are Cyvault AI Support, a helpful and professional customer support bot for a merchant's storefront.
+The customer's payment just failed. They are reaching out to you.
+{policy_context}
+If they ask for a discount, check the policies. If a discount is allowed, offer the exact percentage specified in the policy. If no policy exists, offer a default 5% discount.
+If they ask to process an order or refund, assist them politely.
+Keep responses concise, 1-2 sentences max.
+Customer says: "{req.message}"
+Respond politely:"""
+
+    try:
+        reply = get_llm_response(prompt, task_type="general")
+    except Exception as e:
+        reply = "I can help with your order. What do you need?"
+        
     action_taken = None
     
-    if "discount" in message:
-        reply = "We noticed your payment failed. As a special offer, we've applied an instant 5% discount to your cart! Would you like to retry?"
+    # Heuristic to log if a discount was likely offered
+    message_lower = req.message.lower()
+    if "discount" in message_lower or "%" in reply:
         action_taken = {
             "type": "discount_offered",
-            "narrative": f"Cyvault Recovery AI offered 5% discount to Customer {req.customer_id} under Policy: max_discount_5% | Status: Awaiting Response"
+            "narrative": f"Cyvault Recovery AI engaged in discount negotiation with Customer {req.customer_id} via Chatbot | Status: Active"
         }
         
         # Log action
+        import uuid
         receipt = ActionReceipt(
             id=f"act_{uuid.uuid4().hex[:8]}",
             merchant_id=req.merchant_id,
@@ -478,9 +529,6 @@ def customer_chat(req: CustomerChatRequest, db: Session = Depends(get_db)):
         )
         db.add(receipt)
         db.commit()
-        
-    elif "refund" in message:
-        reply = "I can process a refund for your recent transaction. It usually takes 5-7 business days."
         
     return {"reply": reply, "action_taken": action_taken}
 

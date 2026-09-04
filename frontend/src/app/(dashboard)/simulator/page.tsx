@@ -87,45 +87,13 @@ export default function SimulatorPage() {
     await new Promise(r => setTimeout(r, 500));
     // Skip 'failed' state, go straight to AI intercept
     setPaymentState('negotiating');
-    await triggerBackend('recovery_fail');
-    setTimeout(async () => {
-      // Fetch active policies to dynamically cap discount for demo!
-      let maxAllowed = 15;
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/${merchantId}/policies`);
-        if (res.ok) {
-          const policies = await res.json();
-          if (policies.length > 0) {
-            // Very simple parser for hackathon demo: look for numbers with % sign in the description or condition
-            const combinedText = policies.map((p: any) => p.description + " " + (p.parameters?.condition || "")).join(" ");
-            const percentMatch = combinedText.match(/(\d+(\.\d+)?)%/);
-            if (percentMatch) {
-              maxAllowed = parseFloat(percentMatch[1]);
-            }
-          }
-        }
-      } catch(e) {}
-      
-      // Pick a random discount: 5%, 10%, or 15%, but cap it at maxAllowed!
-      const dynamicDiscounts = [5, 10, 15];
-      let randomDiscount = dynamicDiscounts[Math.floor(Math.random() * dynamicDiscounts.length)];
-      
-      if (randomDiscount > maxAllowed) {
-         // If our generated discount is higher than policy allows, we override it to the exact policy limit!
-         randomDiscount = maxAllowed;
-         
-         // Log a fake action feed alert that policy intervened
-         setActionFeed(prev => [{
-            id: `alert_${Date.now()}`,
-            merchant_id: merchantId,
-            action_type: "POLICY_ENFORCED",
-            decision: "BLOCKED",
-            narrative: `Cyvault intercepted AI: Tried to offer discount higher than ${maxAllowed}%. Capped to policy limit.`,
-            created_at: new Date().toISOString()
-         }, ...prev]);
+    const res = await triggerBackend('recovery_fail');
+    setTimeout(() => {
+      let finalDiscount = 5;
+      if (res && res.discount_offered) {
+         finalDiscount = res.discount_offered;
       }
-      
-      setDiscount(randomDiscount); 
+      setDiscount(finalDiscount); 
     }, 1500);
   };
 

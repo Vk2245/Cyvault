@@ -9,6 +9,8 @@ export default function Graph() {
   const [data, setData] = useState<any>({ nodes: [], edges: [] });
   const [loading, setLoading] = useState(true);
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [showOnlyHighRisk, setShowOnlyHighRisk] = useState(false);
+  const [blockedClusters, setBlockedClusters] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchGraph = async () => {
@@ -41,6 +43,34 @@ export default function Graph() {
     const connectedCustomers = data.edges.filter((e: any) => e.target === d.id).length;
     return connectedCustomers > 1;
   });
+
+  let displayDeviceNodes = deviceNodes.filter((d: any) => !blockedClusters.includes(d.id));
+  if (showOnlyHighRisk) {
+    displayDeviceNodes = displayDeviceNodes.filter((d: any) => highRiskDevices.find((h: any) => h.id === d.id));
+  }
+
+  const handleBlockCluster = async () => {
+    if (selectedNode) {
+      const deviceId = selectedNode.type === 'device' 
+        ? selectedNode.id 
+        : data.edges.find((e: any) => e.source === selectedNode.id)?.target;
+        
+      if (deviceId) {
+        setBlockedClusters(prev => [...prev, deviceId]);
+        setSelectedNode(null);
+        
+        try {
+          await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/${merchantId}/customers/block`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_fingerprint: deviceId })
+          });
+        } catch (e) {
+          console.error("Failed to block cluster", e);
+        }
+      }
+    }
+  };
 
   return (
     <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden text-white">
@@ -82,12 +112,12 @@ export default function Graph() {
               <div className="relative w-96 h-96">
               
               {/* We render each device cluster at a calculated position */}
-              {deviceNodes.map((deviceNode: any, clusterIndex: number) => {
+              {displayDeviceNodes.map((deviceNode: any, clusterIndex: number) => {
                 // Distribute device nodes in a circle if there are multiple
-                const clusterAngle = deviceNodes.length > 1 ? (clusterIndex / deviceNodes.length) * 2 * Math.PI : 0;
-                const clusterRadius = deviceNodes.length > 1 ? 250 : 0; // offset from center
-                const clusterCenterX = deviceNodes.length > 1 ? Math.cos(clusterAngle) * clusterRadius : 0;
-                const clusterCenterY = deviceNodes.length > 1 ? Math.sin(clusterAngle) * clusterRadius : 0;
+                const clusterAngle = displayDeviceNodes.length > 1 ? (clusterIndex / displayDeviceNodes.length) * 2 * Math.PI : 0;
+                const clusterRadius = displayDeviceNodes.length > 1 ? 250 : 0; // offset from center
+                const clusterCenterX = displayDeviceNodes.length > 1 ? Math.cos(clusterAngle) * clusterRadius : 0;
+                const clusterCenterY = displayDeviceNodes.length > 1 ? Math.sin(clusterAngle) * clusterRadius : 0;
                 
                 // Get customers connected to this device
                 const connectedEdges = data.edges.filter((e: any) => e.target === deviceNode.id);
@@ -186,6 +216,17 @@ export default function Graph() {
               </div>
             </motion.div>
 
+            {/* Controls panel */}
+            <div className="absolute top-8 left-8 z-30 flex flex-col gap-3">
+              <button 
+                onClick={() => setShowOnlyHighRisk(!showOnlyHighRisk)}
+                className={`px-4 py-2 rounded-full border text-sm font-label-mono flex items-center gap-2 transition-colors ${showOnlyHighRisk ? 'bg-red-500/20 border-red-500/40 text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'bg-surface-container border-white/10 text-on-surface-variant hover:text-white'}`}
+              >
+                <Filter size={16} /> 
+                {showOnlyHighRisk ? 'Showing High Risk Only' : 'Filter High Risk Only'}
+              </button>
+            </div>
+
             {/* High Risk Cluster Label */}
             {highRiskDevices.length > 0 && (
               <motion.div 
@@ -273,7 +314,10 @@ export default function Graph() {
                   </ul>
                 </div>
                 
-                <button className="w-full py-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-label-mono text-xs hover:bg-red-500/20 transition-colors uppercase tracking-wider flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleBlockCluster}
+                  className="w-full py-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-label-mono text-xs hover:bg-red-500/20 transition-colors uppercase tracking-wider flex items-center justify-center gap-2"
+                >
                   <AlertTriangle size={14} />
                   Block Cluster
                 </button>
