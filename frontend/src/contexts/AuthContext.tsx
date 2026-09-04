@@ -41,10 +41,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    setMerchantId(null);
-    localStorage.removeItem('cyvault_auth');
+    if (window.confirm("Are you sure you want to log out of Cyvault?")) {
+      setIsAuthenticated(false);
+      setUser(null);
+      setMerchantId(null);
+      localStorage.removeItem('cyvault_auth');
+    }
   };
 
   return (

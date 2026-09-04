@@ -33,11 +33,14 @@ export default function Graph() {
 
   const hasData = data && data.nodes && data.nodes.length > 0;
 
-  // Simple layout logic for demo: Customer nodes orbit around a central device node
-  const deviceNode = data.nodes.find((n: any) => n.type === 'device');
+  const deviceNodes = data.nodes.filter((n: any) => n.type === 'device');
   const customerNodes = data.nodes.filter((n: any) => n.type === 'customer');
 
-  return (
+  // Identify high risk clusters (devices with >1 customer)
+  const highRiskDevices = deviceNodes.filter((d: any) => {
+    const connectedCustomers = data.edges.filter((e: any) => e.target === d.id).length;
+    return connectedCustomers > 1;
+  });
     <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden text-white">
       <div className="flex-1 relative overflow-hidden flex items-center justify-center animate-fade-in-up">
         {loading ? (
@@ -69,87 +72,106 @@ export default function Graph() {
             
             <div className="relative w-96 h-96">
               
-              {/* Edges */}
-              {deviceNode && customerNodes.map((node: any, index: number) => {
-                const angle = (index / customerNodes.length) * 2 * Math.PI;
-                const radius = 140;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
+              {/* We render each device cluster at a calculated position */}
+              {deviceNodes.map((deviceNode: any, clusterIndex: number) => {
+                // Distribute device nodes in a circle if there are multiple
+                const clusterAngle = deviceNodes.length > 1 ? (clusterIndex / deviceNodes.length) * 2 * Math.PI : 0;
+                const clusterRadius = deviceNodes.length > 1 ? 250 : 0; // offset from center
+                const clusterCenterX = deviceNodes.length > 1 ? Math.cos(clusterAngle) * clusterRadius : 0;
+                const clusterCenterY = deviceNodes.length > 1 ? Math.sin(clusterAngle) * clusterRadius : 0;
                 
-                return (
-                  <motion.svg key={`edge-${index}`} className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" style={{zIndex: 0}}>
-                    <motion.path 
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.6 }}
-                      transition={{ duration: 1.5, ease: "easeInOut" }}
-                      d={`M 192 192 L ${192 + x} ${192 + y}`} 
-                      fill="none" 
-                      stroke="#ef4444" 
-                      strokeDasharray="6,6" 
-                      strokeWidth="2"
-                    />
-                    {/* Glowing pulse trail on edge */}
-                    <motion.circle
-                      r="4"
-                      fill="#ef4444"
-                      initial={{ offsetDistance: "0%" }}
-                      animate={{ offsetDistance: "100%" }}
-                      style={{ offsetPath: `path('M 192 192 L ${192 + x} ${192 + y}')` }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                      className="shadow-[0_0_10px_#ef4444]"
-                    />
-                  </motion.svg>
-                );
-              })}
+                // Get customers connected to this device
+                const connectedEdges = data.edges.filter((e: any) => e.target === deviceNode.id);
+                const connectedCustomerIds = connectedEdges.map((e: any) => e.source);
+                const linkedCustomers = customerNodes.filter((c: any) => connectedCustomerIds.includes(c.id));
+                const isHighRisk = linkedCustomers.length > 1;
 
-              {/* Center Device Node */}
-              {deviceNode && (
-                <motion.div 
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                  onClick={() => setSelectedNode(deviceNode)}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-surface-container rounded-full border-2 border-red-500/50 flex flex-col items-center justify-center cursor-pointer shadow-[0_0_30px_rgba(239,68,68,0.3)] z-10"
-                >
-                  <Router size={24} className="text-red-400 mb-1" />
-                  <span className="text-[10px] font-label-mono text-red-300">Device</span>
-                  
-                  {/* Warning Ripple */}
-                  <motion.div
-                    initial={{ scale: 1, opacity: 0.8 }}
-                    animate={{ scale: 2, opacity: 0 }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 rounded-full border-2 border-red-500"
-                  />
-                </motion.div>
-              )}
-
-              {/* Orbiting Customer Nodes */}
-              {customerNodes.map((node: any, index: number) => {
-                const angle = (index / customerNodes.length) * 2 * Math.PI;
-                const radius = 140;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
-                
                 return (
-                  <motion.div
-                    key={node.id}
-                    initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
-                    animate={{ x, y, opacity: 1, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 100, damping: 12, delay: 0.5 + (index * 0.2) }}
-                    onClick={() => setSelectedNode(node)}
-                    className="absolute top-1/2 left-1/2 -ml-8 -mt-8 w-16 h-16 bg-surface-container-high rounded-full border-2 border-red-400/40 flex flex-col items-center justify-center cursor-pointer hover:bg-surface hover:border-red-400 transition-colors z-20 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
-                  >
-                    <User size={20} className="text-on-surface mb-1" />
-                    <span className="text-[9px] font-label-mono text-on-surface-variant max-w-full truncate px-1">{node.label}</span>
-                  </motion.div>
+                  <div key={deviceNode.id} className="absolute inset-0 pointer-events-none" style={{ transform: `translate(${clusterCenterX}px, ${clusterCenterY}px)` }}>
+                    
+                    {/* Edges for this cluster */}
+                    {linkedCustomers.map((node: any, index: number) => {
+                      const angle = (index / linkedCustomers.length) * 2 * Math.PI;
+                      const radius = 140;
+                      const x = Math.cos(angle) * radius;
+                      const y = Math.sin(angle) * radius;
+                      
+                      return (
+                        <motion.svg key={`edge-${index}`} className="absolute inset-0 w-full h-full overflow-visible pointer-events-none" style={{zIndex: 0}}>
+                          <motion.path 
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: 0.6 }}
+                            transition={{ duration: 1.5, ease: "easeInOut" }}
+                            d={`M 192 192 L ${192 + x} ${192 + y}`} 
+                            fill="none" 
+                            stroke={isHighRisk ? "#ef4444" : "#3b82f6"} 
+                            strokeDasharray="6,6" 
+                            strokeWidth="2"
+                          />
+                          <motion.circle
+                            r="4"
+                            fill={isHighRisk ? "#ef4444" : "#3b82f6"}
+                            initial={{ offsetDistance: "0%" }}
+                            animate={{ offsetDistance: "100%" }}
+                            style={{ offsetPath: `path('M 192 192 L ${192 + x} ${192 + y}')` }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            className={isHighRisk ? "shadow-[0_0_10px_#ef4444]" : "shadow-[0_0_10px_#3b82f6]"}
+                          />
+                        </motion.svg>
+                      );
+                    })}
+
+                    {/* Center Device Node */}
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                      onClick={() => setSelectedNode(deviceNode)}
+                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 flex flex-col items-center justify-center cursor-pointer pointer-events-auto z-10 ${isHighRisk ? 'bg-surface-container border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.3)]' : 'bg-surface-container border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.3)]'}`}
+                    >
+                      <Router size={24} className={isHighRisk ? "text-red-400 mb-1" : "text-blue-400 mb-1"} />
+                      <span className={`text-[10px] font-label-mono ${isHighRisk ? "text-red-300" : "text-blue-300"}`}>Device</span>
+                      
+                      {isHighRisk && (
+                        <motion.div
+                          initial={{ scale: 1, opacity: 0.8 }}
+                          animate={{ scale: 2, opacity: 0 }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="absolute inset-0 rounded-full border-2 border-red-500"
+                        />
+                      )}
+                    </motion.div>
+
+                    {/* Orbiting Customer Nodes */}
+                    {linkedCustomers.map((node: any, index: number) => {
+                      const angle = (index / linkedCustomers.length) * 2 * Math.PI;
+                      const radius = 140;
+                      const x = Math.cos(angle) * radius;
+                      const y = Math.sin(angle) * radius;
+                      
+                      return (
+                        <motion.div
+                          key={node.id}
+                          initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                          animate={{ x, y, opacity: 1, scale: 1 }}
+                          transition={{ type: "spring", stiffness: 100, damping: 12, delay: 0.5 + (index * 0.2) }}
+                          onClick={() => setSelectedNode(node)}
+                          className={`absolute top-1/2 left-1/2 -ml-8 -mt-8 w-16 h-16 bg-surface-container-high rounded-full border-2 flex flex-col items-center justify-center cursor-pointer pointer-events-auto hover:bg-surface transition-colors z-20 ${isHighRisk ? 'border-red-400/40 hover:border-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'border-blue-400/40 hover:border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]'}`}
+                        >
+                          <User size={20} className="text-on-surface mb-1" />
+                          <span className="text-[9px] font-label-mono text-on-surface-variant max-w-full truncate px-1">{node.label}</span>
+                        </motion.div>
+                      );
+                    })}
+
+                  </div>
                 );
               })}
 
             </div>
 
             {/* High Risk Cluster Label */}
-            {customerNodes.length > 1 && (
+            {highRiskDevices.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -157,7 +179,7 @@ export default function Graph() {
                 className="absolute top-8 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-full flex items-center gap-2 backdrop-blur-md"
               >
                 <AlertTriangle size={16} className="text-red-500" />
-                <span className="text-red-100 font-label-mono text-sm">High Risk Fraud Ring Detected</span>
+                <span className="text-red-100 font-label-mono text-sm">{highRiskDevices.length} Fraud Ring{highRiskDevices.length > 1 ? 's' : ''} Detected</span>
               </motion.div>
             )}
           </div>
@@ -205,28 +227,33 @@ export default function Graph() {
                 <div className="p-4 rounded-xl bg-surface-container border border-white/10">
                   <h4 className="text-xs font-semibold text-on-surface-variant mb-3 uppercase tracking-wider">Connections</h4>
                   <ul className="space-y-3">
-                    {selectedNode.type === 'customer' && deviceNode && (
+                    {selectedNode.type === 'customer' && (
                       <li className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
-                          <Router size={14} className="text-red-400" />
+                        <div className="w-8 h-8 rounded bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                          <Router size={14} className="text-blue-400" />
                         </div>
                         <div className="flex-1 truncate">
-                          <p className="text-sm text-on-surface font-label-mono truncate" title={deviceNode.label}>{deviceNode.label}</p>
-                          <p className="text-[10px] text-on-surface-variant uppercase mt-0.5">Shared Device</p>
+                          <p className="text-sm text-on-surface font-label-mono truncate">
+                            {data.nodes.find((n: any) => n.id === data.edges.find((e: any) => e.source === selectedNode.id)?.target)?.label || 'Unknown'}
+                          </p>
+                          <p className="text-[10px] text-on-surface-variant uppercase mt-0.5">Linked Device</p>
                         </div>
                       </li>
                     )}
-                    {selectedNode.type === 'device' && customerNodes.map((n: any) => (
-                      <li key={n.id} className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                          <User size={14} className="text-on-surface-variant" />
-                        </div>
-                        <div className="flex-1 truncate">
-                          <p className="text-sm text-on-surface font-label-mono truncate">{n.label}</p>
-                          <p className="text-[10px] text-on-surface-variant uppercase mt-0.5">Linked Account</p>
-                        </div>
-                      </li>
-                    ))}
+                    {selectedNode.type === 'device' && data.edges.filter((e: any) => e.target === selectedNode.id).map((e: any) => {
+                      const linkedCust = data.nodes.find((n: any) => n.id === e.source);
+                      return linkedCust ? (
+                        <li key={linkedCust.id} className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                            <User size={14} className="text-on-surface-variant" />
+                          </div>
+                          <div className="flex-1 truncate">
+                            <p className="text-sm text-on-surface font-label-mono truncate">{linkedCust.label}</p>
+                            <p className="text-[10px] text-on-surface-variant uppercase mt-0.5">Linked Account</p>
+                          </div>
+                        </li>
+                      ) : null;
+                    })}
                   </ul>
                 </div>
                 

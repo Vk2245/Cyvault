@@ -12,6 +12,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, Search, Bell, LogOut } from 'lucide-react';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 // ──────────────────────────────────────────────
 // PAGE TITLE MAP — Maps route paths to display titles
@@ -73,6 +74,9 @@ export default function TopBar() {
         <button className="p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors">
           <Search size={18} />
         </button>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* Notifications */}
         <button className="p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors relative">

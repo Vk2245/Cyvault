@@ -14,6 +14,7 @@ export default function SimulatorPage() {
   const [paymentState, setPaymentState] = useState('idle'); 
   const [discount, setDiscount] = useState(0);
   const [fraudBlocked, setFraudBlocked] = useState(false);
+  const [fraudAttempts, setFraudAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
   const [testId, setTestId] = useState('');
   
@@ -86,17 +87,25 @@ export default function SimulatorPage() {
     setPaymentState('negotiating');
     await triggerBackend('recovery_fail');
     setTimeout(() => {
-      setDiscount(5); 
+      // Pick a random discount: 5%, 10%, or 15% to simulate AI dynamically adjusting based on user profile
+      const dynamicDiscounts = [5, 10, 15];
+      const randomDiscount = dynamicDiscounts[Math.floor(Math.random() * dynamicDiscounts.length)];
+      setDiscount(randomDiscount); 
     }, 1500);
   };
 
   const handleFraudAttack = async () => {
     setActiveScenario('fraud');
     setFraudBlocked(false);
-    await triggerBackend('fraud_attack');
-    setTimeout(() => {
-      setFraudBlocked(true); 
-    }, 1000);
+    const nextAttempts = fraudAttempts + 1;
+    setFraudAttempts(nextAttempts);
+    
+    if (nextAttempts >= 3) {
+      await triggerBackend('fraud_attack');
+      setTimeout(() => {
+        setFraudBlocked(true); 
+      }, 500);
+    }
   };
 
   const handleSettlement = async () => {
@@ -196,7 +205,9 @@ export default function SimulatorPage() {
           <div className={`${styles.glassPanel} ${styles.checkoutCard}`}>
             <h3 className={styles.sectionTitle}>1. Revenue Recovery (Cart Abandonment)</h3>
             <div className={styles.productInfo}>
-              <div className={styles.productImage}>🎧</div>
+              <div className={styles.productImage}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"></path></svg>
+              </div>
               <h2>Premium Wireless Headphones</h2>
               <div className={styles.price}>
                 ₹{discount > 0 ? (4999 * (1 - discount/100)).toFixed(0) : 4999}
@@ -206,7 +217,7 @@ export default function SimulatorPage() {
 
             {paymentState === 'idle' && (
               <div className="flex flex-col gap-2 w-full">
-                <button className={styles.primaryBtn} onClick={() => alert('Payment Successful')} disabled={loading}>
+                <button className={styles.primaryBtn} onClick={() => { alert('Payment Successful'); setDiscount(0); }} disabled={loading}>
                   Pay ₹4999
                 </button>
                 <button className={styles.outlineBtn} onClick={handleSimulateCartAbandonment} disabled={loading}>
@@ -231,12 +242,12 @@ export default function SimulatorPage() {
 
             {paymentState === 'negotiating' && discount > 0 && (
               <div className={styles.discountOffer}>
-                <div className={styles.aiBadge}>🤖 Cyvault Recovery AI</div>
+                <div className={styles.aiBadge}>Cyvault Recovery AI</div>
                 <h4>Wait! Don't leave empty-handed.</h4>
                 <p>Complete your purchase now with a special <strong>{discount}% discount</strong>.</p>
                 <div className="flex flex-col gap-2 mt-4">
-                  <button className={styles.successBtn} style={{ marginTop: 0 }} onClick={() => setPaymentState('idle')}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
-                  <button className={styles.outlineBtn} onClick={() => setPaymentState('idle')}>No thanks, cancel order</button>
+                  <button className={styles.successBtn} style={{ marginTop: 0 }} onClick={() => { setPaymentState('idle'); setDiscount(0); }}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
+                  <button className={styles.outlineBtn} onClick={() => { setPaymentState('idle'); setDiscount(0); }}>No thanks, cancel order</button>
                 </div>
               </div>
             )}
@@ -245,17 +256,82 @@ export default function SimulatorPage() {
           <div className={styles.gridControls}>
             {/* Fraud Scenario */}
             <div className={styles.glassPanel}>
-              <h3 className={styles.sectionTitle}>2. Fraud Prevention</h3>
-              <p className={styles.desc}>Simulate 3 rapid payment failures from the same device fingerprint (Velocity attack).</p>
+              <div className="flex justify-between items-start">
+                <h3 className={styles.sectionTitle}>2. Fraud Prevention</h3>
+                {fraudAttempts > 0 && <span className="text-xs font-mono text-red-400 bg-red-500/10 px-2 py-1 rounded">Velocity: {fraudAttempts}/3</span>}
+              </div>
+              <p className={styles.desc}>Simulate rapid payment failures from the same device (Velocity attack).</p>
+              
+              {/* Entity Graph Visualization */}
+              <div className="relative w-full h-40 bg-black/40 border border-white/5 rounded-xl my-4 overflow-hidden flex items-center justify-center">
+                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 160">
+                  {/* Central Node to Acct 1 */}
+                  {fraudAttempts >= 1 && (
+                    <motion.line initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} stroke={fraudBlocked ? "#ef4444" : "#ffffff40"} strokeWidth="2" strokeDasharray={fraudBlocked ? "0" : "4"} className={fraudBlocked ? "animate-pulse" : ""} x1="200" y1="40" x2="100" y2="120" />
+                  )}
+                  {/* Central Node to Acct 2 */}
+                  {fraudAttempts >= 2 && (
+                    <motion.line initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} stroke={fraudBlocked ? "#ef4444" : "#ffffff40"} strokeWidth="2" strokeDasharray={fraudBlocked ? "0" : "4"} className={fraudBlocked ? "animate-pulse" : ""} x1="200" y1="40" x2="200" y2="120" />
+                  )}
+                  {/* Central Node to Acct 3 */}
+                  {fraudAttempts >= 3 && (
+                    <motion.line initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} stroke={fraudBlocked ? "#ef4444" : "#ffffff40"} strokeWidth="2" strokeDasharray={fraudBlocked ? "0" : "4"} className={fraudBlocked ? "animate-pulse" : ""} x1="200" y1="40" x2="300" y2="120" />
+                  )}
+                </svg>
+
+                {/* Nodes HTML Overlay */}
+                {fraudAttempts >= 1 && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={`absolute top-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10 p-2 rounded-lg bg-surface-container border ${fraudBlocked ? 'border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-outline-variant'}`}>
+                    <RouterIcon size={16} className={fraudBlocked ? 'text-red-400' : 'text-primary'} />
+                    <span className="text-[10px] font-mono">Device {testId}</span>
+                  </motion.div>
+                )}
+
+                {/* Account 1 */}
+                {fraudAttempts >= 1 && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute bottom-4 left-[80px] flex flex-col items-center gap-1 z-10">
+                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <User size={14} className="text-white/60" />
+                    </div>
+                    <span className="text-[10px] font-mono text-white/50">Acct A</span>
+                  </motion.div>
+                )}
+                {/* Account 2 */}
+                {fraudAttempts >= 2 && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute bottom-4 left-[184px] flex flex-col items-center gap-1 z-10">
+                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <User size={14} className="text-white/60" />
+                    </div>
+                    <span className="text-[10px] font-mono text-white/50">Acct B</span>
+                  </motion.div>
+                )}
+                {/* Account 3 */}
+                {fraudAttempts >= 3 && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute bottom-4 left-[284px] flex flex-col items-center gap-1 z-10">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${fraudBlocked ? 'bg-red-500/10 border-red-500/30' : 'bg-white/5 border-white/10'}`}>
+                      {fraudBlocked ? <XCircle size={14} className="text-red-400" /> : <User size={14} className="text-white/60" />}
+                    </div>
+                    <span className={`text-[10px] font-mono ${fraudBlocked ? 'text-red-400' : 'text-white/50'}`}>Acct C</span>
+                  </motion.div>
+                )}
+                
+                {fraudAttempts === 0 && (
+                   <div className="text-white/30 text-sm flex items-center gap-2">Graph will spawn on attempt</div>
+                )}
+              </div>
+
               {!fraudBlocked ? (
                 <button className={`${styles.outlineBtn} ${styles.btnFraud}`} onClick={handleFraudAttack} disabled={loading}>
-                  Run Fraud Attack
+                  {fraudAttempts === 0 ? 'Attempt 1st Payment' : fraudAttempts === 1 ? 'Attempt 2nd Payment' : 'Attempt 3rd Payment'}
                 </button>
               ) : (
                 <div className={styles.blockedState}>
-                  <div className={styles.blockIcon}>🛡️</div>
+                  <div className={styles.blockIcon}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  </div>
                   <p>BLOCKED BY CYVAULT</p>
-                  <span>Device {testId} flagged as part of a fraud ring.</span>
+                  <span>Fraud ring detected sharing Device Fingerprint.</span>
+                  <button className="mt-3 text-xs text-white/50 hover:text-white underline" onClick={() => { setFraudBlocked(false); setFraudAttempts(0); }}>Reset Sim</button>
                 </div>
               )}
             </div>

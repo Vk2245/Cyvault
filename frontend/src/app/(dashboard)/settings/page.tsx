@@ -256,21 +256,21 @@ export default function Settings() {
                 <div className="space-y-5">
                   <div className="flex items-start justify-between p-4 rounded-lg bg-surface-container/20 border border-outline-variant/30">
                     <div>
-                      <div className="font-body-md text-body-md font-medium text-on-surface mb-1">🛡️ Fraud Alerts</div>
+                      <div className="font-body-md text-body-md font-medium text-on-surface mb-1">Fraud Alerts</div>
                       <div className="font-label-mono text-label-mono text-on-surface-variant text-sm">When AI blocks a suspected fraud ring or suspicious activity</div>
                     </div>
                     <Toggle checked={notifFraudAlert} onChange={setNotifFraudAlert} />
                   </div>
                   <div className="flex items-start justify-between p-4 rounded-lg bg-surface-container/20 border border-outline-variant/30">
                     <div>
-                      <div className="font-body-md text-body-md font-medium text-on-surface mb-1">🤖 Recovery Actions</div>
+                      <div className="font-body-md text-body-md font-medium text-on-surface mb-1">Recovery Actions</div>
                       <div className="font-label-mono text-label-mono text-on-surface-variant text-sm">When AI offers a discount or intercepts cart abandonment</div>
                     </div>
                     <Toggle checked={notifRecovery} onChange={setNotifRecovery} />
                   </div>
                   <div className="flex items-start justify-between p-4 rounded-lg bg-surface-container/20 border border-outline-variant/30">
                     <div>
-                      <div className="font-body-md text-body-md font-medium text-on-surface mb-1">💰 Settlement Updates</div>
+                      <div className="font-body-md text-body-md font-medium text-on-surface mb-1">Settlement Updates</div>
                       <div className="font-label-mono text-label-mono text-on-surface-variant text-sm">When a settlement is processed or reconciled</div>
                     </div>
                     <Toggle checked={notifSettlement} onChange={setNotifSettlement} />

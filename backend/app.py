@@ -319,16 +319,30 @@ def get_graph_data(merchant_id: str, db: Session = Depends(get_db)):
     nodes = []
     edges = []
     
-    # Generate mock graph if no data
     if not customers:
         return {"nodes": [], "edges": []}
         
-    # Simplified graph generation for demo
+    # Group customers by device fingerprint
+    device_to_customers = {}
+    for c in customers:
+        if c.device_fingerprint:
+            if c.device_fingerprint not in device_to_customers:
+                device_to_customers[c.device_fingerprint] = []
+            device_to_customers[c.device_fingerprint].append(c)
+            
+    # Build graph: Only include devices that have > 1 customer (fraud ring)
+    # or just include all of them if we want to show the full network.
+    # Let's include all, but properly unique device nodes.
+    added_devices = set()
+    
     for c in customers:
         nodes.append({"id": c.id, "label": c.email or c.id, "type": "customer", "group": 1})
         if c.device_fingerprint:
-            nodes.append({"id": f"dev_{c.device_fingerprint}", "label": c.device_fingerprint, "type": "device", "group": 2})
-            edges.append({"source": c.id, "target": f"dev_{c.device_fingerprint}"})
+            dev_id = f"dev_{c.device_fingerprint}"
+            if dev_id not in added_devices:
+                nodes.append({"id": dev_id, "label": c.device_fingerprint, "type": "device", "group": 2})
+                added_devices.add(dev_id)
+            edges.append({"source": c.id, "target": dev_id})
             
     return {"nodes": nodes, "edges": edges}
 
@@ -474,6 +488,176 @@ Respond in a helpful, concise way. If the data doesn't contain the answer, say s
         reply = f"I encountered an error processing your request. Error: {str(e)}"
     
     return {"reply": reply}
+
+# ==========================================
+# POLICY ENGINE ENDPOINTS
+# ==========================================
+class PolicyCompileRequest(BaseModel):
+    natural_language_rule: str
+
+@app.post("/api/merchants/{merchant_id}/policies/compile")
+def compile_policy(merchant_id: str, req: PolicyCompileRequest):
+    """
+    Uses LLM to convert natural language rules into structured JSON.
+    """
+    prompt = f"""
+    You are an AI Policy Compiler for Cyvault, a payment recovery system.
+    Convert this natural language rule into a strict JSON structure.
+    Rule: "{req.natural_language_rule}"
+    
+    You must return ONLY valid JSON in this exact format, with no markdown formatting or backticks:
+    {{
+        "rule_name": "short_underscore_name",
+        "description": "Clear description of what this does",
+        "condition": "The logical condition (e.g. customer.chargebacks_30d > 2)",
+        "action": "BLOCK | ALLOW | FLAG",
+        "target": "auto-retry | transaction | manual review"
+    }}
+    """
+    
+    try:
+        reply = get_llm_response(prompt, task_type="settlement_qa") # reusing task_type for simplicity
+        
+        # Clean up any potential markdown ticks the LLM might stubbornly add
+        import re
+        reply = re.sub(r'^```json\s*', '', reply)
+        reply = re.sub(r'^```\s*', '', reply)
+        reply = re.sub(r'\s*```$', '', reply)
+        
+        compiled_json = json.loads(reply)
+        return {"status": "success", "compiled": compiled_json}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to compile rule: {str(e)}")
+
+class PolicyActivateRequest(BaseModel):
+    name: str
+    description: str
+    condition: str
+    action: str
+    target: str
+
+@app.post("/api/merchants/{merchant_id}/policies/activate")
+def activate_policy(merchant_id: str, req: PolicyActivateRequest, db: Session = Depends(get_db)):
+    """
+    Saves the compiled policy rule to the database.
+    """
+    rule_id = f"pol_{uuid.uuid4().hex[:8]}"
+    
+    new_rule = PolicyRule(
+        id=rule_id,
+        merchant_id=merchant_id,
+        name=req.name,
+        description=req.description,
+        rule_type="custom",
+        parameters={
+            "condition": req.condition,
+            "action": req.action,
+            "target": req.target
+        },
+        is_active=True
+    )
+    
+    db.add(new_rule)
+    
+    # Log the action
+    from backend.action_receipt_logger import log_action_receipt
+    log_action_receipt(
+        db, 
+        merchant_id, 
+        "policy_activated", 
+        rule_id, 
+        "ALLOWED", 
+        f"✅ Activated new custom policy: {req.name}"
+    )
+    
+    db.commit()
+    return {"status": "success", "policy_id": rule_id}
+
+@app.get("/api/merchants/{merchant_id}/policies")
+def get_policies(merchant_id: str, db: Session = Depends(get_db)):
+    """
+    Fetches all active policies for the merchant.
+    """
+    policies = db.query(PolicyRule).filter(PolicyRule.merchant_id == merchant_id).order_by(PolicyRule.created_at.desc()).all()
+    
+    return [{
+        "id": p.id,
+        "name": p.name,
+        "description": p.description,
+        "is_active": p.is_active,
+        "parameters": p.parameters,
+        "created_at": p.created_at.isoformat() if p.created_at else None
+    } for p in policies]
+
+@app.delete("/api/merchants/{merchant_id}/policies/{policy_id}")
+def delete_policy(merchant_id: str, policy_id: str, db: Session = Depends(get_db)):
+    """
+    Deletes (or deactivates) a policy rule.
+    """
+    policy = db.query(PolicyRule).filter(PolicyRule.id == policy_id, PolicyRule.merchant_id == merchant_id).first()
+    if not policy:
+        raise HTTPException(status_code=404, detail="Policy not found")
+        
+    db.delete(policy)
+    db.commit()
+    return {"status": "success"}
+
+@app.get("/api/merchants/{merchant_id}/radar")
+def get_radar_data(merchant_id: str, db: Session = Depends(get_db)):
+    """
+    Leakage Radar Analytics.
+    Returns 7-day trend of revenue at risk vs recovered, and top anomalies.
+    """
+    orders = db.query(Order).filter(Order.merchant_id == merchant_id).order_by(Order.created_at.desc()).all()
+    
+    # In a real app, group by actual dates. For the demo, we'll build a synthetic 7-day trend
+    # and accurately reflect the DB state in the most recent day ("Today")
+    import random
+    from datetime import datetime, timedelta
+    
+    trend = []
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    today_idx = datetime.now().weekday()
+    
+    for i in range(6, 0, -1):
+        idx = (today_idx - i) % 7
+        trend.append({
+            "day": days[idx],
+            "at_risk": random.randint(10000, 50000),
+            "recovered": random.randint(5000, 20000)
+        })
+        
+    # Real data for "Today"
+    today_failed = [o for o in orders if o.status == 'attempted']
+    today_paid = [o for o in orders if o.status == 'paid']
+    
+    today_risk = sum(o.amount_paise for o in today_failed) / 100
+    today_recovered = sum(o.amount_paise for o in today_paid) / 100
+    
+    trend.append({
+        "day": "Today",
+        "at_risk": today_risk,
+        "recovered": today_recovered
+    })
+    
+    # Anomalies: Largest failed orders
+    anomalies = []
+    for o in today_failed[:5]:
+        anomalies.append({
+            "id": o.id,
+            "amount": o.amount_paise / 100,
+            "customer_id": o.customer_id,
+            "time": o.created_at.strftime("%H:%M")
+        })
+        
+    # Sort anomalies by amount descending
+    anomalies.sort(key=lambda x: x["amount"], reverse=True)
+    
+    return {
+        "trend": trend,
+        "anomalies": anomalies,
+        "total_leakage": today_risk - today_recovered
+    }
 
 # ==========================================
 # MERCHANT SETTINGS ENDPOINT
