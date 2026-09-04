@@ -671,6 +671,18 @@ def activate_policy(merchant_id: str, req: PolicyActivateRequest, db: Session = 
     """
     Saves the compiled policy rule to the database.
     """
+    # Ensure merchant exists before doing anything (crucial for fresh DBs)
+    existing_merchant = db.query(Merchant).filter(Merchant.id == merchant_id).first()
+    if not existing_merchant:
+        new_merchant = Merchant(
+            id=merchant_id,
+            name=f"Demo Merchant {merchant_id[-4:]}",
+            email=f"{merchant_id}@demo.com",
+            password_hash="demo_hash"
+        )
+        db.add(new_merchant)
+        db.commit()
+        
     rule_id = f"pol_{uuid.uuid4().hex[:8]}"
     
     new_rule = PolicyRule(
