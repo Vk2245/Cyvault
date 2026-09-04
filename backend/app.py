@@ -347,6 +347,23 @@ def get_alerts(merchant_id: str, db: Session = Depends(get_db)):
         })
     return alerts
 
+@app.get("/api/merchants/{merchant_id}/reconciliation")
+def get_reconciliation(merchant_id: str, db: Session = Depends(get_db)):
+    settlements = db.query(Settlement).filter(Settlement.merchant_id == merchant_id).all()
+    
+    if not settlements:
+        return []
+        
+    return [{
+        "id": s.id,
+        "amount_paise": s.amount_paise,
+        "fees_paise": s.fees_paise,
+        "tax_paise": s.tax_paise,
+        "utr": s.utr,
+        "status": s.status,
+        "created_at": s.created_at.isoformat()
+    } for s in settlements]
+
 class CustomerChatRequest(BaseModel):
     message: str
     merchant_id: str
