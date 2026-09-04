@@ -7,6 +7,9 @@ fix_icons.py
 fix_react_syntax.py
 fix_value_prop.py
 fix_checked_str.py
+fix.py
+fix_client.py
+patch.py
 
 stitch_screens/
 stitch_cyvault_revenue_leak_decoder/
