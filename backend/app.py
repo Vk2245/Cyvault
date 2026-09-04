@@ -280,8 +280,6 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         return {"status": "fraud_ring_simulated", "shared_fingerprint": shared_fingerprint}
         
     elif scenario == "settlement":
-        from backend.models import ActionReceipt
-        
         # Check if customer already triggered a settlement
         existing_settlement = db.query(ActionReceipt).filter(
             ActionReceipt.merchant_id == merchant_id,
@@ -316,8 +314,6 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         return {"status": "success", "simulated_event": "settlement.processed", "settlement_id": setl_id}
         
     elif scenario == "refund":
-        from backend.models import ActionReceipt
-        
         # Check if customer already initiated a refund
         existing_refund = db.query(ActionReceipt).filter(
             ActionReceipt.merchant_id == merchant_id,
