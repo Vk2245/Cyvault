@@ -41,6 +41,8 @@ export default function Graph() {
     const connectedCustomers = data.edges.filter((e: any) => e.target === d.id).length;
     return connectedCustomers > 1;
   });
+
+  return (
     <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden text-white">
       <div className="flex-1 relative overflow-hidden flex items-center justify-center animate-fade-in-up">
         {loading ? (
