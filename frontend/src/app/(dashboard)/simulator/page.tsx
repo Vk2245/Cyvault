@@ -55,7 +55,9 @@ export default function SimulatorPage() {
   }, [merchantId]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatMessages.length > 1) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [chatMessages]);
 
   const triggerBackend = async (scenario: string) => {
