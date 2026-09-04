@@ -14,6 +14,7 @@ export default function SimulatorPage() {
   const [paymentState, setPaymentState] = useState('idle'); 
   const [discount, setDiscount] = useState(0);
   const [fraudBlocked, setFraudBlocked] = useState(false);
+  const [executingAction, setExecutingAction] = useState<string | null>(null);
   const [fraudAttempts, setFraudAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
   const [testId, setTestId] = useState('');
@@ -231,6 +232,7 @@ export default function SimulatorPage() {
 
   const handleUnifiedAttack = async (type: string) => {
     setLoading(true);
+    setExecutingAction(type);
     for (const session of sessions) {
       const m_id = merchantId || "demo";
       try {
@@ -250,9 +252,13 @@ export default function SimulatorPage() {
              body: JSON.stringify({ scenario: 'recovery_fail', merchant_id: m_id, customer_id: session.id })
            });
         }
-      } catch(e) {}
+      } catch(e) {
+        console.error(e);
+      }
     }
     setLoading(false);
+    setExecutingAction(null);
+    alert(`${type === 'fraud' ? 'Fraud Attack' : 'Mass Recovery'} triggered for ${sessions.length} users! Check Dashboard / Radar.`);
   };
 
   // Make sure to save the very first session on mount if it's not saved yet
@@ -620,7 +626,7 @@ export default function SimulatorPage() {
                     disabled={loading || sessions.length === 0}
                     className="w-full py-2.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
                   >
-                    {loading ? 'Executing Attack...' : `Fire Fraud Attack (${sessions.length} users)`}
+                    {executingAction === 'fraud' ? 'Executing Attack...' : `Fire Fraud Attack (${sessions.length} users)`}
                   </button>
                 </div>
                 
@@ -634,7 +640,7 @@ export default function SimulatorPage() {
                     disabled={loading || sessions.length === 0}
                     className="w-full py-2.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
                   >
-                    {loading ? 'Executing...' : `Fire Mass Recovery (${sessions.length} users)`}
+                    {executingAction === 'recovery' ? 'Executing...' : `Fire Mass Recovery (${sessions.length} users)`}
                   </button>
                 </div>
               </div>

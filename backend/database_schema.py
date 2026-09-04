@@ -111,9 +111,6 @@ class ActionReceipt(Base):
 
 # Database Setup
 db_url = settings.DATABASE_URL
-if "supabase.co" in db_url:
-    print("[WARNING] Supabase host unresolvable. Falling back to local SQLite for Demo.")
-    db_url = "sqlite:///./cyvault_v2.db"
 
 engine = create_engine(db_url, echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
