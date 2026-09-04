@@ -217,20 +217,30 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         
         # Check active policies to dynamically set discount
         active_policies = db.query(PolicyRule).filter(PolicyRule.merchant_id == merchant_id, PolicyRule.is_active == True).all()
-        discount_offered = 5 # default
-        policy_name = "default_5%"
         
-        if active_policies:
-            import re
-            combined_text = " ".join([p.description + " " + str(p.parameters) for p in active_policies])
-            matches = re.findall(r'(\d+(?:\.\d+)?)%', combined_text)
-            if matches:
-                percentages = [float(m) for m in matches]
-                discount_offered = min(percentages) # Use the lowest initial discount specified
-                policy_name = active_policies[0].name
+        retry_count = payload.get("retry_count", 0)
+        
+        fallback = next((p for p in active_policies if getattr(p, 'rule_type', '') == 'fixed_fallback'), None)
+        
+        if fallback and isinstance(fallback.parameters, dict):
+            starting_discount = int(fallback.parameters.get('start_discount', 5))
+            max_discount = int(fallback.parameters.get('max_discount', 15))
+            max_retries = int(fallback.parameters.get('max_retries', 3))
+            policy_name = fallback.name
+        else:
+            starting_discount = 5
+            max_discount = 15
+            max_retries = 3
+            policy_name = "default_fallback"
+
+        if retry_count >= max_retries:
+            db.commit()
+            return {"status": "abandoned", "message": "Max retries reached. Customer abandoned."}
+            
+        discount_offered = min(starting_discount + (retry_count * 5), max_discount)
 
         # 4. Log Action Receipt (so Alerts tab and Simulator Feed populate)
-        narrative = f"🤖 Cyvault Recovery AI offered {discount_offered}% discount to Customer {customer_id} | Policy: {policy_name} | Status: Awaiting Response"
+        narrative = f"🤖 Cyvault Recovery AI offered {discount_offered}% discount to Customer {customer_id} (Attempt {retry_count+1}/{max_retries}) | Policy: {policy_name} | Status: Awaiting Response"
         log_action_receipt(db, merchant_id, "offer_discount", order_id, "ALLOWED", narrative)
         
         db.commit()
@@ -270,6 +280,21 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         return {"status": "fraud_ring_simulated", "shared_fingerprint": shared_fingerprint}
         
     elif scenario == "settlement":
+        from backend.models import ActionReceipt
+        
+        # Check if customer already triggered a settlement
+        existing_settlement = db.query(ActionReceipt).filter(
+            ActionReceipt.merchant_id == merchant_id,
+            ActionReceipt.action_type == "settlement_processed",
+            ActionReceipt.entity_id.like(f"setl_{customer_id}%")
+        ).first()
+        
+        if existing_settlement:
+            narrative = f"🛡️ BLOCKED: Duplicate settlement request detected for Customer {customer_id}. Fraud detection funnel triggered."
+            log_action_receipt(db, merchant_id, "fraud_block", f"setl_fraud_{customer_id}", "BLOCKED", narrative)
+            db.commit()
+            return {"status": "blocked", "message": "Settlement is already processed. Duplicate requests are blocked by Cyvault."}
+
         # Create a Settlement record
         setl_id = f"setl_{customer_id}_{random.randint(100, 999)}"
         utr = f"UTR_{random.randint(100000, 999999)}"
@@ -291,6 +316,21 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         return {"status": "success", "simulated_event": "settlement.processed", "settlement_id": setl_id}
         
     elif scenario == "refund":
+        from backend.models import ActionReceipt
+        
+        # Check if customer already initiated a refund
+        existing_refund = db.query(ActionReceipt).filter(
+            ActionReceipt.merchant_id == merchant_id,
+            ActionReceipt.action_type == "refund_initiated",
+            ActionReceipt.entity_id == f"refund_{customer_id}"
+        ).first()
+        
+        if existing_refund:
+            narrative = f"🛡️ BLOCKED: Duplicate refund request detected for Customer {customer_id}. Fraud detection funnel triggered."
+            log_action_receipt(db, merchant_id, "fraud_block", f"refund_{customer_id}", "BLOCKED", narrative)
+            db.commit()
+            return {"status": "blocked", "message": "Your refund is already initiated. Duplicate requests are blocked by Cyvault."}
+
         narrative = f"↩️ Refund initiated for Customer {customer_id} | Amount: ₹4,999.00 | ETA: 5-7 business days"
         log_action_receipt(db, merchant_id, "refund_initiated", f"refund_{customer_id}", "ALLOWED", narrative)
         
@@ -662,9 +702,11 @@ def compile_policy(merchant_id: str, req: PolicyCompileRequest):
 class PolicyActivateRequest(BaseModel):
     name: str
     description: str
-    condition: str
-    action: str
-    target: str
+    condition: str = ""
+    action: str = ""
+    target: str = ""
+    rule_type: str = "custom"
+    parameters: dict = {}
 
 @app.post("/api/merchants/{merchant_id}/policies/activate")
 def activate_policy(merchant_id: str, req: PolicyActivateRequest, db: Session = Depends(get_db)):
@@ -690,8 +732,8 @@ def activate_policy(merchant_id: str, req: PolicyActivateRequest, db: Session = 
         merchant_id=merchant_id,
         name=req.name,
         description=req.description,
-        rule_type="custom",
-        parameters={
+        rule_type=req.rule_type,
+        parameters=req.parameters if req.rule_type == "fixed_fallback" else {
             "condition": req.condition,
             "action": req.action,
             "target": req.target

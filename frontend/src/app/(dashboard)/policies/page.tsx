@@ -13,6 +13,13 @@ export default function Policies() {
   const [isCompiling, setIsCompiling] = useState(false);
   const [compiledRule, setCompiledRule] = useState<any>(null);
   const [isActivating, setIsActivating] = useState(false);
+  
+  const [fixedPolicy, setFixedPolicy] = useState({
+    start_discount: 5,
+    max_discount: 15,
+    max_retries: 3
+  });
+  const [isActivatingFixed, setIsActivatingFixed] = useState(false);
 
   useEffect(() => {
     fetchPolicies();
@@ -78,6 +85,31 @@ export default function Policies() {
       console.error(e);
     } finally {
       setIsActivating(false);
+    }
+  };
+
+  const handleActivateFixed = async () => {
+    if (!merchantId) return;
+    setIsActivatingFixed(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/${merchantId}/policies/activate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'recovery_fallback_policy',
+          description: `Fixed fallback policy: Start at ${fixedPolicy.start_discount}%, up to ${fixedPolicy.max_discount}% over ${fixedPolicy.max_retries} retries.`,
+          rule_type: 'fixed_fallback',
+          parameters: fixedPolicy
+        })
+      });
+      if (res.ok) {
+        fetchPolicies();
+        alert('Fallback policy activated successfully!');
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsActivatingFixed(false);
     }
   };
 
@@ -236,6 +268,60 @@ export default function Policies() {
                 
               </div>
             </div>
+            
+            {/* NEW: Fixed Fallback Policy Configurator */}
+            <div className="glass-panel rounded-2xl p-1 flex flex-col mt-6 relative overflow-hidden">
+              <div className="relative z-10 p-6 md:p-8 flex flex-col bg-background/95 rounded-[15px]">
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
+                  <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                    <Shield size={20} className="text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-headline-md text-headline-md text-on-surface">Fallback Recovery Configurator</h3>
+                    <p className="text-xs font-label-mono text-on-surface-variant">Configure fixed discount limits and retries for cart abandonment</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm text-on-surface-variant">Starting Discount (%)</label>
+                    <input 
+                      type="number" 
+                      value={fixedPolicy.start_discount} 
+                      onChange={(e) => setFixedPolicy({...fixedPolicy, start_discount: Number(e.target.value)})}
+                      className="bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-emerald-500 outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm text-on-surface-variant">Max Discount (%)</label>
+                    <input 
+                      type="number" 
+                      value={fixedPolicy.max_discount} 
+                      onChange={(e) => setFixedPolicy({...fixedPolicy, max_discount: Number(e.target.value)})}
+                      className="bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-emerald-500 outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm text-on-surface-variant">Max Retries</label>
+                    <input 
+                      type="number" 
+                      value={fixedPolicy.max_retries} 
+                      onChange={(e) => setFixedPolicy({...fixedPolicy, max_retries: Number(e.target.value)})}
+                      className="bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-emerald-500 outline-none"
+                    />
+                  </div>
+                </div>
+                
+                <button 
+                  onClick={handleActivateFixed}
+                  disabled={isActivatingFixed}
+                  className="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 py-3 rounded-full font-bold hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+                >
+                  {isActivatingFixed ? 'Deploying...' : 'Deploy Fallback Policy'}
+                </button>
+              </div>
+            </div>
+            
           </section>
 
         </div>

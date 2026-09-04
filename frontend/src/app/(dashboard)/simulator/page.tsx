@@ -20,6 +20,10 @@ export default function SimulatorPage() {
   const [testId, setTestId] = useState('');
   const [activeTab, setActiveTab] = useState('single');
   const [showCheckout, setShowCheckout] = useState(false);
+  const [smsClicked, setSmsClicked] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const [attackCount, setAttackCount] = useState(3);
+
   
   // Chat state
   const [chatMessages, setChatMessages] = useState<{role: string, content: string}[]>([
@@ -147,20 +151,22 @@ export default function SimulatorPage() {
   const [sessions, setSessions] = useState<{id: string, date: string}[]>([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  const getStorageKey = () => `cyvault_demo_sessions_${merchantId || 'demo'}`;
+
   useEffect(() => {
     // Load sessions from local storage
-    const saved = localStorage.getItem('cyvault_demo_sessions');
+    const saved = localStorage.getItem(getStorageKey());
     if (saved) {
       setSessions(JSON.parse(saved));
     }
-  }, []);
+  }, [merchantId]);
 
   const saveCurrentSession = (id: string) => {
-    const saved = localStorage.getItem('cyvault_demo_sessions');
+    const saved = localStorage.getItem(getStorageKey());
     let parsed = saved ? JSON.parse(saved) : [];
     if (!parsed.find((s: any) => s.id === id)) {
       parsed.unshift({ id, date: new Date().toLocaleString() });
-      localStorage.setItem('cyvault_demo_sessions', JSON.stringify(parsed));
+      localStorage.setItem(getStorageKey(), JSON.stringify(parsed));
       setSessions(parsed);
     }
   };
@@ -176,6 +182,8 @@ export default function SimulatorPage() {
     setFraudAttempts(0);
     setActiveScenario('none');
     setShowCheckout(false);
+    setSmsClicked(false);
+    setRetryCount(0);
     setChatMessages([{ role: 'agent', content: 'Hi! I am Cyvault Support. Your payment failed. How can I help you today?' }]);
     setShowHistory(false);
   };
@@ -188,13 +196,15 @@ export default function SimulatorPage() {
     setFraudAttempts(0);
     setActiveScenario('none');
     setShowCheckout(false);
+    setSmsClicked(false);
+    setRetryCount(0);
     setShowHistory(false);
   };
 
   const deleteSession = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const updated = sessions.filter(s => s.id !== id);
-    localStorage.setItem('cyvault_demo_sessions', JSON.stringify(updated));
+    localStorage.setItem(getStorageKey(), JSON.stringify(updated));
     setSessions(updated);
     if (testId === id) {
       startNewSession();
@@ -204,7 +214,9 @@ export default function SimulatorPage() {
   const handleUnifiedAttack = async (type: string) => {
     setLoading(true);
     setExecutingAction(type);
-    for (const session of sessions) {
+    
+    const targets = sessions.slice(0, attackCount);
+    for (const session of targets) {
       const m_id = merchantId || "demo";
       try {
         if (type === 'fraud') {
@@ -229,7 +241,7 @@ export default function SimulatorPage() {
     }
     setLoading(false);
     setExecutingAction(null);
-    alert(`${type === 'fraud' ? 'Fraud Attack' : 'Mass Recovery'} triggered for ${sessions.length} users! Check Dashboard / Radar.`);
+    alert(`${type === 'fraud' ? 'Fraud Attack' : 'Mass Recovery'} triggered for ${targets.length} users! Check Dashboard / Radar.`);
   };
 
   // Make sure to save the very first session on mount if it's not saved yet
@@ -296,7 +308,14 @@ export default function SimulatorPage() {
             <h2 className={styles.brandTitle}>Storefront Simulator</h2>
             <span className={styles.brandBadge}>Customer ID: {testId}</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={startNewSession}
+              className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors flex items-center justify-center border border-primary/20 bg-primary/5"
+              title="New Session"
+            >
+              <Plus size={16} />
+            </button>
             <div className="relative">
               <button 
                 onClick={() => setShowHistory(!showHistory)} 
@@ -374,8 +393,8 @@ export default function SimulatorPage() {
           
           {/* SMS Simulation Visualizer */}
           <AnimatePresence>
-            {paymentState === 'negotiating' && discount > 0 && (
-              <motion.div initial={{ opacity: 0, y: -20, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} className="mx-6 mb-4">
+            {paymentState === 'negotiating' && discount > 0 && !smsClicked && (
+              <motion.div initial={{ opacity: 0, y: -20, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} exit={{ opacity: 0, height: 0, scale: 0.95 }} className="mx-6 mb-4">
                 <div className="p-4 rounded-xl bg-[#0f172a] border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)] relative overflow-hidden">
                   {/* Glass reflection */}
                   <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
@@ -396,7 +415,7 @@ export default function SimulatorPage() {
                     <p className="text-xs text-white/80 leading-relaxed font-mono">
                       Hi! We noticed you left some items in your cart. Complete your purchase now with a special <span className="text-emerald-400 font-bold">{discount}% discount</span>!
                     </p>
-                    <button onClick={() => setShowCheckout(true)} className="mt-3 w-full py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-bold rounded border border-blue-500/30 transition-colors flex items-center justify-center gap-2">
+                    <button onClick={() => { setShowCheckout(true); setSmsClicked(true); }} className="mt-3 w-full py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-bold rounded border border-blue-500/30 transition-colors flex items-center justify-center gap-2">
                       <CreditCard size={14} /> Claim Discount & Pay
                     </button>
                   </div>
@@ -460,10 +479,42 @@ export default function SimulatorPage() {
                     
                     <button 
                       className="w-full mt-3 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors"
-                      onClick={() => {
+                      onClick={async () => {
                         setShowCheckout(false);
                         if (paymentState === 'idle') {
-                          handleSimulateCartAbandonment();
+                          // First cancel
+                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ scenario: 'recovery_fail', merchant_id: merchantId || "demo", customer_id: testId, retry_count: retryCount })
+                          });
+                          const data = await res.json();
+                          if (data.status === 'abandoned') {
+                            setPaymentState('idle');
+                            alert('Order completely abandoned.');
+                          } else {
+                            setPaymentState('negotiating');
+                            setDiscount(data.discount_offered || 5);
+                            setSmsClicked(false);
+                            setRetryCount(retryCount + 1);
+                          }
+                        } else if (paymentState === 'negotiating') {
+                          // Subsequent cancel (retry)
+                          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ scenario: 'recovery_fail', merchant_id: merchantId || "demo", customer_id: testId, retry_count: retryCount })
+                          });
+                          const data = await res.json();
+                          if (data.status === 'abandoned') {
+                            setPaymentState('idle');
+                            setDiscount(0);
+                            alert('Order completely abandoned.');
+                          } else {
+                            setDiscount(data.discount_offered || 5);
+                            setSmsClicked(false);
+                            setRetryCount(retryCount + 1);
+                          }
                         }
                       }}
                       disabled={loading}
@@ -666,28 +717,60 @@ export default function SimulatorPage() {
                 <div className="bg-black/40 border border-white/10 p-5 rounded-lg flex flex-col justify-between">
                   <div>
                     <h4 className="font-semibold mb-1 flex items-center gap-2"><RouterIcon size={16} className="text-red-400"/> Unified Fraud Ring Attack</h4>
-                    <p className="text-sm text-white/50 mb-4">Triggers 3 rapid failed payments for every single customer in your session history. Watch the Entity Graph light up with Fraud Rings.</p>
+                    <p className="text-sm text-white/50 mb-4">Triggers 3 rapid failed payments for {attackCount} customers in your session history. Watch the Entity Graph light up with Fraud Rings.</p>
+                    
+                    <div className="mb-4">
+                      <div className="flex justify-between text-xs text-white/60 mb-1">
+                        <span>Target Pool</span>
+                        <span>{attackCount} / {sessions.length}</span>
+                      </div>
+                      <input 
+                        type="range" 
+                        min="1" 
+                        max={Math.max(1, sessions.length)} 
+                        value={Math.min(attackCount, sessions.length)}
+                        onChange={(e) => setAttackCount(parseInt(e.target.value))}
+                        className="w-full accent-red-500"
+                        disabled={sessions.length === 0}
+                      />
+                    </div>
                   </div>
                   <button 
                     onClick={() => handleUnifiedAttack('fraud')}
                     disabled={loading || sessions.length === 0}
                     className="w-full py-2.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
                   >
-                    {executingAction === 'fraud' ? 'Executing Attack...' : `Fire Fraud Attack (${sessions.length} users)`}
+                    {executingAction === 'fraud' ? 'Executing Attack...' : `Fire Fraud Attack (${Math.min(attackCount, sessions.length)} users)`}
                   </button>
                 </div>
                 
                 <div className="bg-black/40 border border-white/10 p-5 rounded-lg flex flex-col justify-between">
                   <div>
                     <h4 className="font-semibold mb-1 flex items-center gap-2"><TriangleAlert size={16} className="text-emerald-400"/> Mass Cart Abandonment</h4>
-                    <p className="text-sm text-white/50 mb-4">Triggers a cart abandonment event for all generated customers, forcing Cyvault AI to mass-negotiate discounts according to active policies.</p>
+                    <p className="text-sm text-white/50 mb-4">Triggers a cart abandonment event for {attackCount} customers, forcing Cyvault AI to mass-negotiate discounts.</p>
+                    
+                    <div className="mb-4">
+                      <div className="flex justify-between text-xs text-white/60 mb-1">
+                        <span>Target Pool</span>
+                        <span>{attackCount} / {sessions.length}</span>
+                      </div>
+                      <input 
+                        type="range" 
+                        min="1" 
+                        max={Math.max(1, sessions.length)} 
+                        value={Math.min(attackCount, sessions.length)}
+                        onChange={(e) => setAttackCount(parseInt(e.target.value))}
+                        className="w-full accent-emerald-500"
+                        disabled={sessions.length === 0}
+                      />
+                    </div>
                   </div>
                   <button 
                     onClick={() => handleUnifiedAttack('recovery')}
                     disabled={loading || sessions.length === 0}
                     className="w-full py-2.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
                   >
-                    {executingAction === 'recovery' ? 'Executing...' : `Fire Mass Recovery (${sessions.length} users)`}
+                    {executingAction === 'recovery' ? 'Executing...' : `Fire Mass Recovery (${Math.min(attackCount, sessions.length)} users)`}
                   </button>
                 </div>
               </div>
