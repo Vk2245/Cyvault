@@ -96,7 +96,13 @@ export default function Graph() {
                 const isHighRisk = linkedCustomers.length > 1;
 
                 return (
-                  <div key={deviceNode.id} className="absolute inset-0 pointer-events-none" style={{ transform: `translate(${clusterCenterX}px, ${clusterCenterY}px)` }}>
+                  <motion.div 
+                    key={deviceNode.id} 
+                    drag 
+                    dragMomentum={false}
+                    initial={{ x: clusterCenterX, y: clusterCenterY }}
+                    className="absolute inset-0 pointer-events-none" 
+                  >
                     
                     {/* Edges for this cluster */}
                     {linkedCustomers.map((node: any, index: number) => {
@@ -173,7 +179,7 @@ export default function Graph() {
                       );
                     })}
 
-                  </div>
+                  </motion.div>
                 );
               })}
 
