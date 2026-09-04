@@ -9,19 +9,19 @@
    ────────────────────────────────────────────── */
 .appContainer {
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
-  background-color: #090610;
+  background-color: transparent;
   color: #f8f9fa;
 }
 
 /* Left Side: Merchant Dashboard Feed */
 .merchantSide {
   flex: 1.2;
-  border-right: 1px solid rgba(157, 78, 221, 0.2);
+  border-right: 1px solid rgba(157, 78, 221, 0.15);
   position: relative;
-  background: #000;
+  background: transparent;
 }
 
 /* Right Side: Customer Simulator */

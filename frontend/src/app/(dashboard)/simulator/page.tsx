@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon } from 'lucide-react';
 import styles from './simulator.module.css';
 
@@ -75,13 +75,13 @@ export default function SimulatorPage() {
     }
   };
 
-  const handleSimulateFailure = async () => {
+  const handleSimulateCartAbandonment = async () => {
     setActiveScenario('recovery');
     setPaymentState('processing');
-    await new Promise(r => setTimeout(r, 1000));
-    setPaymentState('failed');
-    await triggerBackend('recovery_fail');
+    await new Promise(r => setTimeout(r, 500));
+    // Skip 'failed' state, go straight to AI intercept
     setPaymentState('negotiating');
+    await triggerBackend('recovery_fail');
     setTimeout(() => {
       setDiscount(5); 
     }, 1500);
@@ -140,9 +140,6 @@ export default function SimulatorPage() {
               <h1 className="text-2xl font-bold text-white">Merchant Live Feed</h1>
               <p className="text-white/60 text-sm">Real-time Cyvault AI Actions</p>
             </div>
-            <button onClick={() => router.push('/recovery')} className="ml-auto px-4 py-2 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition-colors font-medium border border-white/10">
-              Go to Dashboard
-            </button>
           </div>
           
           <div className="flex-1 flex flex-col gap-4">
@@ -194,7 +191,7 @@ export default function SimulatorPage() {
           
           {/* Main Checkout View (Recovery Scenario) */}
           <div className={`${styles.glassPanel} ${styles.checkoutCard}`}>
-            <h3 className={styles.sectionTitle}>1. Revenue Recovery (Payment Failure)</h3>
+            <h3 className={styles.sectionTitle}>1. Revenue Recovery (Cart Abandonment)</h3>
             <div className={styles.productInfo}>
               <div className={styles.productImage}>🎧</div>
               <h2>Premium Wireless Headphones</h2>
@@ -205,22 +202,20 @@ export default function SimulatorPage() {
             </div>
 
             {paymentState === 'idle' && (
-              <button className={styles.primaryBtn} onClick={handleSimulateFailure} disabled={loading}>
-                {loading ? 'Processing...' : 'Pay ₹4999'}
-              </button>
+              <div className="flex flex-col gap-2 w-full">
+                <button className={styles.primaryBtn} onClick={() => alert('Payment Successful')} disabled={loading}>
+                  Pay ₹4999
+                </button>
+                <button className={styles.outlineBtn} onClick={handleSimulateCartAbandonment} disabled={loading}>
+                  {loading ? 'Processing...' : 'Cancel / Close Checkout'}
+                </button>
+              </div>
             )}
 
             {paymentState === 'processing' && (
               <div className={styles.loadingState}>
                 <div className={styles.spinner}></div>
-                <p>Authenticating with Bank...</p>
-              </div>
-            )}
-
-            {paymentState === 'failed' && (
-              <div className={styles.failedState}>
-                <div className={styles.errorIcon}>❌</div>
-                <p>Payment Failed. Insufficient Funds.</p>
+                <p>Processing Exit Intent...</p>
               </div>
             )}
 
