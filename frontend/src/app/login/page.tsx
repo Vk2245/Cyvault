@@ -34,7 +34,7 @@ export default function LoginPage() {
           // Save merchant_id to localStorage for future requests
           localStorage.setItem('merchant_id', data.merchant_id);
           // Set auth state
-          login(email);
+          login(email, data.merchant_id);
           // Redirect to dashboard
           router.push('/recovery');
         } else {

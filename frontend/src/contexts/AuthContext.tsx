@@ -6,7 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: any | null;
   merchantId: string | null;
-  login: (email: string) => void;
+  login: (email: string, merchantId: string) => void;
   logout: () => void;
 }
 
@@ -32,12 +32,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = (email: string) => {
-    const mId = `merch_${Math.random().toString(36).substr(2, 9)}`;
-    const newState = { isAuthenticated: true, user: { email }, merchantId: mId };
+  const login = (email: string, realMerchantId: string) => {
+    const newState = { isAuthenticated: true, user: { email }, merchantId: realMerchantId };
     setIsAuthenticated(true);
     setUser(newState.user);
-    setMerchantId(mId);
+    setMerchantId(realMerchantId);
     localStorage.setItem('cyvault_auth', JSON.stringify(newState));
   };
 

@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, ScrollText, User, Bot, Paperclip, Send, Lightbulb } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Chatbot() {
+  const { merchantId } = useAuth();
   const [messages, setMessages] = useState<{role: string, content: string}[]>([
     {
       role: "agent",
@@ -35,7 +37,7 @@ export default function Chatbot() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ message: userMessage, merchant_id: merchantId || "demo" }),
       });
       
       if (!response.ok) throw new Error("API Error");
