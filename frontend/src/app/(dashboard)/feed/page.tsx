@@ -1,5 +1,6 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, Bot, ShieldAlert, ArrowUpRight, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -44,10 +45,27 @@ export default function Feed() {
         {loading && feedItems.length === 0 ? (
           <div className="flex justify-center items-center h-64 text-on-surface-variant">Loading action feed...</div>
         ) : feedItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-center glass-panel rounded-2xl p-12 w-full">
-            <Activity size={48} className="text-primary mb-4 opacity-50" />
-            <h3 className="text-xl font-semibold mb-2">Action Feed Empty</h3>
-            <p className="text-on-surface-variant max-w-md">No automated actions have been taken by Cyvault AI yet. Try running a scenario in the Simulator to generate some actions.</p>
+          <div className="flex-1 flex flex-col items-center justify-center p-12">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center justify-center text-center p-12 max-w-lg glass-panel rounded-2xl w-full"
+            >
+              <div className="relative w-24 h-24 mb-6">
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 border-2 border-dashed border-primary/30 rounded-full"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-primary/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-2xl font-semibold mb-3 text-on-surface">Action Feed Empty</h3>
+              <p className="text-on-surface-variant">No automated actions have been taken by Cyvault AI yet. Try running a scenario in the Simulator to generate some actions.</p>
+            </motion.div>
           </div>
         ) : (
           <div className="space-y-3">

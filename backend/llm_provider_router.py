@@ -56,6 +56,6 @@ def get_llm_response(prompt: str, task_type: str = "general") -> str:
     elif task_type == "policy_compile":
         return '{"rule_type": "fallback_limit", "parameters": {"max": 1000}}'
     elif task_type == "settlement_qa":
-        return "I am currently unable to answer complex queries. Please check the raw settlement data table below."
+        return "I am currently unable to process your request due to high traffic on our AI services. Please try again later."
         
     return "Error: AI services are currently unavailable. The core money-moving system remains operational."

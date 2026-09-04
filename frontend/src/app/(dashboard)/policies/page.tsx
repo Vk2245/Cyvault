@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Edit2, Trash2, AlertTriangle, Plus, Sparkles, Terminal, CheckCircle2 } from 'lucide-react';
 
 export default function Policies() {

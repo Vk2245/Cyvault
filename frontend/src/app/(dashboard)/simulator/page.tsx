@@ -1,5 +1,6 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon } from 'lucide-react';

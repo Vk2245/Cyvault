@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Key, Lock, TriangleAlert, Eye, EyeOff, RefreshCw, Webhook, Copy, Bot, User, Bell, Users, CreditCard, Save, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 

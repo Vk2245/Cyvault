@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, Search, Filter, User, Users as UsersIcon, Smartphone, Calendar, Download } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 

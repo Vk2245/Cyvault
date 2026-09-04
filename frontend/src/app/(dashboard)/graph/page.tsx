@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, User, Smartphone, AlertTriangle, Router, X, BrainCircuit } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Graph() {
   const { merchantId } = useAuth();

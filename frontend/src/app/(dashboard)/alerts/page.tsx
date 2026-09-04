@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, User, TriangleAlert, ShieldAlert, Bot } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -36,11 +37,28 @@ export default function Alerts() {
         {loading && alerts.length === 0 ? (
            <div className="flex justify-center items-center h-64 text-on-surface-variant">Loading alerts...</div>
         ) : alerts.length === 0 ? (
-           <div className="flex flex-col items-center justify-center h-64 text-center glass-panel rounded-2xl p-12">
-             <ShieldAlert size={48} className="text-primary mb-4 opacity-50" />
-             <h3 className="text-xl font-semibold mb-2">No alerts yet</h3>
-             <p className="text-on-surface-variant max-w-md">Alerts will appear here when our AI agents take actions (like offering discounts or blocking fraud) on your behalf.</p>
-           </div>
+           <div className="flex-1 flex flex-col items-center justify-center p-12">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex flex-col items-center justify-center text-center p-12 max-w-lg glass-panel rounded-2xl w-full"
+            >
+              <div className="relative w-24 h-24 mb-6">
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 border-2 border-dashed border-primary/30 rounded-full"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-primary/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-2xl font-semibold mb-3 text-on-surface">Live AI Alerts Empty</h3>
+              <p className="text-on-surface-variant">Alerts will appear here when our AI agents take actions (like offering discounts or blocking fraud) on your behalf.</p>
+            </motion.div>
+          </div>
         ) : (
            <div className="space-y-4">
              {alerts.map((alert, index) => (

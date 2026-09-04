@@ -1,5 +1,6 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ArrowUp, XCircle, Clock, LineChart, ShieldCheck, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
