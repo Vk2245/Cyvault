@@ -598,6 +598,7 @@ export default function SimulatorPage() {
             </div>
 
           </div>
+          </div>
         ) : (
           <div className="flex-1 overflow-y-auto p-6 text-white space-y-6">
             <div className="bg-primary/10 border border-primary/20 rounded-xl p-6 relative overflow-hidden">
