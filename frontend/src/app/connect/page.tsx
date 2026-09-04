@@ -228,7 +228,7 @@ export default function Connect() {
                 }}
                 className="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 px-4 py-1.5 rounded-lg text-[11px] font-bold hover:bg-emerald-500/30 transition-all duration-300 active:scale-[0.98]"
               >
-                Use Demo Account (For Judges)
+                Use Demo Account
               </button>
 
               <a className="font-body-md text-[10px] text-outline hover:text-primary transition-colors flex items-center gap-1 group mt-1" href="https://razorpay.com/docs/api/authentication/" target="_blank" rel="noopener noreferrer">
