@@ -462,6 +462,13 @@ Respond in a helpful, concise way. If the data doesn't contain the answer, say s
 
     try:
         reply = get_llm_response(prompt, task_type="settlement_qa")
+        
+        # Strip markdown formatting for cleaner UI display
+        import re
+        reply = re.sub(r'[*_]{1,2}', '', reply) # Remove bold/italics
+        reply = re.sub(r'^#+\s+', '', reply, flags=re.MULTILINE) # Remove headers
+        reply = re.sub(r'`+', '', reply) # Remove code ticks
+        
     except Exception as e:
         reply = f"I encountered an error processing your request. Error: {str(e)}"
     

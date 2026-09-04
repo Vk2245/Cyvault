@@ -91,6 +91,12 @@ def chat_with_insights_bot(request: ChatRequest) -> dict:
         # Extract the reply text from the AI's response
         ai_reply = chat_completion.choices[0].message.content
         
+        # Strip markdown formatting for cleaner UI display
+        import re
+        ai_reply = re.sub(r'[*_]{1,2}', '', ai_reply)
+        ai_reply = re.sub(r'^#+\s+', '', ai_reply, flags=re.MULTILINE)
+        ai_reply = re.sub(r'`+', '', ai_reply)
+        
         return {"reply": ai_reply}
         
     except Exception as error:
