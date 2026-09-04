@@ -67,7 +67,7 @@ export default function Users() {
                      <tr key={user.id} className="hover:bg-[#ffffff08] transition-colors">
                        <td className="py-4 px-6 font-label-mono text-primary font-medium">{user.id}</td>
                        <td className="py-4 px-6">{user.email || '—'}</td>
-                       <td className="py-4 px-6 font-label-mono text-on-surface-variant">{user.phone || '—'}</td>
+                       <td className="py-4 px-6 font-label-mono text-on-surface-variant">{user.phone ? user.phone.replace(/(\+91-\d{2})\d{6}(\d{2})/, "$1XXXXXX$2") : '—'}</td>
                        <td className="py-4 px-6">
                          {user.device_fingerprint ? (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/5 border border-white/10 font-label-mono text-[10px] text-on-surface-variant">

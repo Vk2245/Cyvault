@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, ScrollText, User, Activity, TriangleAlert, ShieldCheck, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, RefreshCcw } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function Radar() {
   const { merchantId } = useAuth();
+  const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -162,8 +164,8 @@ export default function Radar() {
                       <p className="text-xs text-on-surface-variant">Order: <span className="font-label-mono">{anom.id}</span></p>
                       
                       <div className="mt-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="flex-1 bg-white/10 hover:bg-white/20 text-white text-[10px] py-1.5 rounded transition-colors">Investigate</button>
-                        <button className="flex-1 bg-primary/20 hover:bg-primary/30 text-primary text-[10px] py-1.5 rounded transition-colors">Apply Policy</button>
+                        <button onClick={() => router.push('/graph')} className="flex-1 bg-white/10 hover:bg-white/20 text-white text-[10px] py-1.5 rounded transition-colors">Investigate</button>
+                        <button onClick={() => router.push('/policies')} className="flex-1 bg-primary/20 hover:bg-primary/30 text-primary text-[10px] py-1.5 rounded transition-colors">Apply Policy</button>
                       </div>
                     </motion.div>
                   ))

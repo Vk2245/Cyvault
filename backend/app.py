@@ -270,6 +270,66 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         
         db.commit()
         return {"status": "success", "simulated_event": "refund.created"}
+        
+    elif scenario == "payment_success":
+        # Check if customer exists, if not create
+        existing_customer = db.query(Customer).filter(Customer.id == customer_id).first()
+        if not existing_customer:
+            new_customer = Customer(
+                id=customer_id,
+                merchant_id=merchant_id,
+                email=f"{customer_id.lower()}@customer.demo",
+                phone=f"+91-{random.randint(70000, 99999)}{random.randint(10000, 99999)}",
+                device_fingerprint=f"fp_{customer_id}_{random.randint(1000, 9999)}"
+            )
+            db.add(new_customer)
+            db.flush()
+            
+        # Create successful Order
+        amount_to_pay = payload.get("amount", 499900)
+        order_id = f"order_{customer_id}_{random.randint(100, 999)}"
+        new_order = Order(
+            id=order_id,
+            merchant_id=merchant_id,
+            customer_id=customer_id,
+            amount_paise=amount_to_pay,
+            status="paid"
+        )
+        db.add(new_order)
+        db.flush()
+        
+        # Create successful Transaction
+        tx_id = f"pay_{customer_id}_{random.randint(100, 999)}"
+        new_tx = Transaction(
+            id=tx_id,
+            order_id=order_id,
+            amount_paise=amount_to_pay,
+            status="captured",
+            method="card",
+            risk_score=0.1
+        )
+        db.add(new_tx)
+        
+        # Optionally create a Settlement automatically
+        setl_id = f"setl_{customer_id}_{random.randint(100, 999)}"
+        utr = f"UTR_{random.randint(100000, 999999)}"
+        new_settlement = Settlement(
+            id=setl_id,
+            merchant_id=merchant_id,
+            amount_paise=amount_to_pay,
+            fees_paise=int(amount_to_pay * 0.02),
+            tax_paise=int(amount_to_pay * 0.0036),
+            utr=utr,
+            status="processed"
+        )
+        db.add(new_settlement)
+        
+        narrative = f"✅ Payment of ₹{amount_to_pay/100:.2f} successful for Customer {customer_id}."
+        log_action_receipt(db, merchant_id, "payment_success", order_id, "ALLOWED", narrative)
+        
+        db.commit()
+        return {"status": "success", "simulated_event": "payment.captured", "order_id": order_id}
+        
     else:
         raise HTTPException(status_code=400, detail="Unknown scenario")
 
@@ -298,7 +358,17 @@ def get_dashboard_kpis(merchant_id: str, db: Session = Depends(get_db)):
             rate = round((recovered / (at_risk + recovered)) * 100, 1)
             
         # Optional: Add actual cases from DB if needed
-        
+        for o in orders[:5]:
+            recent_cases.append({
+                "order_id": o.id,
+                "customer": o.customer_id,
+                "amount": o.amount_paise / 100,
+                "type": "Recovery" if o.status == 'paid' else "Abandonment",
+                "intervention": "Discount AI" if o.status == 'paid' else "None",
+                "status": o.status,
+                "color": "emerald" if o.status == "paid" else "cyan"
+            })
+            
     return {
         "at_risk": at_risk,
         "recovered": recovered,

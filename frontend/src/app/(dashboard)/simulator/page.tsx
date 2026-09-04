@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
-import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon } from 'lucide-react';
+import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon, History, Trash2, Plus } from 'lucide-react';
 import styles from './simulator.module.css';
 
 export default function SimulatorPage() {
@@ -17,6 +17,7 @@ export default function SimulatorPage() {
   const [fraudAttempts, setFraudAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
   const [testId, setTestId] = useState('');
+  const [activeTab, setActiveTab] = useState('single');
   
   // Chat state
   const [chatMessages, setChatMessages] = useState<{role: string, content: string}[]>([
@@ -86,10 +87,43 @@ export default function SimulatorPage() {
     // Skip 'failed' state, go straight to AI intercept
     setPaymentState('negotiating');
     await triggerBackend('recovery_fail');
-    setTimeout(() => {
-      // Pick a random discount: 5%, 10%, or 15% to simulate AI dynamically adjusting based on user profile
+    setTimeout(async () => {
+      // Fetch active policies to dynamically cap discount for demo!
+      let maxAllowed = 15;
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/${merchantId}/policies`);
+        if (res.ok) {
+          const policies = await res.json();
+          if (policies.length > 0) {
+            // Very simple parser for hackathon demo: look for numbers with % sign in the description or condition
+            const combinedText = policies.map((p: any) => p.description + " " + (p.parameters?.condition || "")).join(" ");
+            const percentMatch = combinedText.match(/(\d+(\.\d+)?)%/);
+            if (percentMatch) {
+              maxAllowed = parseFloat(percentMatch[1]);
+            }
+          }
+        }
+      } catch(e) {}
+      
+      // Pick a random discount: 5%, 10%, or 15%, but cap it at maxAllowed!
       const dynamicDiscounts = [5, 10, 15];
-      const randomDiscount = dynamicDiscounts[Math.floor(Math.random() * dynamicDiscounts.length)];
+      let randomDiscount = dynamicDiscounts[Math.floor(Math.random() * dynamicDiscounts.length)];
+      
+      if (randomDiscount > maxAllowed) {
+         // If our generated discount is higher than policy allows, we override it to the exact policy limit!
+         randomDiscount = maxAllowed;
+         
+         // Log a fake action feed alert that policy intervened
+         setActionFeed(prev => [{
+            id: `alert_${Date.now()}`,
+            merchant_id: merchantId,
+            action_type: "POLICY_ENFORCED",
+            decision: "BLOCKED",
+            narrative: `Cyvault intercepted AI: Tried to offer discount higher than ${maxAllowed}%. Capped to policy limit.`,
+            created_at: new Date().toISOString()
+         }, ...prev]);
+      }
+      
       setDiscount(randomDiscount); 
     }, 1500);
   };
@@ -138,6 +172,95 @@ export default function SimulatorPage() {
       setChatMessages(prev => [...prev, {role: 'agent', content: 'Connection error'}]);
     }
   };
+
+  // --- Session Management ---
+  const [sessions, setSessions] = useState<{id: string, date: string}[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  useEffect(() => {
+    // Load sessions from local storage
+    const saved = localStorage.getItem('cyvault_demo_sessions');
+    if (saved) {
+      setSessions(JSON.parse(saved));
+    }
+  }, []);
+
+  const saveCurrentSession = (id: string) => {
+    const saved = localStorage.getItem('cyvault_demo_sessions');
+    let parsed = saved ? JSON.parse(saved) : [];
+    if (!parsed.find((s: any) => s.id === id)) {
+      parsed.unshift({ id, date: new Date().toLocaleString() });
+      localStorage.setItem('cyvault_demo_sessions', JSON.stringify(parsed));
+      setSessions(parsed);
+    }
+  };
+
+  const startNewSession = () => {
+    if (testId) saveCurrentSession(testId);
+    
+    const newId = `SIM_${Math.floor(Math.random() * 9000) + 1000}`;
+    setTestId(newId);
+    setPaymentState('idle');
+    setDiscount(0);
+    setFraudBlocked(false);
+    setFraudAttempts(0);
+    setActiveScenario('none');
+    setChatMessages([{ role: 'agent', content: 'Hi! I am Cyvault Support. Your payment failed. How can I help you today?' }]);
+    setShowHistory(false);
+  };
+
+  const loadSession = (id: string) => {
+    setTestId(id);
+    setPaymentState('idle');
+    setDiscount(0);
+    setFraudBlocked(false);
+    setFraudAttempts(0);
+    setActiveScenario('none');
+    setShowHistory(false);
+  };
+
+  const deleteSession = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = sessions.filter(s => s.id !== id);
+    localStorage.setItem('cyvault_demo_sessions', JSON.stringify(updated));
+    setSessions(updated);
+    if (testId === id) {
+      startNewSession();
+    }
+  };
+
+  const handleUnifiedAttack = async (type: string) => {
+    setLoading(true);
+    for (const session of sessions) {
+      const m_id = merchantId || "demo";
+      try {
+        if (type === 'fraud') {
+          // Trigger 3 fraud attempts to reliably spawn graph nodes
+          for(let i=0; i<3; i++) {
+             await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ scenario: 'fraud_attack', merchant_id: m_id, customer_id: session.id })
+             });
+          }
+        } else if (type === 'recovery') {
+           await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ scenario: 'recovery_fail', merchant_id: m_id, customer_id: session.id })
+           });
+        }
+      } catch(e) {}
+    }
+    setLoading(false);
+  };
+
+  // Make sure to save the very first session on mount if it's not saved yet
+  useEffect(() => {
+    if (testId && !sessions.find(s => s.id === testId)) {
+      saveCurrentSession(testId);
+    }
+  }, [testId, sessions]);
 
   return (
     <div className={styles.appContainer}>
@@ -190,16 +313,87 @@ export default function SimulatorPage() {
       {/* Right Side: Customer Simulator */}
       <div className={styles.customerSide}>
         {/* Cyvault Branding Header */}
-        <div className={styles.simulatorBrandHeader}>
+        <div className={styles.simulatorBrandHeader} style={{ position: 'relative' }}>
           <img src="/cyvault_transparent.png" alt="Cyvault" className={styles.brandLogo} />
-          <div>
+          <div className="flex-1">
             <h2 className={styles.brandTitle}>Storefront Simulator</h2>
             <span className={styles.brandBadge}>Customer ID: {testId}</span>
           </div>
-          <div className={styles.pulseDot}></div>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <button 
+                onClick={() => setShowHistory(!showHistory)} 
+                className="p-2 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-colors flex items-center gap-2"
+                title="Session History"
+              >
+                <History size={18} />
+              </button>
+
+              {/* History Dropdown */}
+              <AnimatePresence>
+                {showHistory && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 top-full mt-2 w-64 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden"
+                  >
+                    <div className="p-3 border-b border-white/10 flex justify-between items-center bg-black/40">
+                      <h3 className="text-sm font-semibold text-white">Demo Sessions</h3>
+                      <button onClick={startNewSession} className="text-[10px] bg-primary/20 text-primary px-2 py-1 rounded flex items-center gap-1 hover:bg-primary/30 transition-colors">
+                        <Plus size={12} /> New
+                      </button>
+                    </div>
+                    <div className="max-h-60 overflow-y-auto p-2 space-y-1">
+                      {sessions.length === 0 ? (
+                        <p className="text-xs text-white/40 text-center py-4">No past sessions.</p>
+                      ) : (
+                        sessions.map(s => (
+                          <div 
+                            key={s.id} 
+                            onClick={() => loadSession(s.id)}
+                            className={`p-2 rounded-lg cursor-pointer flex justify-between items-center group transition-colors ${s.id === testId ? 'bg-white/10' : 'hover:bg-white/5'}`}
+                          >
+                            <div>
+                              <p className="text-xs font-mono text-white/90">{s.id}</p>
+                              <p className="text-[9px] text-white/40 mt-0.5">{s.date}</p>
+                            </div>
+                            <button 
+                              onClick={(e) => deleteSession(s.id, e)}
+                              className="text-white/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all p-1"
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            <div className={styles.pulseDot}></div>
+          </div>
         </div>
 
-        <div className={styles.demoControlsWrapper}>
+        {/* Tab Navigation */}
+        <div className="flex border-b border-white/10 mx-6 mt-4 shrink-0">
+          <button 
+            className={`px-4 py-3 text-sm font-semibold transition-colors ${activeTab === 'single' ? 'text-primary border-b-2 border-primary' : 'text-white/50 hover:text-white'}`}
+            onClick={() => setActiveTab('single')}
+          >
+            Single User Test
+          </button>
+          <button 
+            className={`px-4 py-3 text-sm font-semibold transition-colors ${activeTab === 'multi' ? 'text-primary border-b-2 border-primary' : 'text-white/50 hover:text-white'}`}
+            onClick={() => setActiveTab('multi')}
+          >
+            Multi-User Unified Testing
+          </button>
+        </div>
+
+        {activeTab === 'single' ? (
+          <div className={styles.demoControlsWrapper}>
           
           {/* Main Checkout View (Recovery Scenario) */}
           <div className={`${styles.glassPanel} ${styles.checkoutCard}`}>
@@ -217,7 +411,17 @@ export default function SimulatorPage() {
 
             {paymentState === 'idle' && (
               <div className="flex flex-col gap-2 w-full">
-                <button className={styles.primaryBtn} onClick={() => { alert('Payment Successful'); setDiscount(0); }} disabled={loading}>
+                <button className={styles.primaryBtn} onClick={async () => { 
+                  setLoading(true);
+                  await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scenario: 'payment_success', merchant_id: merchantId || "demo", customer_id: testId, amount: 499900 })
+                  });
+                  setLoading(false);
+                  setDiscount(0); 
+                  alert('Payment Successful & Reconciled!');
+                }} disabled={loading}>
                   Pay ₹4999
                 </button>
                 <button className={styles.outlineBtn} onClick={handleSimulateCartAbandonment} disabled={loading}>
@@ -246,7 +450,19 @@ export default function SimulatorPage() {
                 <h4>Wait! Don't leave empty-handed.</h4>
                 <p>Complete your purchase now with a special <strong>{discount}% discount</strong>.</p>
                 <div className="flex flex-col gap-2 mt-4">
-                  <button className={styles.successBtn} style={{ marginTop: 0 }} onClick={() => { setPaymentState('idle'); setDiscount(0); }}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
+                  <button className={styles.successBtn} style={{ marginTop: 0 }} onClick={async () => { 
+                    const discountedAmount = (4999 * (1 - discount/100)).toFixed(0);
+                    setLoading(true);
+                    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ scenario: 'payment_success', merchant_id: merchantId || "demo", customer_id: testId, amount: parseInt(discountedAmount)*100 })
+                    });
+                    setLoading(false);
+                    setPaymentState('idle'); 
+                    setDiscount(0); 
+                    alert('Discounted Payment Successful & Reconciled!');
+                  }}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
                   <button className={styles.outlineBtn} onClick={() => { setPaymentState('idle'); setDiscount(0); }}>No thanks, cancel order</button>
                 </div>
               </div>
@@ -382,7 +598,61 @@ export default function SimulatorPage() {
             </div>
 
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto p-6 text-white space-y-6">
+            <div className="bg-primary/10 border border-primary/20 rounded-xl p-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+              <h3 className="text-xl font-bold mb-2">Multi-User Unified Testing</h3>
+              <p className="text-white/70 max-w-2xl mb-6">
+                Fire stress tests across all your generated demo sessions simultaneously. 
+                This will simulate high traffic and populate the Dashboard, Leakage Radar, and Entity Graph dynamically for <strong>{sessions.length}</strong> unique customers.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                <div className="bg-black/40 border border-white/10 p-5 rounded-lg flex flex-col justify-between">
+                  <div>
+                    <h4 className="font-semibold mb-1 flex items-center gap-2"><RouterIcon size={16} className="text-red-400"/> Unified Fraud Ring Attack</h4>
+                    <p className="text-sm text-white/50 mb-4">Triggers 3 rapid failed payments for every single customer in your session history. Watch the Entity Graph light up with Fraud Rings.</p>
+                  </div>
+                  <button 
+                    onClick={() => handleUnifiedAttack('fraud')}
+                    disabled={loading || sessions.length === 0}
+                    className="w-full py-2.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
+                  >
+                    {loading ? 'Executing Attack...' : `Fire Fraud Attack (${sessions.length} users)`}
+                  </button>
+                </div>
+                
+                <div className="bg-black/40 border border-white/10 p-5 rounded-lg flex flex-col justify-between">
+                  <div>
+                    <h4 className="font-semibold mb-1 flex items-center gap-2"><TriangleAlert size={16} className="text-emerald-400"/> Mass Cart Abandonment</h4>
+                    <p className="text-sm text-white/50 mb-4">Triggers a cart abandonment event for all generated customers, forcing Cyvault AI to mass-negotiate discounts according to active policies.</p>
+                  </div>
+                  <button 
+                    onClick={() => handleUnifiedAttack('recovery')}
+                    disabled={loading || sessions.length === 0}
+                    className="w-full py-2.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+                  >
+                    {loading ? 'Executing...' : `Fire Mass Recovery (${sessions.length} users)`}
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+               <h4 className="font-semibold text-white/80 mb-3 border-b border-white/10 pb-2">Active Target Pool ({sessions.length})</h4>
+               <div className="flex flex-wrap gap-2">
+                 {sessions.map(s => (
+                   <div key={s.id} className="bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-mono">
+                     <User size={12} className="text-white/40" />
+                     {s.id}
+                   </div>
+                 ))}
+                 {sessions.length === 0 && <p className="text-sm text-white/40">No users generated yet. Go to Single User Test and create some sessions first!</p>}
+               </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

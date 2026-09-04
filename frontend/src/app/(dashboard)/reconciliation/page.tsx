@@ -60,10 +60,42 @@ export default function Reconciliation() {
             <p className="text-on-surface-variant max-w-md">Your transactions will be automatically reconciled here once payment data flows in.</p>
          </div>
       ) : (
-         <div className="flex-1 flex flex-col justify-center items-center text-center glass-panel rounded-2xl p-12">
-            {/* The actual table would go here, omitting for brevity since data is empty anyway */}
-            <h3 className="text-xl font-semibold mb-2">Data Synced</h3>
-            <p className="text-on-surface-variant max-w-md">Data table loaded.</p>
+         <div className="flex-1 overflow-hidden glass-panel rounded-2xl flex flex-col">
+            <div className="p-6 border-b border-[#ffffff1a] flex justify-between items-center bg-[#ffffff05]">
+              <h3 className="font-headline-md text-headline-md font-semibold text-on-surface">Recent Settlements</h3>
+              <button className="px-4 py-2 bg-primary/20 text-primary rounded-lg text-sm font-semibold hover:bg-primary/30 transition-colors">Export CSV</button>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-[#ffffff1a] bg-[#ffffff02] sticky top-0 z-10 backdrop-blur-md">
+                    <th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Settlement ID</th>
+                    <th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider text-right">Amount</th>
+                    <th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider text-right">Fees/Tax</th>
+                    <th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">UTR</th>
+                    <th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Date</th>
+                    <th className="py-4 px-6 font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="font-body-md text-sm divide-y divide-[#ffffff0a]">
+                  {data.map((row: any) => (
+                    <tr key={row.id} className="hover:bg-[#ffffff08] transition-colors group">
+                      <td className="py-4 px-6 font-label-mono text-primary/80">{row.id}</td>
+                      <td className="py-4 px-6 text-right font-label-mono">₹{(row.amount_paise / 100).toLocaleString()}</td>
+                      <td className="py-4 px-6 text-right font-label-mono text-on-surface-variant">₹{((row.fees_paise + row.tax_paise) / 100).toLocaleString()}</td>
+                      <td className="py-4 px-6 font-label-mono text-xs text-on-surface-variant">{row.utr}</td>
+                      <td className="py-4 px-6 text-on-surface-variant">{new Date(row.created_at).toLocaleDateString()}</td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded font-label-mono text-[10px] uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                          {row.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
          </div>
       )}
       </div>
