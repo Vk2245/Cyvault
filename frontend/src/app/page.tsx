@@ -68,8 +68,8 @@ export default function LandingPage() {
             {/* Stats Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 mt-8 border-t border-[#ffffff1a]/30">
               <div className="flex flex-col items-center gap-2 glass-panel p-4 rounded-2xl">
-                <span className="font-stat-lg text-stat-lg text-secondary drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">₹1.2Cr+</span>
-                <span className="font-label-mono text-label-mono text-on-surface/70 uppercase tracking-widest text-xs">Recovered</span>
+                <span className="font-stat-lg text-stat-lg text-secondary drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">&lt;50ms</span>
+                <span className="font-label-mono text-label-mono text-on-surface/70 uppercase tracking-widest text-xs">AI Response Time</span>
               </div>
               <div className="flex flex-col items-center gap-2 glass-panel p-4 rounded-2xl">
                 <span className="font-stat-lg text-stat-lg text-primary drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">0</span>
