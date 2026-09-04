@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
-import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon, History, Trash2, Plus } from 'lucide-react';
+import { Bot, Send, User, TriangleAlert, CheckCircle2, XCircle, Router as RouterIcon, History, Trash2, Plus, MessageSquare, Smartphone, CreditCard, ShieldCheck } from 'lucide-react';
 import styles from './simulator.module.css';
 
 export default function SimulatorPage() {
@@ -19,6 +19,7 @@ export default function SimulatorPage() {
   const [loading, setLoading] = useState(false);
   const [testId, setTestId] = useState('');
   const [activeTab, setActiveTab] = useState('single');
+  const [showCheckout, setShowCheckout] = useState(false);
   
   // Chat state
   const [chatMessages, setChatMessages] = useState<{role: string, content: string}[]>([
@@ -174,6 +175,7 @@ export default function SimulatorPage() {
     setFraudBlocked(false);
     setFraudAttempts(0);
     setActiveScenario('none');
+    setShowCheckout(false);
     setChatMessages([{ role: 'agent', content: 'Hi! I am Cyvault Support. Your payment failed. How can I help you today?' }]);
     setShowHistory(false);
   };
@@ -185,6 +187,7 @@ export default function SimulatorPage() {
     setFraudBlocked(false);
     setFraudAttempts(0);
     setActiveScenario('none');
+    setShowCheckout(false);
     setShowHistory(false);
   };
 
@@ -369,8 +372,109 @@ export default function SimulatorPage() {
         {activeTab === 'single' ? (
           <div className={styles.demoControlsWrapper}>
           
+          {/* SMS Simulation Visualizer */}
+          <AnimatePresence>
+            {paymentState === 'negotiating' && discount > 0 && (
+              <motion.div initial={{ opacity: 0, y: -20, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} className="mx-6 mb-4">
+                <div className="p-4 rounded-xl bg-[#0f172a] border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)] relative overflow-hidden">
+                  {/* Glass reflection */}
+                  <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+                  
+                  <div className="flex items-center gap-3 mb-3 relative z-10">
+                    <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 shrink-0">
+                      <Smartphone size={16} className="text-blue-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                        New SMS Received 
+                        <span className="text-[9px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded uppercase tracking-wider font-mono border border-blue-500/30">Just Now</span>
+                      </h4>
+                      <p className="text-[10px] text-white/50 font-mono">From: DEMO_STORE</p>
+                    </div>
+                  </div>
+                  <div className="bg-black/40 rounded-lg p-3 border border-white/5 relative z-10">
+                    <p className="text-xs text-white/80 leading-relaxed font-mono">
+                      Hi! We noticed you left some items in your cart. Complete your purchase now with a special <span className="text-emerald-400 font-bold">{discount}% discount</span>!
+                    </p>
+                    <button onClick={() => setShowCheckout(true)} className="mt-3 w-full py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-bold rounded border border-blue-500/30 transition-colors flex items-center justify-center gap-2">
+                      <CreditCard size={14} /> Claim Discount & Pay
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Main Checkout View (Recovery Scenario) */}
-          <div className={`${styles.glassPanel} ${styles.checkoutCard}`}>
+          <div className={`${styles.glassPanel} ${styles.checkoutCard} relative overflow-hidden`}>
+            {/* Fake Razorpay Checkout Overlay */}
+            <AnimatePresence>
+              {showCheckout && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="absolute inset-0 bg-white z-50 flex flex-col"
+                >
+                  {/* Header */}
+                  <div className="bg-[#02042b] p-4 flex justify-between items-center text-white">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-white rounded flex items-center justify-center font-bold text-[#02042b]">D</div>
+                      <div>
+                        <h4 className="font-bold text-sm">Demo Store</h4>
+                        <p className="text-xs text-white/70">Test Transaction</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-white/70">Amount to pay</p>
+                      <h3 className="font-bold text-lg">₹{discount > 0 ? (4999 * (1 - discount/100)).toFixed(0) : 4999}</h3>
+                    </div>
+                  </div>
+                  
+                  {/* Body */}
+                  <div className="flex-1 p-6 flex flex-col items-center justify-center bg-gray-50 text-gray-800">
+                    <ShieldCheck size={48} className="text-emerald-500 mb-4" />
+                    <h3 className="text-lg font-bold mb-1">Secure Checkout</h3>
+                    <p className="text-sm text-gray-500 mb-8 text-center">Complete your payment for Premium Wireless Headphones.</p>
+                    
+                    <button 
+                      className="w-full bg-[#528FF0] hover:bg-[#437de0] text-white py-3 rounded text-sm font-bold shadow-lg transition-all"
+                      onClick={async () => {
+                        const finalAmount = discount > 0 ? (4999 * (1 - discount/100)).toFixed(0) : "4999";
+                        setLoading(true);
+                        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ scenario: 'payment_success', merchant_id: merchantId || "demo", customer_id: testId, amount: parseInt(finalAmount)*100 })
+                        });
+                        setLoading(false);
+                        setPaymentState('idle'); 
+                        setDiscount(0); 
+                        setShowCheckout(false);
+                        alert(`Payment of ₹${finalAmount} Successful!`);
+                      }}
+                      disabled={loading}
+                    >
+                      {loading ? 'Processing...' : `Pay ₹${discount > 0 ? (4999 * (1 - discount/100)).toFixed(0) : 4999}`}
+                    </button>
+                    
+                    <button 
+                      className="w-full mt-3 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors"
+                      onClick={() => {
+                        setShowCheckout(false);
+                        if (paymentState === 'idle') {
+                          handleSimulateCartAbandonment();
+                        }
+                      }}
+                      disabled={loading}
+                    >
+                      Cancel Payment
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <h3 className={styles.sectionTitle}>1. Revenue Recovery (Cart Abandonment)</h3>
             <div className={styles.productInfo}>
               <div className={styles.productImage}>
@@ -384,22 +488,9 @@ export default function SimulatorPage() {
             </div>
 
             {paymentState === 'idle' && (
-              <div className="flex flex-col gap-2 w-full">
-                <button className={styles.primaryBtn} onClick={async () => { 
-                  setLoading(true);
-                  await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ scenario: 'payment_success', merchant_id: merchantId || "demo", customer_id: testId, amount: 499900 })
-                  });
-                  setLoading(false);
-                  setDiscount(0); 
-                  alert('Payment Successful & Reconciled!');
-                }} disabled={loading}>
-                  Pay ₹4999
-                </button>
-                <button className={styles.outlineBtn} onClick={handleSimulateCartAbandonment} disabled={loading}>
-                  {loading ? 'Processing...' : 'Cancel / Close Checkout'}
+              <div className="flex flex-col gap-2 w-full mt-4">
+                <button className={styles.primaryBtn} onClick={() => setShowCheckout(true)} disabled={loading}>
+                  Proceed to Checkout
                 </button>
               </div>
             )}
@@ -420,24 +511,12 @@ export default function SimulatorPage() {
 
             {paymentState === 'negotiating' && discount > 0 && (
               <div className={styles.discountOffer}>
-                <div className={styles.aiBadge}>Cyvault Recovery AI</div>
-                <h4>Wait! Don't leave empty-handed.</h4>
-                <p>Complete your purchase now with a special <strong>{discount}% discount</strong>.</p>
-                <div className="flex flex-col gap-2 mt-4">
-                  <button className={styles.successBtn} style={{ marginTop: 0 }} onClick={async () => { 
-                    const discountedAmount = (4999 * (1 - discount/100)).toFixed(0);
-                    setLoading(true);
-                    await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/simulate`, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ scenario: 'payment_success', merchant_id: merchantId || "demo", customer_id: testId, amount: parseInt(discountedAmount)*100 })
-                    });
-                    setLoading(false);
-                    setPaymentState('idle'); 
-                    setDiscount(0); 
-                    alert('Discounted Payment Successful & Reconciled!');
-                  }}>Pay ₹{(4999 * (1 - discount/100)).toFixed(0)} Now</button>
-                  <button className={styles.outlineBtn} onClick={() => { setPaymentState('idle'); setDiscount(0); }}>No thanks, cancel order</button>
+                <div className={styles.aiBadge}>Cyvault Recovery AI Active</div>
+                <h4>Checkout Abandoned!</h4>
+                <p className="mb-4">But don't worry, Cyvault has intercepted the drop-off and sent an automated SMS recovery link to the customer.</p>
+                
+                <div className="text-[10px] text-white/50 text-center uppercase tracking-wider font-mono">
+                  Waiting for customer response...
                 </div>
               </div>
             )}
