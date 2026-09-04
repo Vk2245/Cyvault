@@ -67,12 +67,19 @@ export default function Graph() {
             <p className="text-on-surface-variant">The graph will dynamically populate as our AI agents process transactions and detect relationships. Run the Simulator to see it in action.</p>
           </motion.div>
         ) : (
-          <div className="relative w-full h-full flex items-center justify-center">
+          <div className="relative w-full h-full flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing">
             
-            {/* Background Grid */}
-            <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-            
-            <div className="relative w-96 h-96">
+            <motion.div 
+              drag
+              dragConstraints={{ left: -1500, right: 1500, top: -1500, bottom: 1500 }}
+              dragElastic={0.1}
+              className="absolute flex items-center justify-center"
+              style={{ width: 4000, height: 4000 }}
+            >
+              {/* Background Grid */}
+              <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+              
+              <div className="relative w-96 h-96">
               
               {/* We render each device cluster at a calculated position */}
               {deviceNodes.map((deviceNode: any, clusterIndex: number) => {
@@ -170,7 +177,8 @@ export default function Graph() {
                 );
               })}
 
-            </div>
+              </div>
+            </motion.div>
 
             {/* High Risk Cluster Label */}
             {highRiskDevices.length > 0 && (
