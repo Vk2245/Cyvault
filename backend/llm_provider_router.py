@@ -19,22 +19,14 @@ else:
 def get_llm_response(prompt: str, task_type: str = "general") -> str:
     """
     6-Layer Safety architecture router:
-    1. Tries Gemini (Primary for Reasoning/General tasks)
-    2. Falls back to Groq (Llama-3) if Gemini fails or rate-limits
+    1. Tries Groq (Primary for speed and OSS models)
+    2. Falls back to Gemini if Groq fails or rate-limits
     3. Falls back to deterministic templates if both fail
     
     This ensures our AI features never completely crash during a demo.
     """
     
-    # 1. Try Gemini
-    if gemini_model:
-        try:
-            response = gemini_model.generate_content(prompt)
-            return response.text
-        except Exception as e:
-            print(f"Gemini API failed: {e}. Falling back to Groq...")
-            
-    # 2. Try Groq (Fallback)
+    # 1. Try Groq (Primary)
     if groq_client:
         try:
             chat_completion = groq_client.chat.completions.create(
@@ -48,7 +40,15 @@ def get_llm_response(prompt: str, task_type: str = "general") -> str:
             )
             return chat_completion.choices[0].message.content
         except Exception as e:
-            print(f"Groq API failed: {e}. Falling back to deterministic templates...")
+            print(f"Groq API failed: {e}. Falling back to Gemini...")
+            
+    # 2. Try Gemini (Fallback)
+    if gemini_model:
+        try:
+            response = gemini_model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            print(f"Gemini API failed: {e}. Falling back to deterministic templates...")
             
     # 3. Deterministic Fallback (AI Unavailable Mode)
     if task_type == "receipt_narrate":
