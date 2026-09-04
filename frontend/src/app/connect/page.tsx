@@ -219,7 +219,19 @@ export default function Connect() {
               <button disabled={isSubmitting} className="w-full bg-white text-black px-4 py-1.5 rounded-lg text-[11px] font-bold hover:bg-white/90 transition-all duration-300 active:scale-[0.98] mt-1 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] disabled:opacity-50" type="submit">
                 {isSubmitting ? 'Connecting...' : 'Connect & Verify'}
               </button>
-              <a className="font-body-md text-[10px] text-outline hover:text-primary transition-colors flex items-center gap-1 group" href="https://razorpay.com/docs/api/authentication/" target="_blank" rel="noopener noreferrer">
+              
+              <button 
+                type="button"
+                onClick={() => {
+                  login("judge@razorpay.com", "demo_merchant_1");
+                  router.push('/simulator');
+                }}
+                className="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 px-4 py-1.5 rounded-lg text-[11px] font-bold hover:bg-emerald-500/30 transition-all duration-300 active:scale-[0.98]"
+              >
+                Use Demo Account (For Judges)
+              </button>
+
+              <a className="font-body-md text-[10px] text-outline hover:text-primary transition-colors flex items-center gap-1 group mt-1" href="https://razorpay.com/docs/api/authentication/" target="_blank" rel="noopener noreferrer">
                 Don't have Razorpay keys? Get them here
                 <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
               </a>
