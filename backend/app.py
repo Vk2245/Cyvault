@@ -166,8 +166,9 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
     if not existing_merchant:
         new_merchant = Merchant(
             id=merchant_id,
-            name=f"Merchant {merchant_id[-4:]}",
-            api_key_hash="demo_hash"
+            name=f"Demo Merchant {merchant_id[-4:]}",
+            email=f"{merchant_id}@demo.com",
+            password_hash="demo_hash"
         )
         db.add(new_merchant)
         db.commit()
