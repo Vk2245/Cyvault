@@ -477,6 +477,22 @@ def get_merchant_settings(merchant_id: str, db: Session = Depends(get_db)):
     """
     merchant = db.query(Merchant).filter(Merchant.id == merchant_id).first()
     if not merchant:
+        if merchant_id == "demo_merchant_1":
+            return {
+                "profile": {
+                    "name": "Demo Merchant",
+                    "company_name": "Acme Corp",
+                    "email": "demo@cyvault.io",
+                    "industry": "E-commerce",
+                    "created_at": "2023-01-01T00:00:00"
+                },
+                "api_keys": {
+                    "key_id": "rzp_test_demo123",
+                    "key_secret_masked": "demo••••••••••••",
+                    "webhook_secret_masked": "whsec••••••••",
+                    "webhook_url": f"https://api.cyvault.io/v1/webhooks/incoming/{merchant_id}"
+                }
+            }
         raise HTTPException(status_code=404, detail="Merchant not found")
     
     # Mask API keys for display (show first 8 and last 4 chars)

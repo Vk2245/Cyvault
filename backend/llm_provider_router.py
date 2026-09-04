@@ -44,7 +44,7 @@ def get_llm_response(prompt: str, task_type: str = "general") -> str:
                         "content": prompt,
                     }
                 ],
-                model="llama3-8b-8192",
+                model="openai/gpt-oss-120b",
             )
             return chat_completion.choices[0].message.content
         except Exception as e:
