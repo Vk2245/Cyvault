@@ -40,10 +40,11 @@ app.add_middleware(
 def health_check():
     return {"status": "ok", "environment": settings.ENVIRONMENT}
 
-@app.post("/webhook/razorpay")
-async def razorpay_webhook(request: Request):
+@app.post("/webhook/razorpay/{merchant_id}")
+@app.post("/webhooks/razorpay/{merchant_id}")
+async def razorpay_webhook(merchant_id: str, request: Request):
     """
-    Ingests Razorpay Webhooks.
+    Ingests Razorpay Webhooks for a specific merchant.
     1. Verifies Signature
     2. Parses JSON
     3. Routes to appropriate track (Recovery, Finance, etc.)
@@ -54,8 +55,8 @@ async def razorpay_webhook(request: Request):
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid JSON payload")
         
-    # Route event internally
-    parse_webhook_event(event_dict)
+    # Route event internally, passing the exact merchant_id
+    parse_webhook_event(event_dict, merchant_id)
     
     # Must return 200 quickly to acknowledge Razorpay
     return {"status": "received"}
