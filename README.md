@@ -13,13 +13,20 @@
   <img src="https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js"/>
   <img src="https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
   <img src="https://img.shields.io/badge/PostgreSQL-Supabase-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
-  <img src="https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge" alt="License"/>
+ 
 </p>
 
 <p align="center">
   <em>Businesses lose ~15% of revenue to failed payments and ~2% to chargeback fraud every year.<br/>
   Cyvault plugs those leaks autonomously — recovering lost carts, blocking fraud rings, and reconciling ledgers in real-time.</em>
 </p>
+
+--- 
+
+## Who is this for?
+
+**Cyvault is built specifically for Merchants and Businesses using Razorpay as their payment gateway.** 
+If you process payments via Razorpay, Cyvault acts as an intelligence layer sitting directly on top of your Razorpay account. By simply plugging in your Razorpay Webhook URL into Cyvault, it automatically starts tracking failed payments, recovering abandoned carts, and blocking fraudulent transactions without you having to change a single line of code on your checkout page.
 
 --- 
 
