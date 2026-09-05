@@ -844,10 +844,14 @@ def get_radar_data(merchant_id: str, db: Session = Depends(get_db)):
 # MERCHANT SETTINGS ENDPOINT
 # ==========================================
 @app.get("/api/merchants/{merchant_id}/settings")
-def get_merchant_settings(merchant_id: str, db: Session = Depends(get_db)):
+def get_merchant_settings(merchant_id: str, request: Request, db: Session = Depends(get_db)):
     """
     Returns merchant profile and masked API keys for the Settings page.
+    Uses request.base_url to generate the real webhook URL dynamically.
     """
+    # Build real webhook URL from the actual deployed server URL
+    base = str(request.base_url).rstrip('/')
+    real_webhook_url = f"{base}/webhook/razorpay/{merchant_id}"
     merchant = db.query(Merchant).filter(Merchant.id == merchant_id).first()
     if not merchant:
         if merchant_id == "demo_merchant_1":
@@ -863,7 +867,7 @@ def get_merchant_settings(merchant_id: str, db: Session = Depends(get_db)):
                     "key_id": "rzp_test_demo123",
                     "key_secret_masked": "demo••••••••••••",
                     "webhook_secret_masked": "whsec••••••••",
-                    "webhook_url": f"https://api.cyvault.io/v1/webhooks/incoming/{merchant_id}"
+                    "webhook_url": real_webhook_url
                 }
             }
         raise HTTPException(status_code=404, detail="Merchant not found")
@@ -890,7 +894,7 @@ def get_merchant_settings(merchant_id: str, db: Session = Depends(get_db)):
             "key_id": razorpay_key if razorpay_key else "Not configured",
             "key_secret_masked": mask_key(razorpay_secret),
             "webhook_secret_masked": mask_key(webhook_secret),
-            "webhook_url": f"https://api.cyvault.io/v1/webhooks/incoming/{merchant_id}"
+            "webhook_url": real_webhook_url
         }
     }
 

@@ -1,13 +1,38 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, Search, Bell, ScrollText, TrendingDown, TrendingUp, Shield, User } from 'lucide-react';
+import { Menu, Search, Bell, ScrollText, TrendingDown, TrendingUp, Shield, User, Copy, CheckCircle2, Webhook } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Recovery() {
   const { merchantId } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [webhookUrl, setWebhookUrl] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  // Fetch webhook URL from settings
+  useEffect(() => {
+    const fetchWebhookUrl = async () => {
+      if (!merchantId) return;
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/merchants/${merchantId}/settings`);
+        if (res.ok) {
+          const settings = await res.json();
+          setWebhookUrl(settings?.api_keys?.webhook_url || '');
+        }
+      } catch (e) {
+        console.error("Error fetching webhook URL:", e);
+      }
+    };
+    fetchWebhookUrl();
+  }, [merchantId]);
+
+  const copyWebhookUrl = () => {
+    navigator.clipboard.writeText(webhookUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +59,34 @@ export default function Recovery() {
     <main className="flex-1 flex flex-col h-full relative w-full">
       <div className="flex-1 w-full max-w-container-max mx-auto p-4 md:p-6 flex flex-col gap-8 md:gap-12 animate-fade-in-up">
         
+        {/* Webhook URL Banner - always visible */}
+        {webhookUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-panel rounded-xl p-4 border border-primary-container/30 bg-primary-container/5"
+          >
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2 shrink-0">
+                <Webhook size={18} className="text-primary" />
+                <span className="font-label-mono text-xs text-on-surface-variant uppercase tracking-wider">Your Razorpay Webhook URL</span>
+              </div>
+              <div className="flex-1 flex items-center gap-2 min-w-0">
+                <code className="flex-1 bg-surface-container/50 px-3 py-1.5 rounded-lg font-mono text-xs text-tertiary-fixed-dim truncate border border-outline-variant/30">
+                  {webhookUrl}
+                </code>
+                <button 
+                  onClick={copyWebhookUrl}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center gap-1.5 font-label-mono text-xs"
+                >
+                  {copied ? <><CheckCircle2 size={14} className="text-emerald-400" /> Copied!</> : <><Copy size={14} /> Copy</>}
+                </button>
+              </div>
+            </div>
+            <p className="text-[10px] text-on-surface-variant mt-2 font-label-mono">Paste this URL in your Razorpay Dashboard → Settings → Webhooks → Add New Webhook</p>
+          </motion.div>
+        )}
+
         {loading ? (
            <div className="flex items-center justify-center h-64 text-on-surface-variant">Loading dashboard data...</div>
         ) : !hasData ? (
