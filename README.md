@@ -21,12 +21,7 @@
   Cyvault plugs those leaks autonomously — recovering lost carts, blocking fraud rings, and reconciling ledgers in real-time.</em>
 </p>
 
----
-
-> **⚠️ Proprietary Software**
-> This repository and all its contents are proprietary and confidential. Unauthorized copying, distribution, or use of this software is strictly prohibited. All rights reserved © 2026.
-
----
+--- 
 
 ## Table of Contents
 
