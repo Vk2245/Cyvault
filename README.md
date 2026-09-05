@@ -238,8 +238,20 @@ Cyvault is 100% compatible with real Razorpay environments. By securely intercep
 The screenshots below demonstrate Cyvault seamlessly intercepting a failed payment from a live Razorpay checkout page and instantly generating an Action Receipt:
 
 <div style="display: flex; gap: 10px;">
-  <img src="docs/assets/razorpay_checkout.png" alt="Razorpay Checkout" width="49%">
-  <img src="docs/assets/cyvault_webhook_alert.png" alt="Cyvault Alerts" width="49%">
+  <img src="docs/assets/razorpay_checkout.png" alt="Razorpay Checkout (Failure)" width="49%">
+  <img src="docs/assets/cyvault_webhook_alert.png" alt="Cyvault Alerts (Failure Intercept)" width="49%">
+</div>
+
+### Full Data-Chain Synchronization on Success
+
+Similarly, when a payment successfully processes via Razorpay's Mock Bank (Test Mode), the `payment.captured` webhook triggers Cyvault to construct the **entire data chain** dynamically. Cyvault captures the webhook and automatically generates the Customer record, Order, Transaction, and even auto-reconciles the Settlement.
+
+<div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+  <div style="display: flex; gap: 10px;">
+    <img src="docs/assets/rzp_mock_bank.png" alt="Razorpay Mock Bank (OTP Success)" width="49%">
+    <img src="docs/assets/rzp_payment_success.png" alt="Razorpay Payment Completed" width="49%">
+  </div>
+  <img src="docs/assets/cyvault_success_alert.png" alt="Cyvault Alerts (Success Intercept)" width="100%">
 </div>
 
 ---
