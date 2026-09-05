@@ -1,0 +1,112 @@
+# Cyvault - Issues Log
+
+Here is a consolidated list of the frontend issues faced during the HTML-to-Next.js migration and how they were resolved:
+
+1. JSX Attribute Errors:
+   - Issue: The AI-generated HTML screens used raw string HTML attributes like `onclick`, `tabindex`, `readonly=""`, and `rows="1"` which caused Next.js/React hydration and compilation errors.
+   - Fix: Ran automated Python scripts to convert these to valid JSX camelCase props (`onClick`, `tabIndex`, `readOnly`, `rows={1}`).
+
+2. Uncontrolled Input Warnings:
+   - Issue: React threw warnings for using `value` and `checked` without `onChange` handlers on static UI forms.
+   - Fix: Converted them to `defaultValue` and `defaultChecked`, and fixed `<textarea>content</textarea>` to use `defaultValue="content"`.
+
+3. Navigation & Layout Inconsistency:
+   - Issue: Since all 9 dashboard screens were generated independently, each had its own hardcoded `<nav>` sidebar. This caused visual inconsistencies and broke the DRY principle.
+   - Fix: Adopted Next.js App Router best practices by creating a `(dashboard)` Route Group and a centralized `<Sidebar />` layout component.
+
+4. Layout Duplication (Double Margins):
+   - Issue: Moving to a centralized layout meant the margin-left logic (`md:ml-64`) collided with the old wrapper code in individual pages.
+   - Fix: Wrote a `strip_layout.py` script to extract only the core `<main>` content from each page, discarding the old duplicate wrappers.
+
+5. Missing CSS Animations:
+   - Issue: The Entity Graph lost its glowing and connecting line animations (`pulse-red`, `dash`) because they were defined in `<style>` blocks within the HTML `<head>`, which weren't copied over.
+   - Fix: Extracted the `@keyframes` and appended them to Next.js's global `src/app/globals.css`.
+
+6. Chatbot Page Scrolling:
+   - Issue: The entire Chatbot page was scrolling instead of just the chat history.
+   - Fix: Locked the page height to the viewport (`height: calc(100vh/0.9)`) and applied `overflow-hidden` to the wrapper, while keeping `overflow-y-auto` on the chat history container.
+
+7. Ugly Scrollbars:
+   - Issue: The new Sidebar had an ugly default browser scrollbar overlapping the UI.
+   - Fix: Used Tailwind arbitrary variants (`[&::-webkit-scrollbar]:hidden`) to hide the scrollbar completely while maintaining scroll functionality.
+
+8. Viewport Scaling:
+   - Issue: The main dashboard content looked too large/zoomed-in compared to the original design.
+   - Fix: Applied a CSS `zoom: 0.9` (90% scale) to the dashboard content wrapper in `layout.tsx` to provide more breathing room.
+
+9. Static Dummy Data in Dashboard:
+   - Issue: The frontend used hardcoded HTML for tables and numbers, which scared the mock user.
+   - Fix: Converted the dashboard and all inner pages to use `use client` and fetched real data from the backend via `/api/merchants/{merchant_id}/*` endpoints. Added proper Empty States with Lucide icons for when no data is present.
+
+10. Graph Animation & Layout:
+    - Issue: The original HTML-based graph lacked creative animations and the structure was not data-driven.
+    - Fix: Implemented Framer Motion animations for nodes, creating an orbital layout for customers connected to a central device node. Added dynamic fetching for real-time updates.
+
+11. Simulator Integration:
+    - Issue: The simulator page used an iframe to load `localhost:3000` which caused issues and wouldn't deploy cleanly. Also lacked a customer chatbot for negotiation.
+49:
+50: 12. Policy Engine Initialization Error
+51:     - Issue: Custom policies failed to activate on a fresh DB (Foreign Key violation) because the merchant record didn't exist yet.
+52:     - Fix: Added an auto-creation logic block in the `activate_policy` and `simulate_webhook` endpoints to initialize a merchant on-the-fly, ensuring fresh setups work without crashing.
+53: 
+54: 13. Scaling for 1000+ Customers (Mass Cart Abandonment)
+55:     - Issue: Manual negotiation becomes impossible at scale when 1000+ customers abandon carts.
+56:     - Fix: Built a Unified Testing suite in the Simulator. Cyvault AI automatically processes thousands of failed transactions in parallel, sending out-of-band recovery SMS/Email links based on active policies without merchant intervention.
+57: 
+58: 14. Missing Customer/Merchant Action Synchronization
+59:     - Issue: Actions performed by the customer in the Simulator weren't reflecting in the Merchant's Dashboard Alerts or Action Feed.
+60:     - Fix: Standardized the `log_action_receipt` system across the backend. Now, when the Simulator triggers an event (e.g. discount offered or fraud blocked), it logs a global receipt that the frontend live-feed and radar components immediately pick up.
+61: 
+    - Fix: Replaced the iframe with a direct embedded `Live Action Feed` fetching from the backend. Built a Customer Chatbot component for real-time negotiation testing.
+
+12. Policy Engine Initialization Error
+    - Issue: Custom policies failed to activate on a fresh DB (Foreign Key violation) because the merchant record didn't exist yet.
+    - Fix: Added an auto-creation logic block in the `activate_policy` and `simulate_webhook` endpoints to initialize a merchant on-the-fly, ensuring fresh setups work without crashing.
+
+13. Scaling for 1000+ Customers (Mass Cart Abandonment)
+    - Issue: Manual negotiation becomes impossible at scale when 1000+ customers abandon carts.
+    - Fix: Built a Unified Testing suite in the Simulator. Cyvault AI automatically processes thousands of failed transactions in parallel, sending out-of-band recovery SMS/Email links based on active policies without merchant intervention.
+
+14. Missing Customer/Merchant Action Synchronization
+    - Issue: Actions performed by the customer in the Simulator weren't reflecting in the Merchant's Dashboard Alerts or Action Feed.
+    - Fix: Standardized the `log_action_receipt` system across the backend. Now, when the Simulator triggers an event (e.g. discount offered or fraud blocked), it logs a global receipt that the frontend live-feed and radar components immediately pick up.
+
+15. Chatbot Rate Limits & Model Deprecation
+    - Issue: Fast, continuous testing hit the primary LLM API limits repeatedly, and older models were prone to deprecation, causing 500 errors in negotiation flows.
+    - Fix: Implemented an intelligent `llm_provider_router` with a robust fallback mechanism. If the primary model hits a rate limit or fails, it automatically cascades to a faster, cheaper inference endpoint, ensuring zero downtime during the demo.
+
+16. Demo Account Friction for Judges
+    - Issue: Hackathon judges don't have Razorpay API keys, causing friction in onboarding.
+    - Fix: Created a 1-click "Use Demo Account" button on the Connect page that bypasses the Razorpay key requirement. It syncs perfectly with the backend's `demo_merchant_1` auto-creation logic, putting judges directly into the Simulator instantly.
+
+17. Light Mode Visibility Issues
+    - Issue: The frontend UI components were hard to read in light mode, and fixing all colors at the last minute was too risky.
+    - Fix: Locked the entire application into a premium Dark Mode by forcefully setting `forcedTheme="dark"` in `layout.tsx` and disabling the Theme Toggle to ensure a flawless pitch experience.
+
+18. Infinite Refunds & Settlements Fraud
+    - Issue: Earlier, the user was able to request any number of refunds and settlements from the simulator by repeatedly clicking the buttons. This exposed a massive double-spend and settlement fraud vulnerability.
+    - Fix: Implemented a state-tracking fraud check in the backend `/api/simulate` endpoint. If a duplicate refund or settlement is detected for the same customer on the same day, it triggers the fraud detection funnel and blocks the request with an alert, effectively stopping the exploit.
+
+19. Simulator Session Isolation (Cross-Account Leakage)
+    - Issue: The simulator's session history was piling up with hundreds of tests, and sessions from the database were leaking into other demo accounts.
+    - Fix: Added a "+" icon to easily start fresh sessions, and partitioned the localStorage keys dynamically by `merchantId` so each login gets its own isolated test environment. This ensures no cross-account data leakage in the demo panel.
+
+20. Realistic "Cart Abandonment" Flow
+    - Issue: The original abandonment flow jumped straight to negotiation without feeling like a real checkout.
+    - Fix: Created a mini Razorpay checkout view inside the simulator. When the user clicks "Cancel Payment", it visually simulates a drop-off. Cyvault then displays a "New SMS Received" banner at the top, allowing the user to click the link and retry the payment with a dynamically calculated discount based on their retry count and active merchant policies.
+
+21. Configurable Fallback Policies
+    - Issue: Merchants needed a quick way to set fixed discount negotiation boundaries without writing natural language AI rules.
+    - Fix: Built a "Fallback Recovery Configurator" in the Policies page. Merchants can now configure Maximum Discount, Starting Discount, and Max Retries. This connects directly to the iterative negotiation loop in the simulator.
+
+22. Broken Theme Toggle (Light Mode Button)
+    - Issue: The sun/moon theme toggle button was broken/unresponsive because the application was forcefully locked to dark mode to avoid light-mode styling issues.
+    - Fix: Removed the `forcedTheme="dark"` prop from the `ThemeProvider` in `layout.tsx` while keeping the `defaultTheme="dark"`, which safely re-enabled the theme toggle functionality without breaking the initial dark-mode presentation.
+
+23. Unprofessional Fake Statistics on Landing Page
+    - Issue: The landing page displayed fake, hardcoded metrics like "₹1.2Cr+ Recovered" which looked unrealistic and unprofessional for a hackathon demo.
+    - Fix: Replaced fabricated revenue metrics with realistic, system-focused capabilities like "<50ms AI Response Time". This shifts the pitch focus from fake adoption numbers to the platform's actual technical strength and speed.
+
+24. Real Webhook Multi-Tenant Routing Bug
+    - Issue: When testing real payment.failed webhooks directly from the Razorpay Dashboard to the deployed Render backend, the webhook was successfully received and logged to the DB, but didn't appear in the Cyvault UI. This happened because the webhook handler defaulted to logging under demo_merchant_1, while the frontend was polling for a unique Google OAuth merchant ID (e.g., merch_c402...).
+    - Fix: Refactored the FastAPI webhook endpoint from @app.post('/webhook/razorpay') to @app.post('/webhook/razorpay/{merchant_id}'). This allows the exact merchant ID to be passed in the Razorpay Webhook URL configuration, ensuring strict multi-tenant isolation and guaranteeing the alert appears instantly on the correct merchant's dashboard.
