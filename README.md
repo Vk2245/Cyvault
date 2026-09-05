@@ -231,6 +231,19 @@ sequenceDiagram
 
 ---
 
+## Real-World Razorpay Integration
+
+Cyvault is 100% compatible with real Razorpay environments. By securely intercepting Razorpay Webhooks (like `payment.failed`), Cyvault's AI can trigger autonomous recovery loops without any manual intervention from the merchant. 
+
+The screenshots below demonstrate Cyvault seamlessly intercepting a failed payment from a live Razorpay checkout page and instantly generating an Action Receipt:
+
+<div style="display: flex; gap: 10px;">
+  <img src="docs/assets/razorpay_checkout.png" alt="Razorpay Checkout" width="49%">
+  <img src="docs/assets/cyvault_webhook_alert.png" alt="Cyvault Alerts" width="49%">
+</div>
+
+---
+
 ## Tech Stack
 
 ### Backend
