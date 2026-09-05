@@ -58,6 +58,7 @@ def parse_webhook_event(event_dict: dict):
         db = SessionLocal()
         try:
             from backend.action_receipt_logger import log_action_receipt
+            from backend.database_schema import Merchant
             
             # Extract real details from the Razorpay payload
             payment_entity = payload.get("payment", {}).get("entity", {})
@@ -65,10 +66,14 @@ def parse_webhook_event(event_dict: dict):
             email = payment_entity.get("email", "Unknown User")
             pay_id = payment_entity.get("id", "pay_unknown")
             
+            # In production, we find merchant by razorpay account ID. 
+            # For this demo, we assign the webhook to the most recently active merchant in the DB.
+            active_merchant = db.query(Merchant).order_by(Merchant.created_at.desc()).first()
+            target_merchant_id = active_merchant.id if active_merchant else "demo_merchant_1"
+            
             # Log it to the database so the frontend UI sees it
             narrative = f"🔔 REAL WEBHOOK: Payment of ₹{amount} failed for {email}. Cyvault AI intercepted the webhook and is analyzing."
-            # We use 'demo_merchant_1' because the simulator frontend looks for this ID by default
-            log_action_receipt(db, "demo_merchant_1", "recovery_fail", f"real_webhook_{pay_id}", "ALLOWED", narrative)
+            log_action_receipt(db, target_merchant_id, "recovery_fail", f"real_webhook_{pay_id}", "ALLOWED", narrative)
             db.commit()
         finally:
             db.close()
