@@ -850,8 +850,10 @@ def get_merchant_settings(merchant_id: str, request: Request, db: Session = Depe
     Uses request.base_url to generate the real webhook URL dynamically.
     """
     # Build real webhook URL from the actual deployed server URL
-    base = str(request.base_url).rstrip('/')
-    real_webhook_url = f"{base}/webhook/razorpay/{merchant_id}"
+    # Render sets X-Forwarded-Host behind its reverse proxy
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or "cyvault224.onrender.com"
+    scheme = request.headers.get("x-forwarded-proto") or "https"
+    real_webhook_url = f"{scheme}://{host}/webhook/razorpay/{merchant_id}"
     merchant = db.query(Merchant).filter(Merchant.id == merchant_id).first()
     if not merchant:
         if merchant_id == "demo_merchant_1":
