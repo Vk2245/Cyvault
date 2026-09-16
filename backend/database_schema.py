@@ -113,7 +113,7 @@ class ActionReceipt(Base):
 # Database Setup
 db_url = settings.DATABASE_URL
 
-engine = create_engine(db_url, echo=False)
+engine = create_engine(db_url, echo=False, pool_pre_ping=True, pool_recycle=1800)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
