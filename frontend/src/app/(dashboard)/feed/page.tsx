@@ -9,6 +9,11 @@ export default function Feed() {
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const sanitizeNarrative = (text: string) => {
+    if (!text) return '';
+    return text.replace(/[\p{Extended_Pictographic}\u2600-\u27BF\uFE0F\u21A9\u2705\u2714\u2716\u274C]/gu, '').trim();
+  };
+
   useEffect(() => {
     const fetchFeed = async () => {
       if (!merchantId) return;
@@ -108,7 +113,7 @@ export default function Feed() {
                         </span>
                       </div>
                       
-                      <p className="text-on-surface-variant text-sm pl-2 leading-relaxed">{item.narrative}</p>
+                      <p className="text-on-surface-variant text-sm pl-2 leading-relaxed">{sanitizeNarrative(item.narrative)}</p>
                       
                       <div className="flex gap-2 text-xs font-mono pl-2 mt-3">
                         <span className="px-2 py-1 bg-white/5 rounded-md text-white/60">{item.action_type.replace(/_/g, ' ')}</span>

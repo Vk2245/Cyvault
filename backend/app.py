@@ -10,6 +10,7 @@ from backend.config import settings
 from backend.database_schema import get_db, init_db, Merchant, Order, Settlement, Customer, Transaction, ActionReceipt, PolicyRule
 from backend.webhook_handler import verify_razorpay_signature, parse_webhook_event
 from backend.llm_provider_router import get_llm_response
+from backend.action_receipt_logger import remove_emojis
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -241,7 +242,7 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         discount_offered = min(starting_discount + (retry_count * 5), max_discount)
 
         # 4. Log Action Receipt (so Alerts tab and Simulator Feed populate)
-        narrative = f"🤖 Cyvault Recovery AI offered {discount_offered}% discount to Customer {customer_id} (Attempt {retry_count+1}/{max_retries}) | Policy: {policy_name} | Status: Awaiting Response"
+        narrative = f"Cyvault Recovery AI offered {discount_offered}% discount to Customer {customer_id} (Attempt {retry_count+1}/{max_retries}) | Policy: {policy_name} | Status: Awaiting Response"
         log_action_receipt(db, merchant_id, "offer_discount", order_id, "ALLOWED", narrative)
         
         db.commit()
@@ -274,7 +275,7 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
             ))
             
         # Log BLOCKED action receipt
-        narrative = f"🛡️ BLOCKED: Fraud ring detected. 3 accounts sharing device fingerprint {shared_fingerprint}. All recovery actions suspended."
+        narrative = f"BLOCKED: Fraud ring detected. 3 accounts sharing device fingerprint {shared_fingerprint}. All recovery actions suspended."
         log_action_receipt(db, merchant_id, "fraud_block", f"ring_{customer_id}", "BLOCKED", narrative)
         
         db.commit()
@@ -289,7 +290,7 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         ).first()
         
         if existing_settlement:
-            narrative = f"🛡️ BLOCKED: Duplicate settlement request detected for Customer {customer_id}. Fraud detection funnel triggered."
+            narrative = f"BLOCKED: Duplicate settlement request detected for Customer {customer_id}. Fraud detection funnel triggered."
             log_action_receipt(db, merchant_id, "fraud_block", f"setl_fraud_{customer_id}", "BLOCKED", narrative)
             db.commit()
             return {"status": "blocked", "message": "Settlement is already processed. Duplicate requests are blocked by Cyvault."}
@@ -308,7 +309,7 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         )
         db.add(new_settlement)
         
-        narrative = f"💰 Settlement processed: ₹4,999.00 | UTR: {utr} | Status: Processed"
+        narrative = f"Settlement processed: ₹4,999.00 | UTR: {utr} | Status: Processed"
         log_action_receipt(db, merchant_id, "settlement_processed", setl_id, "ALLOWED", narrative)
         
         db.commit()
@@ -323,12 +324,12 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         ).first()
         
         if existing_refund:
-            narrative = f"🛡️ BLOCKED: Duplicate refund request detected for Customer {customer_id}. Fraud detection funnel triggered."
+            narrative = f"BLOCKED: Duplicate refund request detected for Customer {customer_id}. Fraud detection funnel triggered."
             log_action_receipt(db, merchant_id, "fraud_block", f"refund_{customer_id}", "BLOCKED", narrative)
             db.commit()
             return {"status": "blocked", "message": "Your refund is already initiated. Duplicate requests are blocked by Cyvault."}
 
-        narrative = f"↩️ Refund initiated for Customer {customer_id} | Amount: ₹4,999.00 | ETA: 5-7 business days"
+        narrative = f"Refund initiated for Customer {customer_id} | Amount: ₹4,999.00 | ETA: 5-7 business days"
         log_action_receipt(db, merchant_id, "refund_initiated", f"refund_{customer_id}", "ALLOWED", narrative)
         
         db.commit()
@@ -387,7 +388,7 @@ def simulate_webhook(payload: dict, db: Session = Depends(get_db)):
         )
         db.add(new_settlement)
         
-        narrative = f"✅ Payment of ₹{amount_to_pay/100:.2f} successful for Customer {customer_id}."
+        narrative = f"Payment of ₹{amount_to_pay/100:.2f} successful for Customer {customer_id}."
         log_action_receipt(db, merchant_id, "payment_success", order_id, "ALLOWED", narrative)
         
         db.commit()
@@ -507,7 +508,7 @@ def get_alerts(merchant_id: str, db: Session = Depends(get_db)):
             "id": r.id,
             "action_type": r.action_type,
             "decision": r.decision,
-            "narrative": r.narrative,
+            "narrative": remove_emojis(r.narrative),
             "created_at": r.created_at.isoformat()
         })
     return alerts
@@ -633,7 +634,7 @@ def merchant_insight_chat(req: MerchantChatRequest, db: Session = Depends(get_db
 You help merchants understand their revenue recovery, fraud prevention, and financial data.
 Be concise, professional, and helpful. Use bullet points for clarity.
 Never share sensitive data like full card numbers or passwords.
-If the user is just saying hello or asking a casual greeting (like 'hi', 'hey', 'hello', etc.), you MUST reply ONLY with exactly: "Hello! 👋 How can I help you today?". Do NOT add any extra information, do NOT list out a menu, and do NOT mention their stats.
+If the user is just saying hello or asking a casual greeting (like 'hi', 'hey', 'hello', etc.), you MUST reply ONLY with exactly: "Hello! How can I help you today?". Do NOT add any extra information, do NOT list out a menu, and do NOT mention their stats.
 
 Merchant Data Context:
 {context_str}
@@ -748,7 +749,7 @@ def activate_policy(merchant_id: str, req: PolicyActivateRequest, db: Session = 
         "policy_activated", 
         rule_id, 
         "ALLOWED", 
-        f"✅ Activated new custom policy: {req.name}"
+        f"Activated new custom policy: {req.name}"
     )
     
     db.commit()

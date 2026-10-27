@@ -9,11 +9,19 @@ USES: database_schema.py, utils.py
 # IMPORTS
 # ──────────────────────────────────────────────
 import uuid
+import re
 from sqlalchemy.orm import Session
 
 # Import from our own project files
 from backend.database_schema import ActionReceipt
 from backend.utils import get_current_timestamp
+
+def remove_emojis(text: str) -> str:
+    """Removes unicode emojis and special symbols from text."""
+    if not text:
+        return ""
+    clean = re.sub(r'[\U00010000-\U0010ffff\u2600-\u26ff\u2700-\u27bf\ufe00-\ufe0f\u200d\u20e3\u21a9\u2705\u2714\u2716\u274c]', '', text)
+    return clean.strip()
 
 # ──────────────────────────────────────────────
 # MAIN FUNCTIONS
@@ -54,7 +62,7 @@ def log_action_receipt(
         action_type=action_type,
         entity_id=entity_id,
         decision=decision,
-        narrative=narrative
+        narrative=remove_emojis(narrative)
     )
     
     try:

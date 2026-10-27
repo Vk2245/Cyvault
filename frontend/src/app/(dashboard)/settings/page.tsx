@@ -429,7 +429,7 @@ export default function Settings() {
       {/* Toast notification */}
       {saveStatus === 'copied' && (
         <div className="fixed bottom-6 right-6 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-lg font-mono text-sm animate-in fade-in slide-in-from-bottom-4">
-          ✓ Copied to clipboard
+          Copied to clipboard
         </div>
       )}
     </main>

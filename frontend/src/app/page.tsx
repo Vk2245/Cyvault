@@ -1,5 +1,5 @@
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Link as LinkIcon, PlayCircle, MessageSquare, ShieldAlert, RefreshCcw, BrainCircuit, Activity, Headset, Sliders, Send } from 'lucide-react';
+import { Link as LinkIcon, PlayCircle, MessageSquare, ShieldAlert, RefreshCcw, BrainCircuit, Activity, Headset, Sliders, Send, Check } from 'lucide-react';
 import Navbar from "@/components/Navbar";
 
 export default function LandingPage() {
@@ -190,7 +190,7 @@ export default function LandingPage() {
                       Processing...
                     </div>
                     <div className="bg-white dark:bg-[#1a1a1a] text-black dark:text-white p-3 rounded-2xl rounded-tl-sm self-start text-[12px] border border-gray-300 dark:border-gray-700 shadow-md font-medium flex items-center gap-2" style={{ animation: 'chat-bubble-6 16s ease infinite' }}>
-                      <div className="w-4 h-4 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center font-bold text-[10px] text-green-600 dark:text-green-400">✓</div>
+                      <div className="w-4 h-4 rounded-full bg-green-500/20 border border-green-500 flex items-center justify-center font-bold text-[10px] text-green-600 dark:text-green-400"><Check size={10} /></div>
                       Payment ₹4,500 recovered!
                     </div>
                   </div>
@@ -218,7 +218,7 @@ export default function LandingPage() {
                     <div className="absolute w-full h-[2px] bg-gray-200 dark:bg-[#a78bfa]/20 top-1/2 left-0 -translate-y-1/2 overflow-hidden rounded-full z-0">
                       <div className="w-4 h-full bg-primary dark:bg-[#a78bfa] rounded-full absolute shadow-[0_0_10px_rgba(139,92,246,0.8)]" style={{ animation: 'data-flow 2s linear infinite' }}></div>
                     </div>
-                    <div className="bg-white dark:bg-[#0a0a0a] border border-gray-300 dark:border-[#a78bfa]/40 text-black dark:text-white rounded-lg px-2 py-1 text-center text-[10px] font-label-mono font-bold z-10 shadow-md flex items-center gap-1">Ledger ✓</div>
+                    <div className="bg-white dark:bg-[#0a0a0a] border border-gray-300 dark:border-[#a78bfa]/40 text-black dark:text-white rounded-lg px-2 py-1 text-center text-[10px] font-label-mono font-bold z-10 shadow-md flex items-center gap-1">Ledger <Check size={10} className="text-emerald-400" /></div>
                   </div>
                 </div>
               </div>
@@ -305,7 +305,9 @@ export default function LandingPage() {
                   
                   {/* Block Shield Slam */}
                   <div className="absolute z-30" style={{ animation: 'shield-slam 4s infinite' }}>
-                     <div className="w-12 h-12 bg-surface rounded-full flex items-center justify-center border-2 border-red-500 text-red-500 font-bold shadow-2xl text-[16px]">🚫</div>
+                     <div className="w-12 h-12 bg-surface rounded-full flex items-center justify-center border-2 border-red-500 text-red-500 font-bold shadow-2xl">
+                       <ShieldAlert size={20} className="text-red-500" />
+                     </div>
                   </div>
                   
                   {/* Outer Nodes */}

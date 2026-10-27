@@ -63,7 +63,7 @@ export default function Chatbot() {
       const data = await response.json();
       setMessages(prev => [...prev, { role: "agent", content: data.reply }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: "agent", content: "⚠️ I am currently offline or experiencing a connection issue. Please try again in a moment." }]);
+      setMessages(prev => [...prev, { role: "agent", content: "I am currently offline or experiencing a connection issue. Please try again in a moment." }]);
     } finally {
       setIsLoading(false);
     }

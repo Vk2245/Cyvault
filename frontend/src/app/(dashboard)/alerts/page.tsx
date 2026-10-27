@@ -9,6 +9,11 @@ export default function Alerts() {
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const sanitizeNarrative = (text: string) => {
+    if (!text) return '';
+    return text.replace(/[\p{Extended_Pictographic}\u2600-\u27BF\uFE0F\u21A9\u2705\u2714\u2716\u274C]/gu, '').trim();
+  };
+
   useEffect(() => {
     const fetchAlerts = async () => {
       if (!merchantId) return;
@@ -76,7 +81,7 @@ export default function Alerts() {
                        <h3 className="font-semibold text-on-surface text-lg">Cyvault AI Action</h3>
                        <span className="font-label-mono text-xs text-on-surface-variant">{new Date(alert.created_at).toLocaleTimeString()}</span>
                      </div>
-                     <p className="text-on-surface-variant text-sm mb-3 leading-relaxed">{alert.narrative}</p>
+                     <p className="text-on-surface-variant text-sm mb-3 leading-relaxed">{sanitizeNarrative(alert.narrative)}</p>
                      
                      <div className="flex gap-2">
                        <span className="px-2.5 py-1 rounded bg-[#ffffff08] border border-[#ffffff1a] font-label-mono text-[10px] text-on-surface uppercase tracking-wider">

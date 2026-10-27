@@ -83,7 +83,7 @@ function App() {
           <div className="glass-panel checkout-card">
             <h3 className="section-title">1. Test Revenue Recovery (AI Negotiation)</h3>
             <div className="product-info">
-              <div className="product-image">🎧</div>
+              <div className="product-image"><span style={{fontSize: '1rem', fontWeight: 700}}>AUDIO</span></div>
               <h2>Premium Wireless Headphones</h2>
               <div className="price">
                 ₹{discount > 0 ? (4999 * (1 - discount/100)).toFixed(0) : 4999}
@@ -153,7 +153,7 @@ function App() {
         {/* 1. AI Negotiation Modal */}
         <div className={`ai-modal-overlay ${paymentState === 'negotiating' ? 'active' : ''}`}>
           <div className="glass-panel ai-modal">
-            <div className="ai-avatar">🤖</div>
+            <div className="ai-avatar">AI</div>
             {discount === 0 ? (
               <>
                 <h3 style={{marginBottom: '10px'}}>Cyvault AI Analyzing...</h3>
@@ -180,7 +180,7 @@ function App() {
         {/* 2. Fraud Block Modal */}
         <div className={`ai-modal-overlay ${activeScenario === 'fraud' ? 'active' : ''}`}>
           <div className="glass-panel ai-modal" style={{borderTopColor: 'var(--error)'}}>
-            <div className="ai-avatar" style={{background: 'var(--error)', boxShadow: '0 0 20px var(--error)'}}>🛡️</div>
+            <div className="ai-avatar" style={{background: 'var(--error)', boxShadow: '0 0 20px var(--error)'}}>SEC</div>
             {!fraudBlocked ? (
               <>
                 <h3 style={{marginBottom: '10px'}}>Cyvault Risk AI Scanning...</h3>

@@ -175,7 +175,7 @@ HTML_TEMPLATE = """
             <div style="color: #64748b;">Sent at {timestamp}</div>
             
             <div class="security-note" style="color: #64748b;">
-                <span style="margin-right: 6px;">🔒</span> 
+                <span style="margin-right: 6px;">[Secure]</span> 
                 This alert was generated securely using read-only ledger analysis.
             </div>
         </div>

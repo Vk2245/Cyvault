@@ -138,7 +138,7 @@ def parse_webhook_event(event_dict: dict, merchant_id: str):
             db.add(new_tx)
             
             # ── Step 5: Log Alert ActionReceipt (populates Alerts tab) ──
-            narrative = f"🔔 REAL WEBHOOK: Payment of ₹{amount_rupees} failed for {email}. Cyvault AI intercepted the webhook and is analyzing."
+            narrative = f"REAL WEBHOOK: Payment of ₹{amount_rupees} failed for {email}. Cyvault AI intercepted the webhook and is analyzing."
             log_action_receipt(db, merchant_id, "recovery_fail", f"real_webhook_{pay_id}", "ALLOWED", narrative)
             
             # ── Step 6: Check policies and log Recovery Action (populates Recovery Cases) ──
@@ -156,7 +156,7 @@ def parse_webhook_event(event_dict: dict, merchant_id: str):
                 starting_discount = 10
                 policy_name = "default_recovery"
             
-            recovery_narrative = f"🤖 Cyvault Recovery AI offered {starting_discount}% discount to {email} (Real Webhook) | Policy: {policy_name} | SMS recovery link sent."
+            recovery_narrative = f"Cyvault Recovery AI offered {starting_discount}% discount to {email} (Real Webhook) | Policy: {policy_name} | SMS recovery link sent."
             log_action_receipt(db, merchant_id, "offer_discount", cyvault_order_id, "ALLOWED", recovery_narrative)
             
             db.commit()
@@ -255,7 +255,7 @@ def parse_webhook_event(event_dict: dict, merchant_id: str):
             ))
             
             # Log success receipt
-            narrative = f"✅ Payment of ₹{amount_rupees} successful for {email}."
+            narrative = f"Payment of ₹{amount_rupees} successful for {email}."
             log_action_receipt(db, merchant_id, "payment_success", cyvault_order_id, "ALLOWED", narrative)
             
             db.commit()
