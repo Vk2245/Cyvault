@@ -1,12 +1,25 @@
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
+"""
+FILE: notification_engine.py
+PURPOSE: Dispatches HTML email notifications and alerts to merchants and customers via SMTP.
+USED BY: policy_enforcer.py, recovery_orchestrator.py, webhook_handler.py
+USES: config.py
+"""
+
+# ──────────────────────────────────────────────
+# IMPORTS
+# ──────────────────────────────────────────────
+# STEP 1: Python built-in libraries
+import asyncio
 import logging
 import os
-from config import settings
-import asyncio
+import smtplib
 from datetime import datetime
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+# STEP 3: Our own project files
+from backend.config import settings
 
 logger = logging.getLogger(__name__)
 
